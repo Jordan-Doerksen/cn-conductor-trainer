@@ -31,11 +31,13 @@ fallback if the chart isn't handy.
 
 ## Answers captured (live)
 
-> **UPDATE 2026-06-16 — authoritative source incoming.** Jordan is capturing screenshots of all
-> ~136 applicable aspect combos and marking the flashing bulbs, dropping them in
-> `reference/signal-aspects/`. Those **supersede the text descriptions below** for any unconfirmed
-> aspect — including the Restricting (436) conflict and the diverging/slow colours. The 6 already
-> encoded still stand; everything else gets encoded from the shots.
+> **UPDATE 2026-06-16 — authoritative source ARRIVED.** Jordan dropped **CROR Verbal Quiz** app
+> screenshots in `reference/signal_screenshots/` (local-only; first ~26 shots, covering items 1–24
+> of 136). Each shot fully specifies an aspect — **rule # + name + lamps top→bottom + a flash caption
+> ("both flashing" / "red flashing" / "bottom two flashing") + plate + mast/dwarf** — so we now
+> **encode directly from the shots.** They supersede the text guesses below, incl. the Restricting
+> (436) conflict and the diverging/slow colours. (Bonus: the app confirms **no A plate** — it draws
+> one as a trap on Rule 429 and captions it "not used.")
 
 Confirmed answers logged here as they arrive, so they don't get lost in the thread.
 
@@ -79,8 +81,15 @@ Recommend **(2) two staggered reds + R plate** (cleanest contrast with 437). Awa
 - **Hypothesis to confirm:** is the diverging/slow base **red over yellow**? (would make 430 = R/Y +DV,
   431 Slow to Clear = R/Y no plate, and the "to Stop" versions flash the lower lamp.)
 
-**Encoded in the module so far (6 of 42):** 405 Clear · 407 Clear to Medium · 411 Clear to Stop ·
-415 Advance Clear to Stop · 437 Stop & Proceed · 439 Stop. `ASPECTS_DRAFT` stays **true** until the set is complete.
+**Encoded so far (11 — verified 62/62 harness + live):** 405 Clear · 407 Clear to Medium ·
+409 Clear to Slow (dwarf) · 411 Clear to Stop · 415 Advance Clear to Stop · 419A Limited to Diverging ·
+425 Medium to Slow · 426 Medium to Restricting · 432A Diverging to Limited · 437 Stop & Proceed · 439 Stop.
+`ASPECTS_DRAFT` stays **true** until the full set is in. Renderer handles N heads, dwarf, DV/R plates,
+stagger, and per-head flash (`'f'` suffix) — covers everything the screenshots show so far.
+
+**Remaining screenshots to encode (in `signal_screenshots/`):** ~13 more shots already captured
+(items ~7–24 of 136); then Jordan continues capturing 25–136. Hold **429 Diverging to Stop** — its
+shot used the caption slot for the A-plate trap, so flash state is unconfirmed there.
 
 **Still needed (next):**
 - The **exact lower-head colour** for each "Clear to [speed]": Clear to Limited (406) /
