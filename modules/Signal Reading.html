@@ -229,7 +229,8 @@ var SPEEDS=[
    Append 'f' to a head to make THAT lamp flash (e.g. "Yf" = flashing yellow, steady lamps unaffected).
    plaque: DV / R  (there is NO "A" absolute plate in Canada). ===== */
 var ASPECTS=[
- {r:"405",lvl:"basic",spec:{heads:["G"],type:"mast"},tip:"Single green — proceed (Clear). Green on top with a speed lamp below reads as a “Clear to [speed]”; all-green is still Clear."},
+ {r:"405",lvl:"basic",spec:{heads:["G"],type:"mast"},tip:"A SINGLE green — proceed (Clear), high mast or low. Two greens is NOT Clear — that's Clear to Medium (407)."},
+ {r:"407",lvl:"full",spec:{heads:["G","G"],type:"mast"},tip:"Two greens (green over green) — Clear to MEDIUM: proceed, be prepared for MEDIUM speed at the next signal."},
  {r:"411",lvl:"basic",spec:{heads:["Y","R"],type:"mast"},tip:"Yellow over red — APPROACH: your block is clear, the next one is occupied, so be prepared to stop at the next signal."},
  {r:"415",lvl:"basic",spec:{heads:["Yf","R"],type:"mast"},tip:"FLASHING yellow over red — ADVANCE approach: your block and the next are clear, the THIRD is occupied; be prepared to stop at the second signal."},
  {r:"437",lvl:"basic",spec:{heads:["R","R"],type:"mast",stagger:true},tip:"Two reds, STAGGERED — the mark of a non-controlled (automatic) signal: stop, then proceed at restricted speed."},

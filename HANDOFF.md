@@ -63,6 +63,9 @@ CN Conductor Trainer/              (repo root; entry = index.html)
 │  └─ GP Yard (tracks).png         Cropped strip used as the puzzle reference image
 ├─ reference/
 │  ├─ Jan_2025_Canadian_rail_operating_rules_EN.pdf   (GITIGNORED — do not commit)
+│  ├─ 2015_04_10-Robitaille-presentation-with-intro-slide.pdf  (GITIGNORED — CN CRTC seminar, see notes below)
+│  ├─ crtc-fundamentals-notes.md   Committed digest of the Robitaille deck (terminology + rule map)
+│  ├─ signal-questions.md          SME question sheet + live answer log for the Signal Reading aspects
 │  ├─ gp-yard-large.jpg            Source photo the trace was built from
 │  └─ Game Plan.md
 ├─ README.md
@@ -237,6 +240,8 @@ Verify wording against `reference/Jan_2025_Canadian_rail_operating_rules_EN.pdf`
 | R105 | Non-main track |
 
 **Always distinguish CROR rules from CN GOI (operating instructions).** "Set and center" is the canonical example of GOI phrasing that is *not* a numbered CROR rule.
+
+**Control-system framework source (added 2026-06-16):** `reference/2015_04_10-Robitaille-presentation-with-intro-slide.pdf` (GITIGNORED — local only, like the rulebook) is a 2015 CN seminar, *Canadian Rail Traffic Control Fundamentals* (Sean Robitaille, CN Transportation Engineer, U. of Illinois). Best for the **operating language** and how the control methods fit together; digested in `reference/crtc-fundamentals-notes.md`. Rule numbers it anchors: OCS **301–315** · ABS **505–515** · CTC **560–578** · Interlocking **601–620** · pass a controlled signal at stop **564** · Cautionary Limits **94** · non-main track **105** · Special Control System **351–353** · signal aspects **405–440** (speed-signal system; **L/DV/R** markers — confirms there's no "A"). **It's 2015 — verify time-sensitive claims** ("ABS only on CP", "no PTC mandate in Canada") against current sources before repeating.
 
 ---
 

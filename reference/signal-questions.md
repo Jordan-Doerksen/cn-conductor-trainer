@@ -35,13 +35,16 @@ Confirmed answers logged here as they arrive, so they don't get lost in the thre
 - **Framing correction (conductor, CTC territory):** the straight-route aspects are **not**
   "speed past the signal." They tell you **how many blocks ahead are clear before an
   occupancy** — how much warning you get. Speed only governs the turnout/diverging family.
-- **Clear (405):** green on top — single green, *or* all-green — both read as Clear. *(Jordan, firsthand)*
+- **Clear (405):** a **single** green (high mast or low). *(Jordan, firsthand — corrected himself:
+  "all green" is **not** Clear; two greens is Clear to Medium.)* — **ENCODED**
+- **Clear to Medium (407):** **green over green** (two greens). *(Jordan, firsthand)* — **ENCODED**
 - **Clear to Stop (411):** **yellow over red.** Block you're entering clear, the next occupied;
   prepare to stop at the next signal. *(Jordan, firsthand)* — **ENCODED**
 - **Advance Clear to Stop (415):** **flashing yellow over red.** Your block + next clear, the
   third occupied; prepare to stop at the second signal. *(Jordan, firsthand)* — **ENCODED**
   (renderer now flashes a single head via a `'f'` suffix, e.g. `"Yf"` = flashing yellow over steady red).
-- **Grammar:** green on top **+ a non-green lower head = a "Clear to [speed]"**; all-green = plain Clear. *(Jordan, firsthand)*
+- **Grammar:** **single** green = Clear · **green over green** = Clear to Medium · green on top
+  + a non-green lower head = a "Clear to [speed]". *(Jordan, firsthand)*
 
 **Partially captured — modifier logic, but lamp stack NOT yet confirmed (do not encode until it is):**
 A **DV plate** + **flashing** are the discriminators on the diverging / slow / restricting group —
@@ -59,8 +62,8 @@ A **DV plate** + **flashing** are the discriminators on the diverging / slow / r
 > Slow to Stop (435) = ___/___ flashing · Restricting (436) = ___ (single yellow? R plate?) ·
 > Limited to Clear (416) = ___/___ (flashing green?). 2-head or 3-head mast?
 
-**Encoded in the module so far (5 of 42):** 405 Clear · 411 Clear to Stop · 415 Advance Clear
-to Stop · 437 Stop & Proceed · 439 Stop. `ASPECTS_DRAFT` stays **true** until the set is complete.
+**Encoded in the module so far (6 of 42):** 405 Clear · 407 Clear to Medium · 411 Clear to Stop ·
+415 Advance Clear to Stop · 437 Stop & Proceed · 439 Stop. `ASPECTS_DRAFT` stays **true** until the set is complete.
 
 **Still needed (next):**
 - The **exact lower-head colour** for each "Clear to [speed]": Clear to Limited (406) /
