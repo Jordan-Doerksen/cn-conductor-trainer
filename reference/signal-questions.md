@@ -90,12 +90,15 @@ Recommend **(2) two staggered reds + R plate** (cleanest contrast with 437). Awa
 - **Hypothesis to confirm:** is the diverging/slow base **red over yellow**? (would make 430 = R/Y +DV,
   431 Slow to Clear = R/Y no plate, and the "to Stop" versions flash the lower lamp.)
 
-**Encoded so far (12 — verified 68/68 harness + live):** 405 Clear · 407 Clear to Medium ·
-409 Clear to Slow (dwarf)\* · 411 Clear to Stop · 415 Advance Clear to Stop · 419A Limited to Diverging\* ·
-425 Medium to Slow\* · 426 Medium to Restricting\* · 431 Slow to Clear (official) · 432A Diverging to Limited\* ·
-437 Stop & Proceed · 439 Stop.
-**SME sign-off (2026-06-16): Jordan confirmed all 12 render correctly on the live site.** (`ASPECTS_DRAFT`
-still true — flips off only when the whole board is in and signed off.)
+**Encoded so far (16 — verified 92/92 harness + live):** 405 Clear · 406 Clear to Limited ·
+407 Clear to Medium · 409 Clear to Slow · 411 Clear to Stop · 415 Advance Clear to Stop ·
+419A Limited to Diverging · 425 Medium to Slow · 425A Medium to Diverging · 426 Medium to Restricting ·
+431 Slow to Clear · 432A Diverging to Limited · 434A Diverging to Diverging · 437 Stop & Proceed ·
+438 Take or Leave Siding · 439 Stop.
+**SME sign-off (2026-06-16): Jordan confirmed the first 12 on the live site.** Policy: **one card per
+indication, variants noted in the card** (Jordan's call) — e.g. 439's tip notes the 3-red 3-head form.
+Useful pattern confirmed across shots: **flashing green = Limited, steady green = Medium/Clear**;
+flashing yellow (bottom) = the "to Diverging/Slow" warning. (`ASPECTS_DRAFT` still true until the board is complete.)
 
 **Source decision — the quiz app is trusted.** Jordan **passed his 2025 CROR conductor test using the
 CROR Verbal Quiz app**, and the official rulebook (Rule 431) corroborated it. So we encode from the
