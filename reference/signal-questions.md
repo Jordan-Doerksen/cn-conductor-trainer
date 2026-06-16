@@ -29,6 +29,19 @@ fallback if the chart isn't handy.
 
 ---
 
+## Answers captured (live)
+Confirmed answers logged here as they arrive, so they don't get lost in the thread.
+
+- **Framing correction (conductor, CTC territory):** the straight-route aspects are **not**
+  "speed past the signal." They tell you **how many blocks ahead are clear before an
+  occupancy** — how much warning you get. Speed only governs the turnout/diverging family.
+- **Advance Clear to Stop (415):** **flashing yellow on the top head** — your block clear,
+  next block clear, *third* block occupied. *Lower head TBC (single head, or yellow-over-red?)*
+- **Clear to Stop (411):** your block clear, next block occupied. *Lamp TBC — almost certainly
+  **steady** yellow (the steady-vs-flashing contrast with 415); confirm head count + lower head.*
+
+---
+
 ## The question sheet (fallback)
 
 **Paste this framing first:**
@@ -39,17 +52,32 @@ fallback if the chart isn't handy.
 > I'd rather have a gap than a wrong lamp.
 
 ### A — the system (this generates most of the 42)
+
+> **Corrected by SME:** the straight-route aspects are **not** "speed past the signal." They
+> tell you **how many blocks ahead are clear before an occupancy** — how much warning you get.
+> Speed only governs the *turnout/diverging* family. So there are really two families:
+
 1. **Hardware on your sub:** colour-light (separate R/Y/G lens per head), searchlight (one
    lens that changes colour), or position-light? Typical mast — **2 heads or 3?**
-2. **Top head = speed past THIS signal.** What colour is the top head for each:
-   Clear · Limited · Medium · Diverging · Slow · Restricting · Stop? Mark any that **flash**
-   vs steady.
-3. **Lower head = what's coming at the NEXT signal.** Colour of the lower head for:
-   …to Clear · …to Limited · …to Medium · …to Diverging · …to Slow · …to Restricting · …to Stop?
-   Any flashing?
-4. When does a signal get a **third (bottom) head**, and what's it showing?
-5. Which indications use a **flashing** lamp, and **which lamp** flashes? (Suspect: Advance
-   Clear to Stop, and the Limited family — confirm.)
+
+**A1 · Approach family ("Clear to ___") — block warning, normal speed:**
+2. Walk the warning ladder, top→bottom lamps for each:
+   - **Clear (405):** all clear ahead → single ___? (green?)
+   - **Clear to Stop (411):** your block clear, next occupied → top lamp ___ (steady yellow?)
+     over a ___ lower head?
+   - **Advance Clear to Stop (415):** your block clear, next clear, third occupied →
+     **flashing yellow on top** *(SME-confirmed)* over a ___ lower head?
+   - For these — is it a **single head** showing the yellow, or **yellow over red** (2 heads)?
+3. Same block-warning idea for **Clear to Limited / Medium / Slow / Diverging / Restricting** —
+   what changes in the lamps vs Clear to Stop?
+
+**A2 · Turnout/diverging family ("Limited / Medium / Diverging / Slow to ___") — speed through
+the turnouts:**
+4. Here the first word *is* a speed. What do these look like (top head colour, lower head,
+   flashing) — e.g. **Medium to Clear (422)**, **Limited to Clear (416)**, **Slow to Clear
+   (431)**, **Diverging (430)**? When does a **third (bottom) head** appear?
+5. Which indications use a **flashing** lamp, and **which lamp** flashes? (Confirmed so far:
+   flashing yellow top = Advance Clear to Stop. What else flashes?)
 
 ### B — the stand-alones (these break the grammar)
 6. **Clear (405)** — single green, one head, right?
