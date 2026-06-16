@@ -3,3 +3,7 @@ Thumbs.db
 *.tmp
 # do not republish the official rulebook PDF
 reference/*.pdf
+# raw signal-aspect screenshots stay local (likely copyrighted source + repo/site bloat);
+# the encoded aspects ship in the module. Keep the folder's README tracked.
+reference/signal-aspects/*
+!reference/signal-aspects/README.md

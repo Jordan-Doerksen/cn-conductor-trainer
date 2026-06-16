@@ -30,6 +30,13 @@ fallback if the chart isn't handy.
 ---
 
 ## Answers captured (live)
+
+> **UPDATE 2026-06-16 — authoritative source incoming.** Jordan is capturing screenshots of all
+> ~136 applicable aspect combos and marking the flashing bulbs, dropping them in
+> `reference/signal-aspects/`. Those **supersede the text descriptions below** for any unconfirmed
+> aspect — including the Restricting (436) conflict and the diverging/slow colours. The 6 already
+> encoded still stand; everything else gets encoded from the shots.
+
 Confirmed answers logged here as they arrive, so they don't get lost in the thread.
 
 - **Framing correction (conductor, CTC territory):** the straight-route aspects are **not**
