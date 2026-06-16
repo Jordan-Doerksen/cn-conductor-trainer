@@ -90,11 +90,14 @@ Recommend **(2) two staggered reds + R plate** (cleanest contrast with 437). Awa
 - **Hypothesis to confirm:** is the diverging/slow base **red over yellow**? (would make 430 = R/Y +DV,
   431 Slow to Clear = R/Y no plate, and the "to Stop" versions flash the lower lamp.)
 
-**Encoded so far (16 — verified 92/92 harness + live):** 405 Clear · 406 Clear to Limited ·
-407 Clear to Medium · 409 Clear to Slow · 411 Clear to Stop · 415 Advance Clear to Stop ·
-419A Limited to Diverging · 425 Medium to Slow · 425A Medium to Diverging · 426 Medium to Restricting ·
-431 Slow to Clear · 432A Diverging to Limited · 434A Diverging to Diverging · 437 Stop & Proceed ·
-438 Take or Leave Siding · 439 Stop.
+**Encoded so far (19 — verified 109/109 harness + live):** 405 Clear · 406 Clear to Limited ·
+407 Clear to Medium · 409 Clear to Slow · 411 Clear to Stop · 413 Advance Clear to Medium ·
+415 Advance Clear to Stop · 419A Limited to Diverging · 421 Limited to Stop · 425 Medium to Slow ·
+425A Medium to Diverging · 426 Medium to Restricting · 430 Diverging · 431 Slow to Clear ·
+432A Diverging to Limited · 434A Diverging to Diverging · 437 Stop & Proceed · 438 Take or Leave Siding · 439 Stop.
+**Resolved:** 430 Diverging = red/yellow + DV plate (confirms the earlier hypothesis). **New plate: "L"**
+(Limited marker — a yellow *triangle* in the app; renders as a labelled box for now, could be made a
+triangle later). 411's card now notes its 3-head (Y/R/R) form.
 **SME sign-off (2026-06-16): Jordan confirmed the first 12 on the live site.** Policy: **one card per
 indication, variants noted in the card** (Jordan's call) — e.g. 439's tip notes the 3-red 3-head form.
 Useful pattern confirmed across shots: **flashing green = Limited, steady green = Medium/Clear**;
@@ -104,6 +107,12 @@ flashing yellow (bottom) = the "to Diverging/Slow" warning. (`ASPECTS_DRAFT` sti
 CROR Verbal Quiz app**, and the official rulebook (Rule 431) corroborated it. So we encode from the
 `signal_screenshots/` shots with confidence; the official rulebook is a bonus cross-check where he can
 grab it (it can't be screenshotted easily right now). No more "to-be-verified" asterisks.
+
+**Flash semantics (important when reading the shots):** the quiz app *animates* flashing, so a frozen
+screenshot can catch a flashing lamp **mid-off** (appears dark/olive). The **caption / Jordan's markup
+is the source of truth for which lamp flashes** — not whether the lamp looks lit in that one frame.
+(The official rulebook instead marks flashing with a **static symbol**, no animation — so a rulebook
+shot needs no markup.)
 `ASPECTS_DRAFT` stays **true** until the full set is in. Renderer handles N heads, dwarf, DV/R plates,
 stagger, and per-head flash (`'f'` suffix) — covers everything the screenshots show so far.
 
