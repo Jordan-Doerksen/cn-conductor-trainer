@@ -46,21 +46,31 @@ Confirmed answers logged here as they arrive, so they don't get lost in the thre
 - **Grammar:** **single** green = Clear · **green over green** = Clear to Medium · green on top
   + a non-green lower head = a "Clear to [speed]". *(Jordan, firsthand)*
 
-**Partially captured — modifier logic, but lamp stack NOT yet confirmed (do not encode until it is):**
-A **DV plate** + **flashing** are the discriminators on the diverging / slow / restricting group —
-> - **DV plate, flashing → Diverging to Stop (429)**
-> - **DV plate, steady → Diverging (430)**
-> - no plate, **flashing → Slow to Stop (435)**
-> - no plate, **steady, just yellow → Restricting (436)**
->
-> **Flashing (SME-confirmed):** Advance Clear to Stop (415, encoded) · the **Limited** family ·
-> Diverging to Stop (429) · Slow to Stop (435). Slow to Stop flashes *without* a DV plate;
-> Diverging to Stop flashes *with* one — the plate is the only difference between those two.
->
-> Still need the actual lamp colours (top→bottom) to draw these — same format as 411/415:
-> Diverging (430) = ___/___ +DV · Diverging to Stop (429) = ___/___ flashing +DV ·
-> Slow to Stop (435) = ___/___ flashing · Restricting (436) = ___ (single yellow? R plate?) ·
-> Limited to Clear (416) = ___/___ (flashing green?). 2-head or 3-head mast?
+**Confirmed plate/flash logic (SME):**
+- **Plates: only R and DV are used — NO "A" plate.** Conductor-confirmed, on top of the rulebook
+  and the Robitaille deck (three independent sources).
+- **DV plate is an upgrade:** a Diverging indication **always** carries a DV plate; **strip the DV
+  plate and the same aspect downgrades to Slow.** (Matches Robitaille: "DV marker upgrades the indication.")
+- **R plate splits 436 vs 437:** two staggered reds **no plate = Stop & Proceed (437)** *(encoded)*;
+  the **same two staggered reds + R plate = Restricting (436)**.
+- **Flashing indications:** Advance Clear to Stop (415, encoded) · the **Limited** family ·
+  Diverging to Stop (429) · Slow to Stop (435). 429 flashes **with** a DV plate; 435 flashes
+  **without** one — the plate is the only difference between those two.
+- **Head count varies:** signals may be **single-aspect (one head) or dual-aspect (two heads)**.
+- **440 Direction Indicator:** an *advance* that you're leaving the main track (a flashing **arrow**,
+  a separate fixture — the lamp renderer would need an arrow shape; deferred).
+
+**⚠ Conflict to resolve before encoding — Restricting (436):** described three ways across messages —
+(1) single steady yellow · (2) two staggered reds + R plate · (3) red over staggered yellow, no plate.
+CROR allows multiple aspects per indication, so all may be valid — but **pick the one to draw** for GP/CTC.
+Recommend **(2) two staggered reds + R plate** (cleanest contrast with 437). Awaiting confirmation.
+
+**Still need — the actual lamp colours (top→bottom), same format as 411/415:**
+- Diverging (430) = ___/___ **+DV** · Diverging to Stop (429) = ___/___ **flashing +DV**
+- Slow to Stop (435) = ___/___ **flashing** (= 429's aspect minus the DV plate)
+- Limited to Clear (416) = ___/___ (flashing green on top?)
+- **Hypothesis to confirm:** is the diverging/slow base **red over yellow**? (would make 430 = R/Y +DV,
+  431 Slow to Clear = R/Y no plate, and the "to Stop" versions flash the lower lamp.)
 
 **Encoded in the module so far (6 of 42):** 405 Clear · 407 Clear to Medium · 411 Clear to Stop ·
 415 Advance Clear to Stop · 437 Stop & Proceed · 439 Stop. `ASPECTS_DRAFT` stays **true** until the set is complete.
