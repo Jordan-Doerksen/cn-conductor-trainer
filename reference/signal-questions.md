@@ -35,10 +35,23 @@ Confirmed answers logged here as they arrive, so they don't get lost in the thre
 - **Framing correction (conductor, CTC territory):** the straight-route aspects are **not**
   "speed past the signal." They tell you **how many blocks ahead are clear before an
   occupancy** — how much warning you get. Speed only governs the turnout/diverging family.
-- **Advance Clear to Stop (415):** **flashing yellow on the top head** — your block clear,
-  next block clear, *third* block occupied. *Lower head TBC (single head, or yellow-over-red?)*
-- **Clear to Stop (411):** your block clear, next block occupied. *Lamp TBC — almost certainly
-  **steady** yellow (the steady-vs-flashing contrast with 415); confirm head count + lower head.*
+- **Clear (405):** green on top — single green, *or* all-green — both read as Clear. *(Jordan, firsthand)*
+- **Clear to Stop (411):** **yellow over red.** Block you're entering clear, the next occupied;
+  prepare to stop at the next signal. *(Jordan, firsthand)* — **ENCODED**
+- **Advance Clear to Stop (415):** **flashing yellow over red.** Your block + next clear, the
+  third occupied; prepare to stop at the second signal. *(Jordan, firsthand)* — **ENCODED**
+  (renderer now flashes a single head via a `'f'` suffix, e.g. `"Yf"` = flashing yellow over steady red).
+- **Grammar:** green on top **+ a non-green lower head = a "Clear to [speed]"**; all-green = plain Clear. *(Jordan, firsthand)*
+
+**Encoded in the module so far (5 of 42):** 405 Clear · 411 Clear to Stop · 415 Advance Clear
+to Stop · 437 Stop & Proceed · 439 Stop. `ASPECTS_DRAFT` stays **true** until the set is complete.
+
+**Still needed (next):**
+- The **exact lower-head colour** for each "Clear to [speed]": Clear to Limited (406) /
+  Medium (407) / Slow (409) / Diverging (408) / Restricting (410) — green over *what*?
+- The **turnout/diverging family** (Limited / Medium / Diverging / Slow *to* ___) — first word is a real speed.
+- **Restricting (436)**, **Diverging (430)**, **Direction Indicator (440)**, **Take/Leave (438)**.
+- Confirm **Clear** on a 2-head mast: single green, or green-over-green?
 
 ---
 
