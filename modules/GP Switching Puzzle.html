@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GP Switching Puzzle — Dig Out the Cut</title>
+<style>
+  :root{--bg:#0e1622;--card:#18293c;--line:#2b3f56;--ink:#e8eef6;--muted:#93a6bd;
+        --yellow:#f5b301;--blue:#4aa3ff;--green:#33c27f;--red:#ef5a5a;--orange:#ff8a3d;--grey:#7e93ad;}
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0c1320,#0e1622 40%);color:var(--ink);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:18px}
+  header{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}
+  .badge{width:38px;height:38px;border-radius:8px;background:var(--yellow);color:#1a1206;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .title{font-size:17px;font-weight:700}.sub{font-size:12.5px;color:var(--muted)}
+  .levels{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .lvl{background:#15263a;border:1px solid var(--line);border-radius:7px;padding:6px 12px;font-size:13px;cursor:pointer}
+  .lvl.on{border-color:var(--yellow);color:var(--yellow)}
+  .order{background:#15263a;border:1px solid var(--line);border-left:3px solid var(--yellow);border-radius:8px;padding:10px 14px;font-size:14px;margin-bottom:12px}
+  .order b{color:var(--yellow)}
+  .yard{background:#0c1622;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:12px}
+  .lane{display:flex;align-items:center;gap:10px;margin:6px 0}
+  .lane .nm{width:90px;font-family:monospace;font-size:13px;color:var(--muted);text-align:right;flex:none}
+  .lane .rail{flex:1;display:flex;align-items:center;gap:5px;border-left:3px solid #3a567a;padding:5px 8px;min-height:36px;background:#0e1a28;border-radius:0 6px 6px 0}
+  .lane.eng .rail{border-left:3px solid var(--orange);background:#16110a}
+  .lane.eng .nm{color:var(--orange)}
+  .throat{font-size:10px;color:#56708a}
+  .car{min-width:30px;height:26px;padding:0 7px;border-radius:5px;background:#22364d;border:1px solid #3a567a;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:13px;font-weight:700}
+  .car.so{background:#3a3410;border-color:var(--yellow);color:var(--yellow)}
+  .loco{font-size:15px}
+  .builder{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
+  .builder label{font-size:12px;color:var(--muted)}
+  select,input{background:#0e1622;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:7px 9px;font:inherit;font-size:13px}
+  input[type=number]{width:56px}
+  button{font:inherit;border:none;border-radius:7px;padding:8px 13px;font-weight:700;cursor:pointer;font-size:13.5px}
+  .add{background:#22364d;color:var(--ink);border:1px solid var(--line)}
+  .run{background:var(--green);color:#06231a}.reset{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .parbtn{background:transparent;color:var(--yellow);border:1px solid var(--yellow)}
+  button:disabled{opacity:.45;cursor:default}
+  .cols{display:flex;gap:12px;flex-wrap:wrap}
+  .plan{flex:1 1 360px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;min-height:48px}
+  .plan h3{margin:0 0 8px;font-size:13px;color:var(--muted)}
+  .step{display:flex;justify-content:space-between;align-items:center;font-family:monospace;font-size:13px;padding:5px 9px;border:1px solid var(--line);border-radius:6px;margin-bottom:5px;background:#15263a}
+  .step.active{border-color:var(--yellow);background:#1c2c1c}
+  .step .x{color:var(--red);cursor:pointer;font-weight:700;padding:0 4px}
+  .ref{flex:1 1 420px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .ref h3{margin:0 0 8px;font-size:13px;color:var(--muted)}
+  .refimg{position:relative;background:#fff;border-radius:8px;overflow:hidden}
+  .refimg img{display:block;width:100%}
+  .refimg svg{position:absolute;top:0;left:0;width:100%;height:100%}
+  .band{opacity:.5}.band.pulse{opacity:.9}
+  .reflegend{font-size:11px;color:var(--muted);margin-top:7px}
+  .log{font-size:12.5px;color:var(--muted);font-family:monospace;margin-top:6px}
+  .fb{border-radius:9px;padding:12px 14px;margin-top:12px;font-size:13.5px;display:none}
+  .fb.show{display:block}.fb.ok{background:#123326;border:1px solid var(--green)}.fb.no{background:#3a1717;border:1px solid var(--red)}
+  .fb .sol{font-family:monospace;font-size:12.5px;margin-top:8px;color:var(--yellow)}
+  .batches{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+  .btab{background:#15263a;border:1px solid var(--line);border-radius:8px;padding:7px 13px;font-size:13px;cursor:pointer;font-weight:600}
+  .btab.on{border-color:var(--yellow);color:var(--yellow);background:#1c2c1c}
+  .btab.mix.on{border-color:var(--green);color:var(--green);background:#102a1f}
+  .picker{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+  .chip2{min-width:30px;height:30px;padding:0 8px;display:flex;align-items:center;justify-content:center;background:#15263a;border:1px solid var(--line);border-radius:7px;font-size:13px;font-family:monospace;cursor:pointer}
+  .chip2.on{border-color:var(--blue);color:var(--blue)}
+  .chip2:hover{border-color:var(--yellow)}
+  .deal{background:var(--green);color:#06231a}
+  .mixnote{font-size:12px;color:var(--muted);margin-left:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="../index.html" style="display:inline-block;color:#9fb2c9;text-decoration:none;font-size:13px;margin:0 0 10px">&larr; All modules</a>
+  <header><div class="badge">CN</div><div>
+    <div class="title">Switching Puzzle — Dig Out the Cut</div>
+    <div class="sub">Plan your moves, then run · the engine holds your cut · fewer trips = fewer moves</div>
+  </div></header>
+  <div class="batches" id="batches"></div>
+  <div class="picker" id="picker"></div>
+  <div class="order" id="order"></div>
+  <div class="yard" id="yard"></div>
+  <div class="builder">
+    <label><select id="act"><option value="pull">PULL</option><option value="spot">SPOT</option></select></label>
+    <label><input type="number" id="cnt" min="1" value="1"></label>
+    <label id="prepos">from</label>
+    <label><select id="trk"></select></label>
+    <button class="add" id="addBtn">Add move</button>
+    <div style="margin-left:auto;display:flex;gap:8px">
+      <button class="run" id="runBtn">Run plan</button>
+      <button class="reset" id="resetBtn">Reset</button>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="plan"><h3>Your plan</h3><div id="steps"></div><div class="log" id="log"></div></div>
+    <div class="ref"><h3>Where the tracks are (your yard)</h3>
+      <div class="refimg"><img src="../assets/GP%20Yard%20(tracks).png" alt="tracks"><svg id="refsvg" viewBox="0 0 1170 220" preserveAspectRatio="none"></svg></div>
+      <div class="reflegend">Gold = set-out track · blue = inbound · grey = scratch · orange dots = switches. Engine works the throat (left) end.</div>
+    </div>
+  </div>
+  <div class="fb" id="fb"></div>
+  <button class="parbtn" id="parBtn" style="margin-top:10px;display:none">Show a tight (par) solution</button>
+  <div class="fb" id="parsol"></div>
+</div>
+<script>
+var TXY={AS65:[340,492,1006],AS66:[997,520,191],AS67:[815,539,358],AS72:[484,542,188],AS68:[807,559,255],AS73:[471,560,218],AS69:[790,576,264],AS74:[457,578,244],AS70:[783,595,168],AS75:[447,596,262],AS71:[602,613,352],AS76:[188,614,368],AS77:[466,636,543],AS78:[484,656,505]};
+var SW=[[878.9,191],[822.9,279],[792.9,344],[419.9,408],[502.9,424],[814,453],[916,461],[453.9,480],[851,480],[360.9,484],[1220.3,515],[745,569],[870,520],[1186.3,538],[452.9,550],[1061.2,594],[405.9,588],[451.9,631],[397.9,636],[219.9,645],[471.9,664]];
+var OX=130, OY=470; // crop offset
+var PUZZLES=[{"title":"#1 — Warm-up","order":"Set out B to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["B"],"par":3,"parsol":[["pull","AS71",2],["spot","AS73",1],["spot","AS72",1]]},{"title":"#2 — Level 2","order":"Set out C to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["C"],"par":3,"parsol":[["pull","AS71",3],["spot","AS73",1],["spot","AS72",2]]},{"title":"#3 — One deep","order":"Set out D to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["D"],"par":3,"parsol":[["pull","AS71",4],["spot","AS73",1],["spot","AS72",3]]},{"title":"#4 — Two to pull","order":"Set out B and D to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["B","D"],"par":5,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS72",2]]},{"title":"#5 — Six-car cut","order":"Set out C and E to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E","F"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["C","E"],"par":5,"parsol":[["pull","AS71",3],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS72",3]]},{"title":"#6 — Front and back","order":"Set out C and F to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E","F","G"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["C","F"],"par":5,"parsol":[["pull","AS71",3],["spot","AS73",1],["pull","AS71",3],["spot","AS73",1],["spot","AS72",4]]},{"title":"#7 — Two scratch tracks","order":"Set out B, E and F to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E","F","G"],"AS72":[],"AS74":[],"AS73":[]},"goal":"AS73","setouts":["B","E","F"],"par":5,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",4],["spot","AS73",2],["spot","AS72",3]]},{"title":"#8 — Three set-outs","order":"Set out B, D and F to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E","F"],"AS72":[],"AS74":[],"AS73":[]},"goal":"AS73","setouts":["B","D","F"],"par":7,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS72",3]]},{"title":"#9 — Long cut","order":"Set out B, D and G to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E","F","G","H"],"AS72":[],"AS74":[],"AS73":[]},"goal":"AS73","setouts":["B","D","G"],"par":7,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["pull","AS71",3],["spot","AS73",1],["spot","AS72",4]]},{"title":"C1 — Tight scratch","order":"Set out B and D to AS73, engine clear. (AS72 only holds 2)","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":2,"AS73":9},"goal":"AS73","setouts":["B","D"],"par":5,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS72",2]]},{"title":"C2 — Split the dump","order":"Set out C and E to AS73, engine clear. (each scratch holds 2)","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E","F"],"AS72":[],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":2,"AS74":2,"AS73":9},"goal":"AS73","setouts":["C","E"],"par":5,"parsol":[["pull","AS71",4],["spot","AS72",1],["pull","AS71",1],["spot","AS73",2],["spot","AS74",2]]},{"title":"C3 — Occupied scratch","order":"Set out C to AS73, engine clear. (AS72 holds 3, already has X)","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D"],"AS72":["X"],"AS73":[]},"cap":{"AS71":99,"AS72":3,"AS73":9},"goal":"AS73","setouts":["C"],"par":3,"parsol":[["pull","AS71",3],["spot","AS73",1],["spot","AS72",2]]},{"title":"C4 — Crowded yard","order":"Set out B and E to AS73, engine clear. (AS72(3, has X), AS74(2))","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":["X"],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":3,"AS74":2,"AS73":9},"goal":"AS73","setouts":["B","E"],"par":5,"parsol":[["pull","AS71",4],["spot","AS72",2],["pull","AS71",1],["spot","AS73",2],["spot","AS74",1]]},{"title":"C5 — Everything tight","order":"Set out B, D and F to AS73, engine clear. (AS72(2, has X), AS74(3))","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E","F"],"AS72":["X"],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":2,"AS74":3,"AS73":9},"goal":"AS73","setouts":["B","D","F"],"par":7,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS74",3]]},{"type":"outbound","title":"O1 — Reorder three","order":"Build the outbound on AS73 to read A-B-C (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["B","A","C"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","target":["A","B","C"],"setouts":[],"par":6,"parsol":[["pull","AS71",1],["spot","AS72",1],["pull","AS71",1],["pull","AS72",1],["pull","AS71",1],["spot","AS73",3]]},{"type":"outbound","title":"O2 — Reorder four","order":"Build the outbound on AS73 to read A-B-C-D (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["C","A","D","B"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","target":["A","B","C","D"],"setouts":[],"par":6,"parsol":[["pull","AS71",3],["spot","AS73",1],["spot","AS71",1],["spot","AS73",1],["pull","AS71",2],["spot","AS73",2]]},{"type":"outbound","title":"O3 — Two tracks in","order":"Build the outbound on AS73 to read A-B-C-D (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","C"],"AS72":["D","B"],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS74":99,"AS73":99},"goal":"AS73","target":["A","B","C","D"],"setouts":[],"par":5,"parsol":[["pull","AS71",2],["pull","AS72",1],["spot","AS73",2],["pull","AS72",1],["spot","AS73",2]]},{"type":"outbound","title":"O4 — Five-car build","order":"Build the outbound on AS73 to read A-B-C-D-E (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["C","E","A","D","B"],"AS72":[],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS74":99,"AS73":99},"goal":"AS73","target":["A","B","C","D","E"],"setouts":[],"par":8,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS71",1],["spot","AS73",1],["pull","AS71",2],["spot","AS73",2]]},{"type":"outbound","title":"O5 — Scattered cut","order":"Build the outbound on AS73 to read A-B-C-D-E (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["B","D"],"AS72":["A","C","E"],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS74":99,"AS73":99},"goal":"AS73","target":["A","B","C","D","E"],"setouts":[],"par":6,"parsol":[["pull","AS72",1],["pull","AS71",1],["pull","AS72",1],["pull","AS71",1],["pull","AS72",1],["spot","AS73",5]]},{"type":"outbound","title":"O6 — Fully reversed","order":"Build the outbound on AS73 to read A-B-C-D (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["D","C","B","A"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","target":["A","B","C","D"],"setouts":[],"par":8,"parsol":[["pull","AS71",1],["spot","AS73",1],["pull","AS71",1],["spot","AS73",1],["pull","AS71",1],["spot","AS73",1],["pull","AS71",1],["spot","AS73",1]]},{"type":"digout","tidy":true,"title":"T1 — Lift & re-make","order":"Set out B to AS73, re-make the rest on AS71, and leave scratch + lead clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","setouts":["B"],"par":3,"parsol":[["pull","AS71",2],["spot","AS73",1],["spot","AS71",1]]},{"type":"digout","tidy":true,"title":"T2 — Re-make four","order":"Set out C to AS73, re-make the rest on AS71, and leave scratch + lead clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","setouts":["C"],"par":3,"parsol":[["pull","AS71",3],["spot","AS73",1],["spot","AS71",2]]},{"type":"digout","tidy":true,"title":"T3 — Two out, re-make","order":"Set out B and D to AS73, re-make the rest on AS71, and leave scratch + lead clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","setouts":["B","D"],"par":5,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS71",2]]},{"type":"digout","tidy":true,"title":"T4 — Five-car re-make","order":"Set out C to AS73, re-make the rest on AS71, and leave scratch + lead clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","setouts":["C"],"par":3,"parsol":[["pull","AS71",3],["spot","AS73",1],["spot","AS71",2]]},{"type":"digout","tidy":true,"title":"T5 — Two scratch, clean","order":"Set out B and D to AS73, re-make the rest on AS71, and leave scratch + lead clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":[],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS74":99,"AS73":99},"goal":"AS73","setouts":["B","D"],"par":5,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS71",2]]}];
+var pi=0, plan=[], state=null, running=false;
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function pull(s,T,n){var t=s.tracks[T];if(t===undefined)return'unknown';if(n<1)return'pull >=1';if(n>t.length)return'only '+t.length+' on '+T;s.engine=s.engine.concat(t.slice(0,n));s.tracks[T]=t.slice(n);return null;}
+function spot(s,T,n){var t=s.tracks[T];if(t===undefined)return'unknown';if(n<1)return'spot >=1';if(n>s.engine.length)return'only '+s.engine.length+' on engine';var cap=P().cap;if(cap&&cap[T]!==undefined&&t.length+n>cap[T])return T+' is full (holds '+cap[T]+')';var b=s.engine.slice(s.engine.length-n);s.engine=s.engine.slice(0,s.engine.length-n);s.tracks[T]=b.concat(t);return null;}
+function setEq(a,x){return a.length===x.length&&x.every(function(c){return a.indexOf(c)>=0;});}
+function eqArr(a,b){return a.length===b.length&&a.every(function(x,i){return x===b[i];});}
+var P=function(){return PUZZLES[pi];};
+function freshState(){return {tracks:clone(P().start), engine:[]};}
+function role(tr){ if(tr===P().goal)return'gold'; if(tr===P().inbound)return'blue'; return'grey'; }
+var COL={gold:'var(--yellow)',blue:'var(--blue)',grey:'var(--grey)'};
+function loadPuzzle(i){
+  pi=i; plan=[]; running=false; state=freshState();
+  document.getElementById('order').innerHTML='<b>'+P().title+'</b> — '+P().order+' <span style="color:var(--muted)">Par '+P().par+'.</span>';
+  document.getElementById('trk').innerHTML=P().tracks.map(function(t){return '<option>'+t+'</option>';}).join('');
+  document.getElementById('fb').className='fb'; document.getElementById('log').textContent='';
+  document.getElementById('parBtn').style.display='none'; var psl=document.getElementById('parsol'); if(psl)psl.className='fb';
+  renderNav(); renderYard(); renderPlan(); renderRef();
+}
+var GROUPS=[{k:'dig',n:'Dig-outs',c:'#'},{k:'cap',n:'Tight room',c:'C'},{k:'out',n:'Build outbound',c:'O'},{k:'tidy',n:'Leave it clean',c:'T'}];
+var curBatch='dig';
+function gcOf(k){for(var i=0;i<GROUPS.length;i++){if(GROUPS[i].k===k)return GROUPS[i].c;}return '#';}
+function idxInGroup(k){var c=gcOf(k),r=[];PUZZLES.forEach(function(p,i){if(p.title.charAt(0)===c)r.push(i);});return r;}
+function renderNav(){
+  var bh=GROUPS.map(function(g){return '<div class="btab'+(curBatch===g.k?' on':'')+'" onclick="selBatch(\''+g.k+'\')">'+g.n+'</div>';}).join('');
+  bh+='<div class="btab mix'+(curBatch==='mixed'?' on':'')+'" onclick="selBatch(\'mixed\')">Mixed</div>';
+  document.getElementById('batches').innerHTML=bh;
+  var pk=document.getElementById('picker');
+  if(curBatch==='mixed'){ pk.innerHTML='<button class="deal" id="dealBtn">Deal a random puzzle</button><span class="mixnote">Any type \u2014 read the work order, then figure the moves.</span>'; var db=document.getElementById('dealBtn'); if(db)db.addEventListener('click',dealRandom); }
+  else { var idxs=idxInGroup(curBatch); pk.innerHTML=idxs.map(function(i,j){return '<div class="chip2'+(i===pi?' on':'')+'" onclick="loadPuzzle('+i+')">'+(j+1)+'</div>';}).join(''); }
+}
+function selBatch(k){ if(k==='mixed'){ dealRandom(); } else { curBatch=k; loadPuzzle(idxInGroup(k)[0]); } }
+function dealRandom(){ curBatch='mixed'; loadPuzzle(Math.floor(Math.random()*PUZZLES.length)); }
+function renderYard(){
+  var h='<div class="lane eng"><div class="nm">ENGINE</div><div class="rail"><span class="loco">🚂</span>'+
+    state.engine.map(function(c){return '<div class="car'+(P().setouts.indexOf(c)>=0?' so':'')+'">'+c+'</div>';}).join('')+
+    '</div></div>';
+  P().tracks.forEach(function(tr){
+    var cars=state.tracks[tr].map(function(c){return '<div class="car'+(P().setouts.indexOf(c)>=0?' so':'')+'">'+c+'</div>';}).join('');
+    var cp=(tr!==P().inbound&&tr!==P().goal&&P().cap&&P().cap[tr]!==undefined&&P().cap[tr]<90)?(' '+state.tracks[tr].length+'/'+P().cap[tr]):'';
+    var gt=(P().type==='outbound')?'(build)':'(set-out)';var tag=(tr===P().goal)?(' <span class="throat">'+gt+'</span>'):(tr===P().inbound?' <span class="throat">(inbound)</span>':' <span class="throat">(scratch)</span>');
+    h+='<div class="lane"><div class="nm">'+tr+cp+tag+'</div><div class="rail"><span class="throat">⟵</span>'+cars+'</div></div>';
+  });
+  document.getElementById('yard').innerHTML=h;
+}
+function renderRef(){
+  var h='';
+  P().tracks.forEach(function(tr){
+    var c=TXY[tr]; if(!c)return; var x=c[0]-OX, y=c[1]-OY, w=c[2];
+    h+='<rect id="ref-'+tr+'" class="band" x="'+x+'" y="'+(y-8)+'" width="'+w+'" height="16" rx="3" fill="'+COL[role(tr)]+'"/>';
+    h+='<text x="'+(x+w+6)+'" y="'+(y+4)+'" fill="'+COL[role(tr)]+'" font-size="13" font-family="monospace" font-weight="700">'+tr+'</text>';
+  });
+  SW.forEach(function(p){var x=p[0]-OX,y=p[1]-OY; if(x>=0&&x<=1170&&y>=0&&y<=220) h+='<circle cx="'+x+'" cy="'+y+'" r="5" fill="var(--orange)" stroke="#0e1622"/>';});
+  document.getElementById('refsvg').innerHTML=h;
+}
+function pulseRef(tr){var el=document.getElementById('ref-'+tr); if(el){el.setAttribute('class','band pulse'); setTimeout(function(){el.setAttribute('class','band');},450);}}
+function renderPlan(){
+  document.getElementById('steps').innerHTML=plan.map(function(m,i){
+    var verb=m.act==='pull'?('PULL '+m.n+' from '+m.track):('SPOT '+m.n+' to '+m.track);
+    return '<div class="step" id="st'+i+'"><span>'+(i+1)+'. '+verb+'</span><span class="x" onclick="delMove('+i+')">&times;</span></div>';
+  }).join('')||'<div style="color:var(--muted);font-size:13px">No moves yet.</div>';
+}
+function addMove(){ if(running)return; var n=parseInt(document.getElementById('cnt').value,10)||1;
+  plan.push({act:document.getElementById('act').value, track:document.getElementById('trk').value, n:n}); renderPlan(); }
+function delMove(i){ if(running)return; plan.splice(i,1); renderPlan(); }
+document.getElementById('act').addEventListener('change',function(){document.getElementById('prepos').textContent=this.value==='pull'?'from':'to';});
+function runPlan(){
+  if(running||plan.length===0)return; running=true; state=freshState(); renderYard(); document.getElementById('fb').className='fb'; var psr=document.getElementById('parsol'); if(psr)psr.className='fb';
+  var i=0;
+  function step(){
+    if(i>=plan.length){ finish(); running=false; return; }
+    for(var k=0;k<plan.length;k++){var el=document.getElementById('st'+k); if(el)el.className='step'+(k===i?' active':'');}
+    var m=plan[i], err=(m.act==='pull'?pull:spot)(state,m.track,m.n);
+    document.getElementById('log').textContent='Step '+(i+1)+': '+(m.act==='pull'?'pull '+m.n+' from ':'spot '+m.n+' to ')+m.track+(err?'  ✗ '+err:'  ✓');
+    pulseRef(m.track);
+    if(err){ fail('Move '+(i+1)+' won\'t work: '+err+'. Re-plan from there.'); running=false; return; }
+    renderYard(); i++; setTimeout(step,720);
+  }
+  setTimeout(step,300);
+}
+function finish(){
+  var fb=document.getElementById('fb');
+  var scratch=P().tracks.filter(function(t){return t!==P().goal&&t!==P().inbound;}); var tidyOK=scratch.every(function(t){return state.tracks[t].length===0;}); var clear=state.engine.length===0; var setdone=(P().type==='outbound')?eqArr(state.tracks[P().goal],P().target):setEq(state.tracks[P().goal],P().setouts);
+  if(setdone&&clear&&(!P().tidy||tidyOK)){
+    var used=plan.length,par=P().par,extra=used-par;
+    var eff= used<=par?('Tight — '+used+' moves, par '+par+'. That\'s an efficient line.'):(used+' moves (par '+par+') — '+extra+' wasted. There\'s a shorter way.');
+    fb.className='fb show ok'; var w=(P().type==='outbound')?('<b>Outbound built.</b> '+P().goal+' reads '+P().target.join('-')+', engine clear. '):('<b>Cut worked.</b> '+P().setouts.join(', ')+' spotted on '+P().goal+', engine clear. '); fb.innerHTML=w+eff+(P().tidy?' Yard left clean.':'');
+    document.getElementById('parBtn').style.display='inline-block';
+  }else if(setdone&&clear&&P().tidy&&!tidyOK){
+    fail('Set-outs placed and the lead is clear — but you left cars fouling the yard: '+scratch.filter(function(t){return state.tracks[t].length;}).map(function(t){return t+' ['+state.tracks[t].join(',')+']';}).join(', ')+'. Re-make the rest on '+P().inbound+' and clear the scratch tracks.');
+  }else if(setdone&&!clear){
+    fail('Set-outs are right, but you left cars on the engine: ['+state.engine.join(', ')+']. Spot them and clear the power.');
+  }else{
+    fail('Not there yet — '+P().goal+' holds ['+state.tracks[P().goal].join(', ')+'], you need '+((P().type==='outbound')?('the order '+P().target.join('-')):('exactly '+P().setouts.join(', ')))+'. Reset and re-plan.');
+  }
+}
+function fail(m){var fb=document.getElementById('fb');fb.className='fb show no';fb.innerHTML=m;document.getElementById('parBtn').style.display='inline-block';}
+document.getElementById('parBtn').addEventListener('click',function(){
+  var s=P().parsol.map(function(m,i){return (i+1)+'. '+(m[0]==='pull'?'PULL '+m[2]+' from '+m[1]:'SPOT '+m[2]+' to '+m[1]);}).join('<br>');
+  var ps=document.getElementById('parsol'); ps.className='fb show ok'; ps.innerHTML='<b>One tight line ('+P().par+' moves):</b><div class="sol">'+s+'</div>';
+});
+document.getElementById('addBtn').addEventListener('click',addMove);
+document.getElementById('runBtn').addEventListener('click',runPlan);
+document.getElementById('resetBtn').addEventListener('click',function(){loadPuzzle(pi);});
+loadPuzzle(0);
+</script>
+</body>
+</html>

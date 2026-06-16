@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CN Conductor Trainer — Grande Prairie</title>
+<style>
+  :root{--bg:#0e1622;--card:#18293c;--card2:#1b2c40;--line:#2b3f56;--ink:#e8eef6;--muted:#93a6bd;
+        --yellow:#f5b301;--blue:#4aa3ff;--green:#33c27f;--orange:#ff8a3d;}
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0c1320,#0e1622 45%);color:var(--ink);min-height:100vh;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:920px;margin:0 auto;padding:34px 20px 70px}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .badge{width:46px;height:46px;border-radius:10px;background:var(--yellow);color:#1a1206;font-weight:800;
+         display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 3px 14px rgba(245,179,1,.28)}
+  h1{font-size:24px;margin:0;font-weight:800;letter-spacing:.3px}
+  .sub{font-size:13px;color:var(--muted);margin-top:2px}
+  .lead{color:var(--muted);font-size:14.5px;margin:18px 0 22px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  .card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);
+        border-radius:14px;padding:18px;transition:.13s;box-shadow:0 6px 22px rgba(0,0,0,.22)}
+  a.card:hover{transform:translateY(-2px);border-color:var(--yellow)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+       padding:2px 9px;border-radius:20px;margin-bottom:10px}
+  .t-drill{background:#3a3410;color:var(--yellow)} .t-sim{background:#102a1f;color:var(--green)}
+  .t-ref{background:#0f2740;color:var(--blue)} .t-soon{background:#241a10;color:var(--orange)}
+  .card h2{font-size:17px;margin:0 0 6px}
+  .card p{font-size:13.5px;color:var(--muted);margin:0 0 12px;min-height:38px}
+  .go{font-size:13px;font-weight:700;color:var(--yellow)}
+  .soon{opacity:.62;cursor:default}
+  .soon .go{color:var(--orange)}
+  .foot{margin-top:28px;border-top:1px solid var(--line);padding-top:14px;font-size:11.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="badge">CN</div>
+    <div>
+      <h1>Conductor Trainer</h1>
+      <div class="sub">Grande Prairie Yard &middot; built on the January 2025 CROR &amp; your Sept 2020 yard diagram</div>
+    </div>
+  </header>
+  <p class="lead">Pick a module. Each one drills a different piece of the job — and it's all a safe place to make mistakes until the right move is automatic.</p>
+
+  <div class="grid">
+    <a class="card" href="modules/Yard%20Conductor%20Trainer.html">
+      <span class="tag t-drill">Drills</span>
+      <h2>Rule Drills</h2>
+      <p>CROR question reps across switching, switches &amp; derails, securement, signals and radio.</p>
+      <div class="go">Open &rarr;</div>
+    </a>
+    <a class="card" href="modules/GP%20Switching%20Puzzle.html">
+      <span class="tag t-sim">Sim</span>
+      <h2>Switching Puzzle</h2>
+      <p>Plan and work cuts on your real yard: dig-outs, tight room, build outbounds, leave it clean — plus a random mixed mode.</p>
+      <div class="go">Open &rarr;</div>
+    </a>
+    <a class="card" href="modules/GP%20Yard%20Board.html">
+      <span class="tag t-ref">Reference</span>
+      <h2>Yard Board</h2>
+      <p>Your Grande Prairie map, interactive — every track and switch where it actually sits.</p>
+      <div class="go">Open &rarr;</div>
+    </a>
+    <a class="card" href="modules/GP%20Radio%20Steps.html">
+      <span class="tag t-soon">New</span>
+      <h2>Radio &amp; Steps</h2>
+      <p>The radio calls and step-by-step communication for a move — positive ID, distance countdown, point protection.</p>
+      <div class="go">Open &rarr;</div>
+    </a>
+    <a class="card" href="modules/GP%20Switching%20Drill.html">
+      <span class="tag t-drill">Drill</span>
+      <h2>Classify the Cut</h2>
+      <p>Quick scenarios on your GP kick rules — kick or shove, where it can go, and securing it right.</p>
+      <div class="go">Open &rarr;</div>
+    </a>
+  </div>
+
+  <div class="foot">Training aid only — the official CROR and CN special instructions govern. Modules are separate pages linked from here; new ones drop in as cards.</div>
+</div>
+</body>
+</html>

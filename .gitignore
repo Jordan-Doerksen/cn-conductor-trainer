@@ -1,0 +1,5 @@
+.DS_Store
+Thumbs.db
+*.tmp
+# do not republish the official rulebook PDF
+reference/*.pdf
