@@ -50,9 +50,14 @@ A **DV plate** + **flashing** are the discriminators on the diverging / slow / r
 > - no plate, **flashing → Slow to Stop (435)**
 > - no plate, **steady, just yellow → Restricting (436)**
 >
-> Still need the actual lamps to draw these: on the two DV ones, single **red** head or red-over-something,
-> and which lamp flashes? Slow to Stop — flashing *what* (single yellow, or yellow over red)? Restricting —
-> single steady yellow, and does it carry an **R** plate or just the yellow? 2-head or 3-head mast?
+> **Flashing (SME-confirmed):** Advance Clear to Stop (415, encoded) · the **Limited** family ·
+> Diverging to Stop (429) · Slow to Stop (435). Slow to Stop flashes *without* a DV plate;
+> Diverging to Stop flashes *with* one — the plate is the only difference between those two.
+>
+> Still need the actual lamp colours (top→bottom) to draw these — same format as 411/415:
+> Diverging (430) = ___/___ +DV · Diverging to Stop (429) = ___/___ flashing +DV ·
+> Slow to Stop (435) = ___/___ flashing · Restricting (436) = ___ (single yellow? R plate?) ·
+> Limited to Clear (416) = ___/___ (flashing green?). 2-head or 3-head mast?
 
 **Encoded in the module so far (5 of 42):** 405 Clear · 411 Clear to Stop · 415 Advance Clear
 to Stop · 437 Stop & Proceed · 439 Stop. `ASPECTS_DRAFT` stays **true** until the set is complete.
