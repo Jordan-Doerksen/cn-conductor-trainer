@@ -19,13 +19,18 @@
   .lvl.on{border-color:var(--yellow);color:var(--yellow)}
   .order{background:#15263a;border:1px solid var(--line);border-left:3px solid var(--yellow);border-radius:8px;padding:10px 14px;font-size:14px;margin-bottom:12px}
   .order b{color:var(--yellow)}
+  .endb{font-size:10px;font-weight:800;letter-spacing:.5px;border-radius:6px;padding:2px 7px;margin-right:7px;text-transform:uppercase;white-space:nowrap}
+  .endb.north{background:#102a1f;color:var(--green);border:1px solid #2f5e44}
+  .endb.south{background:#241a10;color:var(--orange);border:1px solid #5a3f1e}
+  .order .sou{color:var(--orange);font-size:12.5px;display:block;margin-top:5px}
   .yard{background:#0c1622;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:12px}
   .lane{display:flex;align-items:center;gap:10px;margin:6px 0}
-  .lane .nm{width:90px;font-family:monospace;font-size:13px;color:var(--muted);text-align:right;flex:none}
+  .lane .nm{width:118px;font-family:monospace;font-size:13px;color:var(--muted);text-align:right;flex:none}
   .lane .rail{flex:1;display:flex;align-items:center;gap:5px;border-left:3px solid #3a567a;padding:5px 8px;min-height:36px;background:#0e1a28;border-radius:0 6px 6px 0}
   .lane.eng .rail{border-left:3px solid var(--orange);background:#16110a}
   .lane.eng .nm{color:var(--orange)}
   .throat{font-size:10px;color:#56708a}
+  .kk{font-size:9.5px;color:var(--green);border:1px solid #2f5e44;border-radius:9px;padding:0 5px;margin-left:4px}
   .car{min-width:30px;height:26px;padding:0 7px;border-radius:5px;background:#22364d;border:1px solid #3a567a;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:13px;font-weight:700}
   .car.so{background:#3a3410;border-color:var(--yellow);color:var(--yellow)}
   .loco{font-size:15px}
@@ -44,7 +49,7 @@
   .step{display:flex;justify-content:space-between;align-items:center;font-family:monospace;font-size:13px;padding:5px 9px;border:1px solid var(--line);border-radius:6px;margin-bottom:5px;background:#15263a}
   .step.active{border-color:var(--yellow);background:#1c2c1c}
   .step .x{color:var(--red);cursor:pointer;font-weight:700;padding:0 4px}
-  .ref{flex:1 1 420px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .ref{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:12px}
   .ref h3{margin:0 0 8px;font-size:13px;color:var(--muted)}
   .refimg{position:relative;background:#fff;border-radius:8px;overflow:hidden}
   .refimg img{display:block;width:100%}
@@ -52,9 +57,13 @@
   .band{opacity:.5}.band.pulse{opacity:.9}
   .reflegend{font-size:11px;color:var(--muted);margin-top:7px}
   .log{font-size:12.5px;color:var(--muted);font-family:monospace;margin-top:6px}
+  .log .nar{color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:13px}
+  .log .sys{color:var(--muted)}
   .fb{border-radius:9px;padding:12px 14px;margin-top:12px;font-size:13.5px;display:none}
   .fb.show{display:block}.fb.ok{background:#123326;border:1px solid var(--green)}.fb.no{background:#3a1717;border:1px solid var(--red)}
   .fb .sol{font-family:monospace;font-size:12.5px;margin-top:8px;color:var(--yellow)}
+  .fb .joints{margin-top:8px;border-top:1px solid rgba(255,255,255,.12);padding-top:8px;font-size:13px}
+  .wtbtn{background:transparent;color:var(--green);border:1px solid var(--green);padding:4px 10px;font-size:12.5px;margin-left:6px}
   .batches{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
   .btab{background:#15263a;border:1px solid var(--line);border-radius:8px;padding:7px 13px;font-size:13px;cursor:pointer;font-weight:600}
   .btab.on{border-color:var(--yellow);color:var(--yellow);background:#1c2c1c}
@@ -65,6 +74,21 @@
   .chip2:hover{border-color:var(--yellow)}
   .deal{background:var(--green);color:#06231a}
   .mixnote{font-size:12px;color:var(--muted);margin-left:4px}
+  .helpbtn{margin-left:auto;background:transparent;color:var(--blue);border:1px solid var(--blue);align-self:flex-start}
+  .modal{position:fixed;inset:0;background:rgba(6,11,18,.84);display:none;align-items:flex-start;justify-content:center;z-index:50;padding:22px;overflow:auto}
+  .modal.show{display:flex}
+  .sheet{background:var(--card);border:1px solid var(--line);border-radius:14px;max-width:620px;width:100%;padding:20px 24px;margin:auto}
+  .sheet h2{margin:0 0 4px;font-size:19px}
+  .sheet .lead{color:var(--muted);font-size:13.5px;margin:0 0 14px}
+  .sheet h4{margin:15px 0 6px;font-size:13px;color:var(--yellow);text-transform:uppercase;letter-spacing:.04em}
+  .sheet p{margin:6px 0;font-size:13.5px}
+  .sheet .mv{display:flex;gap:10px;align-items:baseline;margin:7px 0;font-size:13.5px}
+  .sheet .mv b{font-family:monospace;color:var(--blue);flex:none;width:54px}
+  .sheet .mv b.k{color:var(--green)}
+  .sheet ol{margin:6px 0;padding-left:20px;font-size:13.5px}
+  .sheet ol li{margin:4px 0}
+  .sheet .ex{background:#0e1a28;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;font-family:monospace;color:#c9d6e6;line-height:1.7}
+  .sheet .closeRow{display:flex;justify-content:flex-end;margin-top:18px}
 </style>
 </head>
 <body>
@@ -72,14 +96,14 @@
   <a href="../index.html" style="display:inline-block;color:#9fb2c9;text-decoration:none;font-size:13px;margin:0 0 10px">&larr; All modules</a>
   <header><div class="badge">CN</div><div>
     <div class="title">Switching Puzzle — Dig Out the Cut</div>
-    <div class="sub">Plan your moves, then run · the engine holds your cut · fewer trips = fewer moves</div>
-  </div></header>
+    <div class="sub">Plan your moves, then run · tie on, pull, kick, shove · fewest trips <i>and</i> fewest joints</div>
+  </div><button class="helpbtn" id="helpBtn">How to play</button></header>
   <div class="batches" id="batches"></div>
   <div class="picker" id="picker"></div>
   <div class="order" id="order"></div>
   <div class="yard" id="yard"></div>
   <div class="builder">
-    <label><select id="act"><option value="pull">PULL</option><option value="spot">SPOT</option></select></label>
+    <label><select id="act"><option value="pull">PULL</option><option value="spot">SPOT</option><option value="kick">KICK</option></select></label>
     <label><input type="number" id="cnt" min="1" value="1"></label>
     <label id="prepos">from</label>
     <label><select id="trk"></select></label>
@@ -91,33 +115,89 @@
   </div>
   <div class="cols">
     <div class="plan"><h3>Your plan</h3><div id="steps"></div><div class="log" id="log"></div></div>
-    <div class="ref"><h3>Where the tracks are (your yard)</h3>
-      <div class="refimg"><img src="../assets/GP%20Yard%20(tracks).png" alt="tracks"><svg id="refsvg" viewBox="0 0 1170 220" preserveAspectRatio="none"></svg></div>
-      <div class="reflegend">Gold = set-out track · blue = inbound · grey = scratch · orange dots = switches. Engine works the throat (left) end.</div>
-    </div>
   </div>
   <div class="fb" id="fb"></div>
   <button class="parbtn" id="parBtn" style="margin-top:10px;display:none">Show a tight (par) solution</button>
   <div class="fb" id="parsol"></div>
+  <div class="ref"><h3>Where the tracks are — your Grande Prairie yard</h3>
+    <div class="refimg"><img src="../assets/GP%20Yard%20(tracks).png" alt="Grande Prairie yard tracks"><svg id="refsvg" viewBox="0 0 1170 220" preserveAspectRatio="none"></svg></div>
+    <div class="reflegend">Gold = set-out track · blue = inbound · grey = scratch · orange dots = switches. Engine works the throat (left) end. <span style="color:var(--green)">⚡kick</span> = a track you can kick into on the end you're working.</div>
+  </div>
+</div>
+<div class="modal" id="help">
+ <div class="sheet">
+  <h2>How to play</h2>
+  <p class="lead">You're the conductor on the ground. The engine 🚂 works the <b>throat</b> — the left (⟵) end of every track. Get the right cars onto the <span style="color:var(--yellow)">gold</span> track and leave the engine empty, in as few trips — and as few couplings — as you can.</p>
+
+  <h4>1 · Read the work order</h4>
+  <p>The yellow bar up top is your switch list. It says which cars to set out (or, on a build, the exact order to make) and on which track. <b>Par</b> is the move count a tight line — no wasted trips — would take.</p>
+
+  <h4>2 · Your moves</h4>
+  <div class="mv"><b>PULL n</b><span>Tie on and pull the <b>n</b> cars nearest the throat out onto the lead. They ride on the engine. <i>Tying on is a joint.</i></span></div>
+  <div class="mv"><b>SPOT n</b><span>Shove the <b>n</b> cars at the engine's working end into a track and cut them off. Shoving onto cars already in the track couples to them — <i>that's a joint</i>.</span></div>
+  <div class="mv"><b class="k">KICK n</b><span>Shove the <b>n</b> cars at the working end and cut them off <b>rolling</b>, so they coast in on their own — <b>no joint</b>. Which tracks take a kick depends on the end you're working (below); they're marked <span style="color:var(--green)">⚡kick</span>.</span></div>
+  <p style="color:var(--muted)">Think of the engine as a stack: the <b>last</b> cars you PULL sit at the working end, so they're the <b>first</b> you can SPOT or KICK. The order you lift cars in is the whole game.</p>
+
+  <h4>Which end you're building</h4>
+  <p>The work order tags each job <span style="color:var(--green)">NORTH end</span> or <span style="color:var(--orange)">SOUTH end</span> — it changes where you can kick. <b>North end</b> (most builds, when you can): kick into the grade tracks marked <span style="color:var(--green)">⚡kick</span>. <b>South end:</b> you can only kick into <b>AS71</b>, and the GP special instruction is a <b>minimum of 2 hand brakes on</b> to do it.</p>
+
+  <h4>Two scores — moves &amp; joints</h4>
+  <p><b>Moves</b> are trips; <b>par</b> is the tightest trip count. <b>Joints</b> are couplings — every tie-on, and every shove onto standing cars. <b>Kicking makes zero joints</b>, so the fewest-joints line is usually: <i>tie on once, then kick the spares back and the set-outs across.</i> The two scores don't always agree — that's the real tradeoff a conductor makes, and it's why the experienced move on a deep cut is to kick instead of making joint after joint.</p>
+
+  <h4>3 · Build a plan, then run it</h4>
+  <ol>
+   <li>Pick <b>PULL</b>, <b>SPOT</b> or <b>KICK</b>, set the count, choose the track, hit <b>Add move</b>.</li>
+   <li>Stack up the full plan — it lists under <i>Your plan</i>.</li>
+   <li>Hit <b>Run plan</b> to watch it work down the yard. <b>Reset</b> starts over.</li>
+   <li>Stuck? <b>Show a tight (par) solution</b> reveals one clean line, and after a win you can <b>watch the low-joint kick line</b>.</li>
+  </ol>
+
+  <h4>Worked example — puzzle #1</h4>
+  <p>Order: <i>set out B to AS73.</i> AS71 holds <b>A‑B‑C</b> (A nearest the throat).</p>
+  <div class="ex">1. PULL 2 from AS71 &nbsp;→ engine holds A‑B, C left behind &nbsp;<span style="color:var(--orange)">(+1 joint)</span><br>2. KICK 1 to AS73 &nbsp;→ B coasts onto the gold track ✓ &nbsp;<span style="color:var(--green)">(no joint)</span><br>3. KICK 1 to AS72 &nbsp;→ A coasts clear, engine empty &nbsp;<span style="color:var(--green)">(no joint)</span></div>
+  <p style="color:var(--muted)">Three moves, par 3 — and just <b>one joint</b>. You tied on once and let the rest roll.</p>
+
+  <div class="closeRow"><button class="run" id="helpClose">Got it — let's switch</button></div>
+ </div>
 </div>
 <script>
 var TXY={AS65:[340,492,1006],AS66:[997,520,191],AS67:[815,539,358],AS72:[484,542,188],AS68:[807,559,255],AS73:[471,560,218],AS69:[790,576,264],AS74:[457,578,244],AS70:[783,595,168],AS75:[447,596,262],AS71:[602,613,352],AS76:[188,614,368],AS77:[466,636,543],AS78:[484,656,505]};
 var SW=[[878.9,191],[822.9,279],[792.9,344],[419.9,408],[502.9,424],[814,453],[916,461],[453.9,480],[851,480],[360.9,484],[1220.3,515],[745,569],[870,520],[1186.3,538],[452.9,550],[1061.2,594],[405.9,588],[451.9,631],[397.9,636],[219.9,645],[471.9,664]];
 var OX=130, OY=470; // crop offset
+// Which tracks take a kick depends on WHICH END you're working (a puzzle's "end" field; default north).
+//  · NORTH end (most builds, when possible): the grade tracks.
+//  · SOUTH end (per Kourtney, CN GP trainer): ONLY AS71, and the GP special instruction is a minimum of
+//    2 hand brakes applied to kick into it.
+// NORTH-end kicking is CONFIRMED (Jordan, firsthand). The track set below is GP's documented list (CROR 113.4/113.5);
+// the exact track boundaries are the only thing left to spot-check with the CN trainer.
+var KICKABLE_NORTH=['AS71','AS72','AS73','AS74','AS75','AS77','AS78'];
+var KICKABLE_SOUTH=['AS71'];
+function endOf(){return (P().end==='south')?'south':'north';}
+function kickList(){return endOf()==='south'?KICKABLE_SOUTH:KICKABLE_NORTH;}
 var PUZZLES=[{"title":"#1 — Warm-up","order":"Set out B to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["B"],"par":3,"parsol":[["pull","AS71",2],["spot","AS73",1],["spot","AS72",1]]},{"title":"#2 — Level 2","order":"Set out C to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["C"],"par":3,"parsol":[["pull","AS71",3],["spot","AS73",1],["spot","AS72",2]]},{"title":"#3 — One deep","order":"Set out D to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["D"],"par":3,"parsol":[["pull","AS71",4],["spot","AS73",1],["spot","AS72",3]]},{"title":"#4 — Two to pull","order":"Set out B and D to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["B","D"],"par":5,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS72",2]]},{"title":"#5 — Six-car cut","order":"Set out C and E to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E","F"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["C","E"],"par":5,"parsol":[["pull","AS71",3],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS72",3]]},{"title":"#6 — Front and back","order":"Set out C and F to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E","F","G"],"AS72":[],"AS73":[]},"goal":"AS73","setouts":["C","F"],"par":5,"parsol":[["pull","AS71",3],["spot","AS73",1],["pull","AS71",3],["spot","AS73",1],["spot","AS72",4]]},{"title":"#7 — Two scratch tracks","order":"Set out B, E and F to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E","F","G"],"AS72":[],"AS74":[],"AS73":[]},"goal":"AS73","setouts":["B","E","F"],"par":5,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",4],["spot","AS73",2],["spot","AS72",3]]},{"title":"#8 — Three set-outs","order":"Set out B, D and F to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E","F"],"AS72":[],"AS74":[],"AS73":[]},"goal":"AS73","setouts":["B","D","F"],"par":7,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS72",3]]},{"title":"#9 — Long cut","order":"Set out B, D and G to AS73, engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E","F","G","H"],"AS72":[],"AS74":[],"AS73":[]},"goal":"AS73","setouts":["B","D","G"],"par":7,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["pull","AS71",3],["spot","AS73",1],["spot","AS72",4]]},{"title":"C1 — Tight scratch","order":"Set out B and D to AS73, engine clear. (AS72 only holds 2)","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":2,"AS73":9},"goal":"AS73","setouts":["B","D"],"par":5,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS72",2]]},{"title":"C2 — Split the dump","order":"Set out C and E to AS73, engine clear. (each scratch holds 2)","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E","F"],"AS72":[],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":2,"AS74":2,"AS73":9},"goal":"AS73","setouts":["C","E"],"par":5,"parsol":[["pull","AS71",4],["spot","AS72",1],["pull","AS71",1],["spot","AS73",2],["spot","AS74",2]]},{"title":"C3 — Occupied scratch","order":"Set out C to AS73, engine clear. (AS72 holds 3, already has X)","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D"],"AS72":["X"],"AS73":[]},"cap":{"AS71":99,"AS72":3,"AS73":9},"goal":"AS73","setouts":["C"],"par":3,"parsol":[["pull","AS71",3],["spot","AS73",1],["spot","AS72",2]]},{"title":"C4 — Crowded yard","order":"Set out B and E to AS73, engine clear. (AS72(3, has X), AS74(2))","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":["X"],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":3,"AS74":2,"AS73":9},"goal":"AS73","setouts":["B","E"],"par":5,"parsol":[["pull","AS71",4],["spot","AS72",2],["pull","AS71",1],["spot","AS73",2],["spot","AS74",1]]},{"title":"C5 — Everything tight","order":"Set out B, D and F to AS73, engine clear. (AS72(2, has X), AS74(3))","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E","F"],"AS72":["X"],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":2,"AS74":3,"AS73":9},"goal":"AS73","setouts":["B","D","F"],"par":7,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS74",3]]},{"type":"outbound","title":"O1 — Reorder three","order":"Build the outbound on AS73 to read A-B-C (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["B","A","C"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","target":["A","B","C"],"setouts":[],"par":6,"parsol":[["pull","AS71",1],["spot","AS72",1],["pull","AS71",1],["pull","AS72",1],["pull","AS71",1],["spot","AS73",3]]},{"type":"outbound","title":"O2 — Reorder four","order":"Build the outbound on AS73 to read A-B-C-D (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["C","A","D","B"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","target":["A","B","C","D"],"setouts":[],"par":6,"parsol":[["pull","AS71",3],["spot","AS73",1],["spot","AS71",1],["spot","AS73",1],["pull","AS71",2],["spot","AS73",2]]},{"type":"outbound","title":"O3 — Two tracks in","order":"Build the outbound on AS73 to read A-B-C-D (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","C"],"AS72":["D","B"],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS74":99,"AS73":99},"goal":"AS73","target":["A","B","C","D"],"setouts":[],"par":5,"parsol":[["pull","AS71",2],["pull","AS72",1],["spot","AS73",2],["pull","AS72",1],["spot","AS73",2]]},{"type":"outbound","title":"O4 — Five-car build","order":"Build the outbound on AS73 to read A-B-C-D-E (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["C","E","A","D","B"],"AS72":[],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS74":99,"AS73":99},"goal":"AS73","target":["A","B","C","D","E"],"setouts":[],"par":8,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS71",1],["spot","AS73",1],["pull","AS71",2],["spot","AS73",2]]},{"type":"outbound","title":"O5 — Scattered cut","order":"Build the outbound on AS73 to read A-B-C-D-E (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["B","D"],"AS72":["A","C","E"],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS74":99,"AS73":99},"goal":"AS73","target":["A","B","C","D","E"],"setouts":[],"par":6,"parsol":[["pull","AS72",1],["pull","AS71",1],["pull","AS72",1],["pull","AS71",1],["pull","AS72",1],["spot","AS73",5]]},{"type":"outbound","title":"O6 — Fully reversed","order":"Build the outbound on AS73 to read A-B-C-D (throat first), engine clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["D","C","B","A"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","target":["A","B","C","D"],"setouts":[],"par":8,"parsol":[["pull","AS71",1],["spot","AS73",1],["pull","AS71",1],["spot","AS73",1],["pull","AS71",1],["spot","AS73",1],["pull","AS71",1],["spot","AS73",1]]},{"type":"digout","tidy":true,"title":"T1 — Lift & re-make","order":"Set out B to AS73, re-make the rest on AS71, and leave scratch + lead clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","setouts":["B"],"par":3,"parsol":[["pull","AS71",2],["spot","AS73",1],["spot","AS71",1]]},{"type":"digout","tidy":true,"title":"T2 — Re-make four","order":"Set out C to AS73, re-make the rest on AS71, and leave scratch + lead clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","setouts":["C"],"par":3,"parsol":[["pull","AS71",3],["spot","AS73",1],["spot","AS71",2]]},{"type":"digout","tidy":true,"title":"T3 — Two out, re-make","order":"Set out B and D to AS73, re-make the rest on AS71, and leave scratch + lead clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","setouts":["B","D"],"par":5,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS71",2]]},{"type":"digout","tidy":true,"title":"T4 — Five-car re-make","order":"Set out C to AS73, re-make the rest on AS71, and leave scratch + lead clear.","inbound":"AS71","tracks":["AS71","AS72","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS73":99},"goal":"AS73","setouts":["C"],"par":3,"parsol":[["pull","AS71",3],["spot","AS73",1],["spot","AS71",2]]},{"type":"digout","tidy":true,"title":"T5 — Two scratch, clean","order":"Set out B and D to AS73, re-make the rest on AS71, and leave scratch + lead clear.","inbound":"AS71","tracks":["AS71","AS72","AS74","AS73"],"start":{"AS71":["A","B","C","D","E"],"AS72":[],"AS74":[],"AS73":[]},"cap":{"AS71":99,"AS72":99,"AS74":99,"AS73":99},"goal":"AS73","setouts":["B","D"],"par":5,"parsol":[["pull","AS71",2],["spot","AS73",1],["pull","AS71",2],["spot","AS73",1],["spot","AS71",2]]}];
-var pi=0, plan=[], state=null, running=false;
+// Joint-optimal lines (fewest couplings) — verified offline by the BFS solver; ksol is narrated by "watch the kick line".
+var KICKLINE={"#1 — Warm-up":{"jpar":1,"ksol":[["pull","AS71",2],["kick","AS73",1],["kick","AS72",1]]},"#2 — Level 2":{"jpar":1,"ksol":[["pull","AS71",3],["kick","AS73",1],["kick","AS71",2]]},"#3 — One deep":{"jpar":1,"ksol":[["pull","AS71",4],["kick","AS73",1],["kick","AS71",3]]},"#4 — Two to pull":{"jpar":1,"ksol":[["pull","AS71",4],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["kick","AS71",1]]},"#5 — Six-car cut":{"jpar":1,"ksol":[["pull","AS71",5],["kick","AS73",1],["kick","AS72",1],["kick","AS73",1],["kick","AS71",2]]},"#6 — Front and back":{"jpar":1,"ksol":[["pull","AS71",6],["kick","AS73",1],["kick","AS71",2],["kick","AS73",1],["kick","AS71",2]]},"#7 — Two scratch tracks":{"jpar":1,"ksol":[["pull","AS71",6],["kick","AS73",2],["kick","AS71",2],["kick","AS73",1],["kick","AS71",1]]},"#8 — Three set-outs":{"jpar":1,"ksol":[["pull","AS71",6],["kick","AS73",1],["kick","AS72",1],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["kick","AS71",1]]},"#9 — Long cut":{"jpar":1,"ksol":[["pull","AS71",7],["kick","AS73",1],["kick","AS71",2],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["kick","AS71",1]]},"C1 — Tight scratch":{"jpar":1,"ksol":[["pull","AS71",4],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["kick","AS71",1]]},"C2 — Split the dump":{"jpar":1,"ksol":[["pull","AS71",5],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["kick","AS71",2]]},"C3 — Occupied scratch":{"jpar":1,"ksol":[["pull","AS71",3],["kick","AS73",1],["kick","AS71",2]]},"C4 — Crowded yard":{"jpar":1,"ksol":[["pull","AS71",5],["kick","AS73",1],["kick","AS71",2],["kick","AS73",1],["kick","AS71",1]]},"C5 — Everything tight":{"jpar":1,"ksol":[["pull","AS71",6],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["kick","AS71",1]]},"O1 — Reorder three":{"jpar":2,"ksol":[["pull","AS71",3],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["pull","AS71",1],["kick","AS73",1]]},"O2 — Reorder four":{"jpar":2,"ksol":[["pull","AS71",3],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["pull","AS71",2],["kick","AS73",2]]},"O3 — Two tracks in":{"jpar":3,"ksol":[["pull","AS71",2],["pull","AS72",1],["kick","AS73",2],["pull","AS72",1],["kick","AS73",2]]},"O4 — Five-car build":{"jpar":3,"ksol":[["pull","AS71",4],["kick","AS72",1],["kick","AS71",1],["kick","AS73",1],["kick","AS72",1],["pull","AS71",2],["pull","AS72",2],["kick","AS73",4]]},"O5 — Scattered cut":{"jpar":3,"ksol":[["pull","AS72",3],["kick","AS73",1],["kick","AS74",1],["pull","AS71",2],["kick","AS73",1],["pull","AS74",1],["kick","AS73",3]]},"O6 — Fully reversed":{"jpar":3,"ksol":[["pull","AS71",3],["kick","AS72",1],["kick","AS71",1],["kick","AS73",1],["pull","AS71",2],["kick","AS72",1],["kick","AS73",1],["pull","AS72",2],["kick","AS73",2]]},"T1 — Lift & re-make":{"jpar":1,"ksol":[["pull","AS71",2],["kick","AS73",1],["kick","AS71",1]]},"T2 — Re-make four":{"jpar":1,"ksol":[["pull","AS71",3],["kick","AS73",1],["kick","AS71",2]]},"T3 — Two out, re-make":{"jpar":1,"ksol":[["pull","AS71",4],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["kick","AS71",1]]},"T4 — Five-car re-make":{"jpar":1,"ksol":[["pull","AS71",3],["kick","AS73",1],["kick","AS71",2]]},"T5 — Two scratch, clean":{"jpar":1,"ksol":[["pull","AS71",4],["kick","AS73",1],["kick","AS71",1],["kick","AS73",1],["kick","AS71",1]]}};
+var pi=0, plan=[], state=null, running=false, jointsUsed=0;
 function clone(o){return JSON.parse(JSON.stringify(o));}
 function pull(s,T,n){var t=s.tracks[T];if(t===undefined)return'unknown';if(n<1)return'pull >=1';if(n>t.length)return'only '+t.length+' on '+T;s.engine=s.engine.concat(t.slice(0,n));s.tracks[T]=t.slice(n);return null;}
-function spot(s,T,n){var t=s.tracks[T];if(t===undefined)return'unknown';if(n<1)return'spot >=1';if(n>s.engine.length)return'only '+s.engine.length+' on engine';var cap=P().cap;if(cap&&cap[T]!==undefined&&t.length+n>cap[T])return T+' is full (holds '+cap[T]+')';var b=s.engine.slice(s.engine.length-n);s.engine=s.engine.slice(0,s.engine.length-n);s.tracks[T]=b.concat(t);return null;}
+function place(s,T,n){var t=s.tracks[T];var b=s.engine.slice(s.engine.length-n);s.engine=s.engine.slice(0,s.engine.length-n);s.tracks[T]=b.concat(t);}
+function spot(s,T,n){var t=s.tracks[T];if(t===undefined)return'unknown';if(n<1)return'spot >=1';if(n>s.engine.length)return'only '+s.engine.length+' on engine';var cap=P().cap;if(cap&&cap[T]!==undefined&&t.length+n>cap[T])return T+' is full (holds '+cap[T]+')';place(s,T,n);return null;}
+function kick(s,T,n){var t=s.tracks[T];if(t===undefined)return'unknown';if(kickList().indexOf(T)<0)return'can’t kick into '+T+' — working the '+endOf()+' end you can only kick into '+kickList().join(', ')+'; shove it instead';if(n<1)return'kick >=1';if(n>s.engine.length)return'only '+s.engine.length+' on engine';var cap=P().cap;if(cap&&cap[T]!==undefined&&t.length+n>cap[T])return T+' is full (holds '+cap[T]+')';place(s,T,n);return null;}
+function moveFn(act){return act==='pull'?pull:(act==='kick'?kick:spot);}
+function jointCost(s,m){if(m.act==='pull')return 1;if(m.act==='kick')return 0;return s.tracks[m.track].length>0?1:0;}
+function verbText(m){return m.act==='pull'?('PULL '+m.n+' from '+m.track):((m.act==='kick'?'KICK ':'SPOT ')+m.n+' to '+m.track);}
 function setEq(a,x){return a.length===x.length&&x.every(function(c){return a.indexOf(c)>=0;});}
 function eqArr(a,b){return a.length===b.length&&a.every(function(x,i){return x===b[i];});}
 var P=function(){return PUZZLES[pi];};
+function jparOf(){var k=KICKLINE[P().title];return k?k.jpar:1;}
 function freshState(){return {tracks:clone(P().start), engine:[]};}
 function role(tr){ if(tr===P().goal)return'gold'; if(tr===P().inbound)return'blue'; return'grey'; }
 var COL={gold:'var(--yellow)',blue:'var(--blue)',grey:'var(--grey)'};
 function loadPuzzle(i){
-  pi=i; plan=[]; running=false; state=freshState();
-  document.getElementById('order').innerHTML='<b>'+P().title+'</b> — '+P().order+' <span style="color:var(--muted)">Par '+P().par+'.</span>';
+  pi=i; plan=[]; running=false; jointsUsed=0; state=freshState();
+  var endTag=endOf()==='south'?'<span class="endb south">SOUTH end</span>':'<span class="endb north">NORTH end</span>';
+  var sou=endOf()==='south'?'<span class="sou">South-end rule: kick only into AS71, and a minimum of 2 hand brakes on to do it (GP special instruction).</span>':'';
+  document.getElementById('order').innerHTML=endTag+'<b>'+P().title+'</b> — '+P().order+' <span style="color:var(--muted)">Par '+P().par+' moves · '+jparOf()+' joint'+(jparOf()===1?'':'s')+'.</span>'+sou;
   document.getElementById('trk').innerHTML=P().tracks.map(function(t){return '<option>'+t+'</option>';}).join('');
   document.getElementById('fb').className='fb'; document.getElementById('log').textContent='';
   document.getElementById('parBtn').style.display='none'; var psl=document.getElementById('parsol'); if(psl)psl.className='fb';
@@ -132,7 +212,7 @@ function renderNav(){
   bh+='<div class="btab mix'+(curBatch==='mixed'?' on':'')+'" onclick="selBatch(\'mixed\')">Mixed</div>';
   document.getElementById('batches').innerHTML=bh;
   var pk=document.getElementById('picker');
-  if(curBatch==='mixed'){ pk.innerHTML='<button class="deal" id="dealBtn">Deal a random puzzle</button><span class="mixnote">Any type \u2014 read the work order, then figure the moves.</span>'; var db=document.getElementById('dealBtn'); if(db)db.addEventListener('click',dealRandom); }
+  if(curBatch==='mixed'){ pk.innerHTML='<button class="deal" id="dealBtn">Deal a random puzzle</button><span class="mixnote">Any type — read the work order, then figure the moves.</span>'; var db=document.getElementById('dealBtn'); if(db)db.addEventListener('click',dealRandom); }
   else { var idxs=idxInGroup(curBatch); pk.innerHTML=idxs.map(function(i,j){return '<div class="chip2'+(i===pi?' on':'')+'" onclick="loadPuzzle('+i+')">'+(j+1)+'</div>';}).join(''); }
 }
 function selBatch(k){ if(k==='mixed'){ dealRandom(); } else { curBatch=k; loadPuzzle(idxInGroup(k)[0]); } }
@@ -145,7 +225,8 @@ function renderYard(){
     var cars=state.tracks[tr].map(function(c){return '<div class="car'+(P().setouts.indexOf(c)>=0?' so':'')+'">'+c+'</div>';}).join('');
     var cp=(tr!==P().inbound&&tr!==P().goal&&P().cap&&P().cap[tr]!==undefined&&P().cap[tr]<90)?(' '+state.tracks[tr].length+'/'+P().cap[tr]):'';
     var gt=(P().type==='outbound')?'(build)':'(set-out)';var tag=(tr===P().goal)?(' <span class="throat">'+gt+'</span>'):(tr===P().inbound?' <span class="throat">(inbound)</span>':' <span class="throat">(scratch)</span>');
-    h+='<div class="lane"><div class="nm">'+tr+cp+tag+'</div><div class="rail"><span class="throat">⟵</span>'+cars+'</div></div>';
+    var kk=(kickList().indexOf(tr)>=0)?'<span class="kk">⚡kick</span>':'';
+    h+='<div class="lane"><div class="nm">'+tr+cp+tag+kk+'</div><div class="rail"><span class="throat">⟵</span>'+cars+'</div></div>';
   });
   document.getElementById('yard').innerHTML=h;
 }
@@ -162,35 +243,52 @@ function renderRef(){
 function pulseRef(tr){var el=document.getElementById('ref-'+tr); if(el){el.setAttribute('class','band pulse'); setTimeout(function(){el.setAttribute('class','band');},450);}}
 function renderPlan(){
   document.getElementById('steps').innerHTML=plan.map(function(m,i){
-    var verb=m.act==='pull'?('PULL '+m.n+' from '+m.track):('SPOT '+m.n+' to '+m.track);
-    return '<div class="step" id="st'+i+'"><span>'+(i+1)+'. '+verb+'</span><span class="x" onclick="delMove('+i+')">&times;</span></div>';
+    return '<div class="step" id="st'+i+'"><span>'+(i+1)+'. '+verbText(m)+'</span><span class="x" onclick="delMove('+i+')">&times;</span></div>';
   }).join('')||'<div style="color:var(--muted);font-size:13px">No moves yet.</div>';
 }
 function addMove(){ if(running)return; var n=parseInt(document.getElementById('cnt').value,10)||1;
   plan.push({act:document.getElementById('act').value, track:document.getElementById('trk').value, n:n}); renderPlan(); }
 function delMove(i){ if(running)return; plan.splice(i,1); renderPlan(); }
 document.getElementById('act').addEventListener('change',function(){document.getElementById('prepos').textContent=this.value==='pull'?'from':'to';});
-function runPlan(){
-  if(running||plan.length===0)return; running=true; state=freshState(); renderYard(); document.getElementById('fb').className='fb'; var psr=document.getElementById('parsol'); if(psr)psr.className='fb';
+function narrate(s,m){
+  if(m.act==='pull')return 'Tie onto '+m.track+', pull '+m.n+' — '+m.n+(m.n>1?' cars':' car')+' on the engine now. <span style="color:var(--orange)">(+1 joint — you coupled on.)</span>';
+  if(m.act==='kick')return 'Kick '+m.n+' to '+m.track+' — cut ’em off rolling, let ’em coast in. <span style="color:var(--green)">(no joint.)</span>';
+  var occ=s.tracks[m.track].length>0;
+  return occ?('Shove '+m.n+' into '+m.track+', couple to the cars there. <span style="color:var(--orange)">(+1 joint.)</span>'):('Spot '+m.n+' into the empty '+m.track+'. <span style="color:var(--green)">(no joint.)</span>');
+}
+function runPlan(narrated){
+  if(running||plan.length===0)return; running=true; state=freshState(); jointsUsed=0; renderYard();
+  document.getElementById('fb').className='fb'; var psr=document.getElementById('parsol'); if(psr)psr.className='fb';
   var i=0;
   function step(){
     if(i>=plan.length){ finish(); running=false; return; }
     for(var k=0;k<plan.length;k++){var el=document.getElementById('st'+k); if(el)el.className='step'+(k===i?' active':'');}
-    var m=plan[i], err=(m.act==='pull'?pull:spot)(state,m.track,m.n);
-    document.getElementById('log').textContent='Step '+(i+1)+': '+(m.act==='pull'?'pull '+m.n+' from ':'spot '+m.n+' to ')+m.track+(err?'  ✗ '+err:'  ✓');
+    var m=plan[i];
+    var nar=narrated?narrate(state,m):null;
+    var jc=jointCost(state,m);
+    var err=moveFn(m.act)(state,m.track,m.n);
+    if(!err) jointsUsed+=jc;
+    var sys='Step '+(i+1)+': '+(m.act==='pull'?'pull '+m.n+' from ':(m.act==='kick'?'kick '+m.n+' to ':'spot '+m.n+' to '))+m.track+(err?'  ✗ '+err:'  ✓  · joints '+jointsUsed);
+    document.getElementById('log').innerHTML=(nar?'<div class="nar">'+nar+'</div>':'')+'<div class="sys">'+sys+'</div>';
     pulseRef(m.track);
     if(err){ fail('Move '+(i+1)+' won\'t work: '+err+'. Re-plan from there.'); running=false; return; }
-    renderYard(); i++; setTimeout(step,720);
+    renderYard(); i++; setTimeout(step, narrated?1150:720);
   }
   setTimeout(step,300);
+}
+function jointsLine(used){
+  var jp=jparOf();
+  if(used<=jp) return '<div class="joints"><b>'+used+' joint'+(used===1?'':'s')+'</b> — that’s the low-joint line. You tied on and let the rest roll. 👌</div>';
+  return '<div class="joints"><b>'+used+' joints</b> made — a kicking line does it in <b>'+jp+'</b>. The deep-cut move is: tie on once, then <i>kick</i> the spares back and the set-outs across instead of coupling each time. <button class="wtbtn" id="wtBtn">▷ watch the '+jp+'-joint line</button></div>';
 }
 function finish(){
   var fb=document.getElementById('fb');
   var scratch=P().tracks.filter(function(t){return t!==P().goal&&t!==P().inbound;}); var tidyOK=scratch.every(function(t){return state.tracks[t].length===0;}); var clear=state.engine.length===0; var setdone=(P().type==='outbound')?eqArr(state.tracks[P().goal],P().target):setEq(state.tracks[P().goal],P().setouts);
   if(setdone&&clear&&(!P().tidy||tidyOK)){
     var used=plan.length,par=P().par,extra=used-par;
-    var eff= used<=par?('Tight — '+used+' moves, par '+par+'. That\'s an efficient line.'):(used+' moves (par '+par+') — '+extra+' wasted. There\'s a shorter way.');
-    fb.className='fb show ok'; var w=(P().type==='outbound')?('<b>Outbound built.</b> '+P().goal+' reads '+P().target.join('-')+', engine clear. '):('<b>Cut worked.</b> '+P().setouts.join(', ')+' spotted on '+P().goal+', engine clear. '); fb.innerHTML=w+eff+(P().tidy?' Yard left clean.':'');
+    var eff= used<=par?('Tight — '+used+' moves, par '+par+'. That\'s an efficient line.'):(used+' moves (par '+par+') — '+extra+' wasted. There\'s a shorter trip-count.');
+    fb.className='fb show ok'; var w=(P().type==='outbound')?('<b>Outbound built.</b> '+P().goal+' reads '+P().target.join('-')+', engine clear. '):('<b>Cut worked.</b> '+P().setouts.join(', ')+' spotted on '+P().goal+', engine clear. '); fb.innerHTML=w+eff+(P().tidy?' Yard left clean.':'')+jointsLine(jointsUsed);
+    var wt=document.getElementById('wtBtn'); if(wt)wt.addEventListener('click',walkThrough);
     document.getElementById('parBtn').style.display='inline-block';
   }else if(setdone&&clear&&P().tidy&&!tidyOK){
     fail('Set-outs placed and the lead is clear — but you left cars fouling the yard: '+scratch.filter(function(t){return state.tracks[t].length;}).map(function(t){return t+' ['+state.tracks[t].join(',')+']';}).join(', ')+'. Re-make the rest on '+P().inbound+' and clear the scratch tracks.');
@@ -201,14 +299,25 @@ function finish(){
   }
 }
 function fail(m){var fb=document.getElementById('fb');fb.className='fb show no';fb.innerHTML=m;document.getElementById('parBtn').style.display='inline-block';}
+function walkThrough(){
+  if(running)return; var k=KICKLINE[P().title]; if(!k)return;
+  plan=k.ksol.map(function(m){return {act:m[0],track:m[1],n:m[2]};});
+  renderPlan(); runPlan(true);
+}
 document.getElementById('parBtn').addEventListener('click',function(){
   var s=P().parsol.map(function(m,i){return (i+1)+'. '+(m[0]==='pull'?'PULL '+m[2]+' from '+m[1]:'SPOT '+m[2]+' to '+m[1]);}).join('<br>');
   var ps=document.getElementById('parsol'); ps.className='fb show ok'; ps.innerHTML='<b>One tight line ('+P().par+' moves):</b><div class="sol">'+s+'</div>';
 });
 document.getElementById('addBtn').addEventListener('click',addMove);
-document.getElementById('runBtn').addEventListener('click',runPlan);
+document.getElementById('runBtn').addEventListener('click',function(){runPlan(false);});
 document.getElementById('resetBtn').addEventListener('click',function(){loadPuzzle(pi);});
+function showHelp(){document.getElementById('help').className='modal show';}
+function hideHelp(){document.getElementById('help').className='modal';try{localStorage.setItem('gpsp_seen','1');}catch(e){}}
+document.getElementById('helpBtn').addEventListener('click',showHelp);
+document.getElementById('helpClose').addEventListener('click',hideHelp);
+document.getElementById('help').addEventListener('click',function(e){if(e.target===this)hideHelp();});
 loadPuzzle(0);
+try{if(!localStorage.getItem('gpsp_seen'))showHelp();}catch(e){}
 </script>
 </body>
 </html>
