@@ -78,10 +78,10 @@ Confirmed answers logged here as they arrive, so they don't get lost in the thre
 - **440 Direction Indicator:** an *advance* that you're leaving the main track (a flashing **arrow**,
   a separate fixture — the lamp renderer would need an arrow shape; deferred).
 
-**⚠ Conflict to resolve before encoding — Restricting (436):** described three ways across messages —
-(1) single steady yellow · (2) two staggered reds + R plate · (3) red over staggered yellow, no plate.
-CROR allows multiple aspects per indication, so all may be valid — but **pick the one to draw** for GP/CTC.
-Recommend **(2) two staggered reds + R plate** (cleanest contrast with 437). Awaiting confirmation.
+**✅ Restricting (436) — RESOLVED (quiz app, item 23, 2026-06-16):** the trusted quiz app draws **436 = red
+over red over yellow (3-head mast), NO plate** — now encoded as the primary form. CROR allows multiple aspects,
+so the earlier descriptions (single steady yellow; two staggered reds + R plate) stay legal alternates and are
+noted in the card. Clean contrast with **437** (two STAGGERED reds, no plate) is preserved.
 
 **Still need — the actual lamp colours (top→bottom), same format as 411/415:**
 - Diverging (430) = ___/___ **+DV** · Diverging to Stop (429) = ___/___ **flashing +DV**
@@ -90,12 +90,16 @@ Recommend **(2) two staggered reds + R plate** (cleanest contrast with 437). Awa
 - **Hypothesis to confirm:** is the diverging/slow base **red over yellow**? (would make 430 = R/Y +DV,
   431 Slow to Clear = R/Y no plate, and the "to Stop" versions flash the lower lamp.)
 
-**Encoded so far (21 — verified 121/121 harness + live):** 405 Clear · 406 Clear to Limited ·
-407 Clear to Medium · 409 Clear to Slow · 411 Clear to Stop · 413 Advance Clear to Medium ·
+**Encoded so far (24 — verified 271-check stubbed-DOM harness + live renderer):** 405 Clear · 406 Clear to Limited ·
+407 Clear to Medium · 409 Clear to Slow · 411 Clear to Stop · 412 Advance Clear to Limited · 413 Advance Clear to Medium ·
 415 Advance Clear to Stop · 419A Limited to Diverging · 420 Limited to Restricting · 421 Limited to Stop ·
 425 Medium to Slow · 425A Medium to Diverging · 426 Medium to Restricting · 428 Diverging to Clear ·
-430 Diverging · 431 Slow to Clear · 432A Diverging to Limited · 434A Diverging to Diverging ·
-437 Stop & Proceed · 438 Take or Leave Siding · 439 Stop.
+430 Diverging · 431 Slow to Clear · 432A Diverging to Limited · 434 Slow to Slow · 434A Diverging to Diverging ·
+436 Restricting · 437 Stop & Proceed · 438 Take or Leave Siding · 439 Stop.
+**Batch 5 (2026-06-16) — items 19–25:** new cards **412** (Yf/Gf, flashing-green = Limited vs 413's steady-green = Medium),
+**434 Slow to Slow** (R/Yf/Yf, = 434A minus the DV plate), **436 Restricting** (R/R/Y, no plate — resolves the conflict).
+Variants folded into existing cards: **420** (3-head R/Y/R + L plate, bottom-red flashing), **428** (2-head mast form,
+not just dwarf), **413** (3-head Yf/G/R). Pattern reconfirmed: **flashing green = Limited, steady green = Medium/Clear**.
 **Resolved:** 430 Diverging = red/yellow + DV plate (confirms the earlier hypothesis). **New plate: "L"**
 (Limited marker — a yellow *triangle* in the app; renders as a labelled box for now, could be made a
 triangle later). 411's card now notes its 3-head (Y/R/R) form.
@@ -117,12 +121,11 @@ shot needs no markup.)
 `ASPECTS_DRAFT` stays **true** until the full set is in. Renderer handles N heads, dwarf, DV/R plates,
 stagger, and per-head flash (`'f'` suffix) — covers everything the screenshots show so far.
 
-**Remaining screenshots to encode (in `signal_screenshots/`):** read through **item 18 of 136**;
-shots for items **19–24** still to encode (files 172527, 172544, 172551, 172610, 172635, 172749, 172821) —
-paused only because a single session hit a cumulative image-read limit; pick these up fresh. Then Jordan
-captures 25–136. Hold **429 Diverging to Stop** (its shot used the caption for the A-plate trap, flash
-unconfirmed). **Tip for reading shots:** they're 1080×2424; downscale to ≤1600px tall first
-(`%TEMP%\sigshots`) or the image API rejects them once several are already loaded.
+**Remaining screenshots to encode (in `signal_screenshots/`):** ALL 26 shots now in the folder are encoded —
+read through **item 25 of 136** (the 7-file tail 19–25 covered 420/428/413 variants plus new 412/434/436; item 25
+was a 2-head 412). **Next: Jordan captures items 26–136.** Still holding **429 Diverging to Stop** (its shot used the
+caption for the A-plate trap, flash unconfirmed). **Tip for reading shots:** they're 1080×2424; downscale to ≤1600px
+tall first (`%TEMP%\sigshots`) or the image API rejects them once several are already loaded.
 
 **Still needed (next):**
 - The **exact lower-head colour** for each "Clear to [speed]": Clear to Limited (406) /
