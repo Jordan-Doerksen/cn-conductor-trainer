@@ -43,6 +43,17 @@ Confirmed answers logged here as they arrive, so they don't get lost in the thre
   (renderer now flashes a single head via a `'f'` suffix, e.g. `"Yf"` = flashing yellow over steady red).
 - **Grammar:** green on top **+ a non-green lower head = a "Clear to [speed]"**; all-green = plain Clear. *(Jordan, firsthand)*
 
+**Partially captured — modifier logic, but lamp stack NOT yet confirmed (do not encode until it is):**
+A **DV plate** + **flashing** are the discriminators on the diverging / slow / restricting group —
+> - **DV plate, flashing → Diverging to Stop (429)**
+> - **DV plate, steady → Diverging (430)**
+> - no plate, **flashing → Slow to Stop (435)**
+> - no plate, **steady, just yellow → Restricting (436)**
+>
+> Still need the actual lamps to draw these: on the two DV ones, single **red** head or red-over-something,
+> and which lamp flashes? Slow to Stop — flashing *what* (single yellow, or yellow over red)? Restricting —
+> single steady yellow, and does it carry an **R** plate or just the yellow? 2-head or 3-head mast?
+
 **Encoded in the module so far (5 of 42):** 405 Clear · 411 Clear to Stop · 415 Advance Clear
 to Stop · 437 Stop & Proceed · 439 Stop. `ASPECTS_DRAFT` stays **true** until the set is complete.
 
