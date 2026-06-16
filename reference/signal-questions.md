@@ -39,6 +39,15 @@ fallback if the chart isn't handy.
 > (436) conflict and the diverging/slow colours. (Bonus: the app confirms **no A plate** — it draws
 > one as a trap on Rule 429 and captions it "not used.")
 
+> **UPDATE 2026-06-16 (later) — the OFFICIAL source is in play.** Jordan also has the **official CN
+> rulebook app** (the real CROR with the regulatory aspect diagrams). That's the **gold standard** and
+> outranks the third-party quiz app. Each rule's official diagram shows **all the hardware forms** for
+> the indication — e.g. **Rule 431 Slow to Clear = red/green (2-head), red/red/green (3-head),
+> single-green (dwarf), red/green (dwarf).** It reveals the underlying rule: **the proceed (green)
+> lamp's *position* encodes the speed** — green on top = Clear, green low = Slow. **Plan:** prefer the
+> official diagrams as ground truth; the 5 quiz-app aspects (esp. 409 Clear to Slow) are **to be
+> cross-checked** against the official before sign-off.
+
 Confirmed answers logged here as they arrive, so they don't get lost in the thread.
 
 - **Framing correction (conductor, CTC territory):** the straight-route aspects are **not**
@@ -81,9 +90,10 @@ Recommend **(2) two staggered reds + R plate** (cleanest contrast with 437). Awa
 - **Hypothesis to confirm:** is the diverging/slow base **red over yellow**? (would make 430 = R/Y +DV,
   431 Slow to Clear = R/Y no plate, and the "to Stop" versions flash the lower lamp.)
 
-**Encoded so far (11 — verified 62/62 harness + live):** 405 Clear · 407 Clear to Medium ·
-409 Clear to Slow (dwarf) · 411 Clear to Stop · 415 Advance Clear to Stop · 419A Limited to Diverging ·
-425 Medium to Slow · 426 Medium to Restricting · 432A Diverging to Limited · 437 Stop & Proceed · 439 Stop.
+**Encoded so far (12 — verified 68/68 harness + live):** 405 Clear · 407 Clear to Medium ·
+409 Clear to Slow (dwarf)\* · 411 Clear to Stop · 415 Advance Clear to Stop · 419A Limited to Diverging\* ·
+425 Medium to Slow\* · 426 Medium to Restricting\* · 431 Slow to Clear (official) · 432A Diverging to Limited\* ·
+437 Stop & Proceed · 439 Stop.  (\* = from the quiz app; cross-check vs official rulebook.)
 `ASPECTS_DRAFT` stays **true** until the full set is in. Renderer handles N heads, dwarf, DV/R plates,
 stagger, and per-head flash (`'f'` suffix) — covers everything the screenshots show so far.
 
