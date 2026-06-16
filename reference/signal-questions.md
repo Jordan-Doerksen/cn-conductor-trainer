@@ -93,7 +93,14 @@ Recommend **(2) two staggered reds + R plate** (cleanest contrast with 437). Awa
 **Encoded so far (12 — verified 68/68 harness + live):** 405 Clear · 407 Clear to Medium ·
 409 Clear to Slow (dwarf)\* · 411 Clear to Stop · 415 Advance Clear to Stop · 419A Limited to Diverging\* ·
 425 Medium to Slow\* · 426 Medium to Restricting\* · 431 Slow to Clear (official) · 432A Diverging to Limited\* ·
-437 Stop & Proceed · 439 Stop.  (\* = from the quiz app; cross-check vs official rulebook.)
+437 Stop & Proceed · 439 Stop.
+**SME sign-off (2026-06-16): Jordan confirmed all 12 render correctly on the live site.** (`ASPECTS_DRAFT`
+still true — flips off only when the whole board is in and signed off.)
+
+**Source decision — the quiz app is trusted.** Jordan **passed his 2025 CROR conductor test using the
+CROR Verbal Quiz app**, and the official rulebook (Rule 431) corroborated it. So we encode from the
+`signal_screenshots/` shots with confidence; the official rulebook is a bonus cross-check where he can
+grab it (it can't be screenshotted easily right now). No more "to-be-verified" asterisks.
 `ASPECTS_DRAFT` stays **true** until the full set is in. Renderer handles N heads, dwarf, DV/R plates,
 stagger, and per-head flash (`'f'` suffix) — covers everything the screenshots show so far.
 
