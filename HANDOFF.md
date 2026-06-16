@@ -13,7 +13,7 @@
 - **What:** a browser-based training game that helps Jordan re-qualify as a **CN (Canadian National) freight conductor** — learn **CROR** (Canadian Rail Operating Rules), read switch lists, and switch/build trains in **his real yard (CN Grande Prairie)**.
 - **How it's built:** a hub page (`index.html`) linking to several **single-file, vanilla-JS HTML modules**. No build step, no framework, no dependencies. Double-click to run; also published via **GitHub Pages**.
 - **Where it lives:** the canonical git repo is on **Jordan's own machine**; he pushes to GitHub himself. The agent edits files in the connected folder but must **not** run git here (see §2).
-- **Golden rules before you touch anything:** read **§2 (Hard rules)**. Two of them have bitten us repeatedly: (a) never `git init`/git-op or `sed -i`/rename-edit inside the mounted folder — it corrupts files; (b) never guess CROR content — scan the rulebook and cite, and flag CN-operating-practice phrasing as *not a rule*.
+- **Golden rules before you touch anything:** read **§2 (Hard rules)**, and **this file is the source of truth — check against it before you start and update it before you finish (§2.4).** The ones that bite: (a) **environment matters** — on **native Windows (the normal setup)** git + the `Read`/`Write`/`Edit` tools are the working flow; only on the *legacy Linux sandbox mount* are git-ops and `sed -i`/rename-edits forbidden (they corrupt files) — see §2.1; (b) never guess CROR content — scan the rulebook and cite, and flag CN-operating-practice phrasing as *not a rule*; (c) when you change a module/reference/decision, reflect it in §3/§5/§8/§12 the same session.
 
 ---
 
@@ -27,8 +27,12 @@ Jordan got very close to qualifying as a conductor before and wants to rebuild c
 
 These are persisted in the agent's long-term memory. Reproduced here so they travel with the repo.
 
-### 2.1 Environment / tooling (the sandbox mount is hostile)
-The project folder is mounted into a Linux sandbox over a 9p/virtio-style mount. **Rename-based writes on that mount corrupt files**, and the mount's directory cache goes stale.
+### 2.1 Environment / tooling — know which environment you're in
+The rules here depend on where the repo is mounted:
+- **Native Windows (current / normal setup):** the repo lives on Jordan's real machine at `C:\projects\CN Conductor Trainer` on NTFS. Here the `Read`/`Write`/`Edit` tools **and git are safe and are the working flow** — commits and pushes to `origin/main` happen straight from this folder (batches 1–5 of the signal encoding were committed + pushed from here). The hostile-mount cautions below do **not** apply.
+- **Cowork / Linux sandbox mount (legacy):** the project folder was once mounted into a Linux sandbox over a 9p/virtio-style mount. **Rename-based writes on that mount corrupt files**, and the mount's directory cache goes stale. If you're ever back in that setup, the bullets below apply.
+
+When in the legacy sandbox mount:
 
 - **NEVER `git init` or run git operations inside the mounted folder.** It produces a broken `.git/config` ("bad config line 1", reproducible). The canonical repo lives on Jordan's real Windows machine; **he pushes from there.** Do not touch git here. Do not handle his GitHub token/credentials.
 - **NEVER use `sed -i` (or any in-place/rename edit) on mounted files.** A `sed -i` once left **54 NUL bytes** in `GP Yard Board.html`. The **`Edit` tool also uses a rename-write and corrupted a file on the `outputs` mount** during this very session — so prefer full-file methods.
@@ -45,6 +49,12 @@ The project folder is mounted into a Linux sandbox over a 9p/virtio-style mount.
 ### 2.3 Verification discipline
 Every non-trivial change to a module gets checked before it's called done: `node --check` on the extracted `<script>`, a **stubbed-DOM run-through** (mock `document`/`localStorage`/`setTimeout`, then exercise the new code), and for the puzzle, **re-run the BFS solver / re-validate every `parsol`**. For SVG/image work, render with `cairosvg` and eyeball it. When the project mount is unreadable, do these on the `outputs` mount.
 
+### 2.4 Source of truth — read this file first, and keep it current (Jordan's standing rule)
+**This `HANDOFF.md` is the project's source of truth.** It's a two-way obligation, every session:
+- **Before you touch anything:** read this file and check your plan against it (architecture, data models, the GP yard reference, the CROR-vs-GOI distinctions, the safety rules). Don't re-derive what's already written here, and don't silently contradict it.
+- **After any meaningful change:** update this file in the same session so it never drifts from reality — new/changed modules (§3, §5), new reference sources (§8), status + roadmap (§12), and any rule or decision a future session would otherwise re-litigate. Bump the "Last updated" date. **A stale source of truth is worse than none.**
+- Same discipline for the other living docs: **`reference/signal-questions.md`** (the signal-aspect Q&A + encoding log) and the project memory. If a doc disagrees with the code, the **code is reality** — fix the doc.
+
 ---
 
 ## 3. Repository layout
@@ -57,7 +67,8 @@ CN Conductor Trainer/              (repo root; entry = index.html)
 │  ├─ GP Switching Puzzle.html     The dig-out / build puzzle (PULL/SPOT engine, BFS pars)
 │  ├─ GP Yard Board.html           Interactive yard map (clickable tracks + switch dots)
 │  ├─ GP Radio Steps.html          Guided "Back to a Joint" radio call sequence
-│  └─ GP Switching Drill.html      "Classify the cut" quiz
+│  ├─ GP Switching Drill.html      "Classify the cut" quiz
+│  └─ Signal Reading.html          CROR signal aspects (405–440) + SVG lamp renderer + aspect study
 ├─ assets/
 │  ├─ GP Yard (cleaned).png        Denoised black-on-white trace of the yard photo
 │  └─ GP Yard (tracks).png         Cropped strip used as the puzzle reference image
@@ -65,7 +76,10 @@ CN Conductor Trainer/              (repo root; entry = index.html)
 │  ├─ Jan_2025_Canadian_rail_operating_rules_EN.pdf   (GITIGNORED — do not commit)
 │  ├─ 2015_04_10-Robitaille-presentation-with-intro-slide.pdf  (GITIGNORED — CN CRTC seminar, see notes below)
 │  ├─ crtc-fundamentals-notes.md   Committed digest of the Robitaille deck (terminology + rule map)
-│  ├─ signal-questions.md          SME question sheet + live answer log for the Signal Reading aspects
+│  ├─ CROR Signal Rules.pdf        (GITIGNORED — Hoevet third-party study aid; has the "A"-plate error, don't trust blindly)
+│  ├─ signal-questions.md          SME question sheet + LIVE aspect-encoding log (count, what's done, what's next)
+│  ├─ signal-aspects/              Drop zone for signal-aspect photos — README tracked, raw images gitignored
+│  ├─ signal_screenshots/          (GITIGNORED) CROR Verbal Quiz app shots — the trusted aspect-encoding source
 │  ├─ gp-yard-large.jpg            Source photo the trace was built from
 │  └─ Game Plan.md
 ├─ README.md
@@ -113,6 +127,13 @@ A fully hand-held "Back to a Joint" sequence with a visual of where the conducto
 
 ### 5.5 GP Switching Drill ("classify the cut")
 Quick quiz on reading a cut/switch list. Slated for more volume + layering kick/shove compliance.
+
+### 5.6 Signal Reading (CROR aspects 405–440)
+Two-section trainer (Basics / Full) over the CROR signal indications. The **words** (`var IND`, all 42 rules' names + meanings) are sourced exact and verified. The **aspects** — what each signal physically *looks like* — are encoded in **`var ASPECTS`** and drawn by **`drawSignal(spec)`**, an SVG lamp renderer that handles N heads, mast/dwarf, DV/R/L plates, red stagger, and **per-head flashing via a `'f'` suffix** on a head code (`"Yf"` = flashing yellow over a *steady* red; colours are `G/R/Y/L/D` top→bottom).
+- **Encoding source of truth = the CROR Verbal Quiz app screenshots** in `reference/signal_screenshots/` (Jordan passed his 2025 conductor test with this app; the official rulebook corroborates it). Each shot fully specifies one aspect (rule# + name + lamps + flash caption + plate + mast/dwarf). The official CN rulebook app is a bonus cross-check.
+- **Policy (Jordan's call): one card per *indication*, variants noted in the card's tip** — not one card per hardware combo. (A future separate Quiz module will use all ~136 individual variant cards; the study set stays grouped.)
+- **`ASPECTS_DRAFT` stays `true`** until the full set is encoded. Progress, the resolved/open questions, and the "what's next" pointer live in **`reference/signal-questions.md`** (the live log — update it every batch).
+- **Verify** new aspects with the stubbed-DOM harness (asserts lamp count + flash-vs-steady per head against the real `drawSignal`); screenshots of the live page are blocked by the infinite SMIL flash animations, so trust the renderer's counts.
 
 ---
 
@@ -241,6 +262,8 @@ Verify wording against `reference/Jan_2025_Canadian_rail_operating_rules_EN.pdf`
 
 **Always distinguish CROR rules from CN GOI (operating instructions).** "Set and center" is the canonical example of GOI phrasing that is *not* a numbered CROR rule.
 
+**Signal aspects (Rules 405–440) — see §5.6; running count + open questions live in `reference/signal-questions.md`.** Confirmed framework, banked from the quiz app + rulebook + Robitaille: **only DV, R, and L plates exist — there is NO "A"/absolute plate in Canada** (US practice; the quiz app draws an A-plate only as a trap, captioned "not used"). **A DV plate upgrades the indication** (strip it and Diverging downgrades to Slow). The **proceed lamp's position encodes speed** (green high = Clear, green low = Slow); **flashing green = Limited, steady green = Medium/Clear**; **two staggered reds, no plate = non-controlled** (437 Stop & Proceed) vs a single/absolute red the RTC holds (439 Stop). Straight-route ("Clear to ___") aspects mean **blocks-of-warning-ahead, not speed past the signal** — speed governs only the turnout/diverging family.
+
 **Control-system framework source (added 2026-06-16):** `reference/2015_04_10-Robitaille-presentation-with-intro-slide.pdf` (GITIGNORED — local only, like the rulebook) is a 2015 CN seminar, *Canadian Rail Traffic Control Fundamentals* (Sean Robitaille, CN Transportation Engineer, U. of Illinois). Best for the **operating language** and how the control methods fit together; digested in `reference/crtc-fundamentals-notes.md`. Rule numbers it anchors: OCS **301–315** · ABS **505–515** · CTC **560–578** · Interlocking **601–620** · pass a controlled signal at stop **564** · Cautionary Limits **94** · non-main track **105** · Special Control System **351–353** · signal aspects **405–440** (speed-signal system; **L/DV/R** markers — confirms there's no "A"). **It's 2015 — verify time-sensitive claims** ("ABS only on CP", "no PTC mandate in Canada") against current sources before repeating.
 
 ---
@@ -285,12 +308,16 @@ Module **ends** at step 8. Initial transmissions end "over"; the conversation's 
 
 ## 12. Status & roadmap
 
-**Done:** all five modules built and live on GitHub Pages; folder restructured (hub/modules/assets/reference) with relative links; outbound + mixed puzzle batches; radio module through "going for hand brakes"; **How-to-play onboarding added to the Switching Puzzle (2026-06-16, verified).**
+**Done:** all **six** modules built and live on GitHub Pages; folder restructured (hub/modules/assets/reference) with relative links; outbound + mixed + **Full-yard** puzzle batches; **KICKING shipped** as a puzzle move (PULL/SPOT/KICK/TIE-DOWN, secured-cut rule, two scores moves+joints, BFS pars recomputed + verified) — ⚠ the secured-cut model (kick only onto a secured 2+-car standing cut; SME Kourtney) **supersedes §7.1's simpler KICKABLE list**; expand §7.1 from the code the next time the puzzle is touched; radio module through "going for hand brakes"; How-to-play onboarding on the Switching Puzzle (verified); **Signal Reading module built** (§5.6) with the SVG lamp renderer + aspect-study mode.
+
+**In progress:**
+- **Signal-aspect encoding** (`Signal Reading.html`, §5.6): encoding the 405–440 aspects from the CROR Verbal Quiz shots, one card per indication. Running count + "what's next" live in `reference/signal-questions.md`; `ASPECTS_DRAFT` stays `true` until complete.
 
 **Open tasks (in priority order):**
-1. **Add KICKING as a puzzle move** + update the BFS solver so par credits the kicking line (kicking avoids multiple joints — exactly what the first tester described). Honor §7.1: north-end only, into AS71/72/73/74/75/77/78. Update the How-to to mention kicking once it's in.
+1. **Finish the signal-aspect set** — next shots are items 26–136 (once Jordan captures them); resolve the held **429 Diverging to Stop**; then flip `ASPECTS_DRAFT=false` after a verify pass.
 2. **Expand the "classify the cut" quiz** volume; layer kick/shove **compliance** into the puzzle (e.g., flag an illegal kick into AS76 or a south-yard track).
 3. **Radio module later layers:** the move/departure after hand brakes and the closing **"out"** (121c); a player-supplies-the-distances mode; half-distance stop (123.2 iii); hand signals (123.1).
+4. **Separate Quiz module** — a polished CROR Verbal Quiz built on all ~136 individual aspect-variant cards (the study set stays grouped, one-per-indication).
 
 **First-tester feedback that's driving this:** "Cool program!! I'm too dumb to understand how to work it out" + a description of the efficient dig-out (kick spare cars back to AS71 instead of making multiple joints). Takeaway: onboarding gap (now addressed) + the kicking mechanic is the realism the experienced user expects.
 
