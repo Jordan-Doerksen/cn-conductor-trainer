@@ -18,9 +18,9 @@
   a.back{color:var(--muted);text-decoration:none;font-size:13px}
   a.back:hover{color:var(--ink)}
   header.top{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:14px;margin:6px 0 4px}
-  .badge{width:40px;height:40px;border-radius:9px;flex:none;background:var(--card2);border:1px solid var(--line);
-    display:flex;align-items:center;justify-content:center;gap:3px}
-  .badge span{width:8px;height:8px;border-radius:50%}
+  .badge{width:34px;height:48px;border-radius:9px;flex:none;background:var(--card2);border:1px solid var(--line);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+  .badge span{width:8px;height:8px;border-radius:50%;background:#262b34;transition:background .5s,box-shadow .5s}
   .title{font-size:18px;font-weight:700;letter-spacing:.3px}
   .subtitle{font-size:12.5px;color:var(--muted);margin-top:1px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-top:16px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
@@ -68,7 +68,7 @@
 <div class="wrap">
   <a class="back" href="../index.html">← All modules</a>
   <header class="top">
-    <div class="badge" aria-hidden="true"><span style="background:#36d07f"></span><span style="background:#f7b733"></span><span style="background:#e25555"></span></div>
+    <div class="badge" id="sigmark" title="Clear" aria-label="Signal aspect"><span></span><span></span><span></span></div>
     <div><div class="title">CROR Quiz</div><div class="subtitle">Canadian Rail Operating Rules · straight from the rulebook · escalating by tier</div></div>
   </header>
   <div id="app"></div>
@@ -652,5 +652,6 @@ function finish(){
 }
 landing();
 </script>
+<script>(function(){var m=document.getElementById("sigmark");if(!m)return;var L=m.getElementsByTagName("span"),D="#262b34",C={g:"#36d07f",y:"#f7b733",r:"#e25555"};var A=[{n:"Clear",l:["g",0,0]},{n:"Clear to Medium",l:["y","g",0]},{n:"Clear to Stop",l:["y","r",0]},{n:"Diverging",l:["r","y",0]},{n:"Restricting",l:[0,"r","r"]},{n:"Stop",l:["r","r","r"]}];function s(a){m.title=a.n+" — signal aspect";for(var k=0;k<3;k++){var c=a.l[k];L[k].style.background=c?C[c]:D;L[k].style.boxShadow=c?"0 0 7px "+C[c]:"none";}}s(A[0]);if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;var i=0;setInterval(function(){i=(i+1)%A.length;s(A[i]);},3500);})();</script>
 </body>
 </html>

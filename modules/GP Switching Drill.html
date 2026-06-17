@@ -57,7 +57,7 @@
 <div class="wrap">
   <a href="../index.html" style="display:inline-block;color:#9fb2c9;text-decoration:none;font-size:13px;margin:0 0 10px">&larr; All modules</a>
   <header>
-    <div style="width:44px;height:44px;border-radius:10px;flex:none;background:var(--card2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:3px" aria-hidden="true"><span style="width:8px;height:8px;border-radius:50%;background:#36d07f"></span><span style="width:8px;height:8px;border-radius:50%;background:#f7b733"></span><span style="width:8px;height:8px;border-radius:50%;background:#e25555"></span></div>
+    <div id="sigmark" title="Clear" aria-label="Signal aspect" style="width:34px;height:48px;border-radius:9px;flex:none;background:var(--card2);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:#262b34;transition:background .5s,box-shadow .5s"></span><span style="width:8px;height:8px;border-radius:50%;background:#262b34;transition:background .5s,box-shadow .5s"></span><span style="width:8px;height:8px;border-radius:50%;background:#262b34;transition:background .5s,box-shadow .5s"></span></div>
     <div>
       <div class="title">Switching Drill #1 — Classify the Cut</div>
       <div class="sub">Grande Prairie · read the list, send each car to its track, pick a legal move</div>
@@ -210,5 +210,6 @@ document.getElementById('shoveBtn').addEventListener('click',function(){evaluate
 document.getElementById('nextBtn').addEventListener('click',next);
 drawBoard(); drawList(); setPrompt();
 </script>
+<script>(function(){var m=document.getElementById("sigmark");if(!m)return;var L=m.getElementsByTagName("span"),D="#262b34",C={g:"#36d07f",y:"#f7b733",r:"#e25555"};var A=[{n:"Clear",l:["g",0,0]},{n:"Clear to Medium",l:["y","g",0]},{n:"Clear to Stop",l:["y","r",0]},{n:"Diverging",l:["r","y",0]},{n:"Restricting",l:[0,"r","r"]},{n:"Stop",l:["r","r","r"]}];function s(a){m.title=a.n+" — signal aspect";for(var k=0;k<3;k++){var c=a.l[k];L[k].style.background=c?C[c]:D;L[k].style.boxShadow=c?"0 0 7px "+C[c]:"none";}}s(A[0]);if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;var i=0;setInterval(function(){i=(i+1)%A.length;s(A[i]);},3500);})();</script>
 </body>
 </html>
