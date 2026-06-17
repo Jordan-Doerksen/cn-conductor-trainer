@@ -32,8 +32,12 @@
   .card{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:var(--panel);
         border:1px solid var(--line);border-radius:var(--r);padding:var(--pad);transition:.13s}
   a.card:hover{border-color:var(--accent);background:var(--panel2);transform:translateY(-2px)}
-  .tag{align-self:flex-start;font-size:11px;font-weight:600;letter-spacing:.3px;color:var(--muted);
-       background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:2px 8px;margin-bottom:11px}
+  .tag{align-self:flex-start;display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#c2ccd8;
+       background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:3px 11px 3px 8px;margin-bottom:11px}
+  .tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--led,#36d07f);box-shadow:0 0 6px 0 var(--led,#36d07f);animation:led 2.4s ease-in-out infinite}
+  @keyframes led{0%,100%{box-shadow:0 0 4px 0 var(--led,#36d07f);opacity:.78}50%{box-shadow:0 0 9px 2px var(--led,#36d07f);opacity:1}}
+  @media(prefers-reduced-motion:reduce){.tag::before{animation:none}}
+  .tag.q{--led:#36d07f}.tag.s{--led:#5aa9ff}.tag.r{--led:#f7b733}.tag.w{--led:#b58cff}.tag.d{--led:#36d07f}
   .card h2{font-size:16.5px;margin:0 0 6px;font-weight:600}
   .card p{font-size:13px;color:var(--muted);margin:0 0 14px;flex:1}
   .go{font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px}
@@ -54,37 +58,37 @@
 
   <div class="grid">
     <a class="card" href="modules/CROR%20Quiz.html">
-      <span class="tag">Quiz</span>
+      <span class="tag q">Quiz</span>
       <h2>CROR Quiz</h2>
       <p>The rulebook, quizzed — grouped by topic, escalating recall → scenario. Every answer cites the rule.</p>
       <div class="go">Open <span aria-hidden="true">→</span></div>
     </a>
     <a class="card" href="modules/GP%20Switching%20Puzzle.html">
-      <span class="tag">Sim</span>
+      <span class="tag s">Sim</span>
       <h2>Switching Puzzle</h2>
       <p>Plan and work cuts in the Grande Prairie yard: dig-outs, tight room, build outbounds, leave it clean.</p>
       <div class="go">Open <span aria-hidden="true">→</span></div>
     </a>
     <a class="card" href="modules/GP%20Yard%20Board.html">
-      <span class="tag">Reference</span>
+      <span class="tag r">Reference</span>
       <h2>Yard Board</h2>
       <p>The Grande Prairie yard map, interactive — every track and switch where it actually sits.</p>
       <div class="go">Open <span aria-hidden="true">→</span></div>
     </a>
     <a class="card" href="modules/GP%20Radio%20Steps.html">
-      <span class="tag">Walkthrough</span>
+      <span class="tag w">Walkthrough</span>
       <h2>Radio &amp; Steps</h2>
       <p>The radio calls for a move, step by step — positive ID, distance countdown, point protection.</p>
       <div class="go">Open <span aria-hidden="true">→</span></div>
     </a>
     <a class="card" href="modules/GP%20Switching%20Drill.html">
-      <span class="tag">Drill</span>
+      <span class="tag d">Drill</span>
       <h2>Classify the Cut</h2>
       <p>Quick scenarios on the Grande Prairie kick rules — kick or shove, where it can go, securing it right.</p>
       <div class="go">Open <span aria-hidden="true">→</span></div>
     </a>
     <a class="card" href="modules/Signal%20Reading.html">
-      <span class="tag">Drill</span>
+      <span class="tag d">Drill</span>
       <h2>Signal Reading</h2>
       <p>CROR block &amp; interlocking signals — names, meanings, and the speed grammar that decodes them (405–440).</p>
       <div class="go">Open <span aria-hidden="true">→</span></div>
