@@ -437,7 +437,7 @@ function aspectStudy(i){
   var a=list[i],ind=indByR(a.r);
   var tp=(a.spec.type==='dwarf'?'Dwarf signal':'Mast signal')+(a.spec.plaque?(' · '+a.spec.plaque+' plaque'):'');
   app.innerHTML='<div class="card"><div class="crumb"><a onclick="landing()">Sections</a> › <a onclick="sectionHome()">'+(level==='basic'?'Basics':'Full')+'</a> › Aspects</div>'+
-    (ASPECTS_DRAFT?'<div class="draftbar">⚠ <b>Draft aspects.</b> 38 of 42 indications charted from the CROR Verbal Quiz app — <b>not yet signed off</b>, so if a lamp looks wrong, that’s exactly what to flag. (Still to add: 410, 418, 433A, 440; and 407 to confirm.)</div>':'')+
+    (ASPECTS_DRAFT?'<div class="draftbar">⚠ <b>Draft aspects.</b> 38 of 42 indications charted from the CROR Verbal Quiz app — <b>not yet signed off</b>, so if a lamp looks wrong, that’s exactly what to flag. (Still to add: 410, 418, 433A, 440 — not in the app or the CROR rule text.)</div>':'')+
     '<div class="hud"><span>Aspect <b>'+(i+1)+'</b> / '+list.length+'</span><span>'+(level==='basic'?'Basics':'Full')+'</span></div>'+
     '<div class="aspectwrap"><div class="signalbox">'+drawSignal(a.spec)+'</div>'+
       '<div class="aspmeta"><div class="nm">'+ind.n+'</div><div class="rl">CROR Rule '+ind.r+'</div><div class="mn">'+ind.m+'</div>'+

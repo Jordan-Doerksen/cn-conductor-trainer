@@ -63,17 +63,19 @@ fallback if the chart isn't handy.
 > Restricting (436)** vs no plate = **Stop & Proceed (437)**. 429 is UN-HELD — clean shots (items 65/98/132)
 > show R/Yf + DV.
 >
-> **4 NOT in the quiz app — still need the official rulebook or a CTC conductor (do NOT guess these):**
+> **4 NOT in the quiz app — and NOT encodable from the CROR (do NOT guess):**
 > **410** Clear to Restricting · **418** Limited to Medium · **433A** Diverging to Medium · **440** Direction
-> Indicator (flashing arrow, needs a separate fixture). System-based guesses (unconfirmed): 410≈Y/Rf,
-> 418≈R/Gf/G, 433A≈R/Yf/G+DV.
+> Indicator. **Checked the CROR rulebook (Jan 2025 PDF) 2026-06-16: the rule text gives only the INDICATION
+> (the words) — there are NO lamp/aspect descriptions anywhere in the 106-page PDF** (zero "Aspect" chart in
+> the text). So per Jordan ("unless there's a clear description in the CROR, don't guess") these stay
+> **uncharted** until the official rulebook's aspect diagrams or a CTC conductor provide them. 440 is a
+> flashing arrow that also needs a separate renderer fixture. (Earlier system-based hunches are NOT encoded.)
 >
-> **3 conflicts for Jordan to settle:**
-> 1. **407 Clear to Medium** — you said firsthand "green over green," but the app draws **yellow over green**
->    in ALL of its 407 shots (items 55, 64, 69, 84), and it fits the app's family (Clear-to-Slow=Y/Y,
->    Clear-to-Stop=Y/R → Clear-to-Medium=Y/G). Kept **G/G** in the code pending your call.
+> **Conflicts — status:**
+> 1. **407 Clear to Medium — RESOLVED 2026-06-16:** Jordan confirmed the app is right (he misremembered).
+>    Encoded **Y/G** (yellow over green). **406 also aligned** to the yellow-top Clear-to-[speed] family (Y/Gf).
 > 2. **421 dwarf** form (Yf/R, item 102) is visually identical to **415** (Yf/R) — primary kept as the 3-head R/Y/R+L.
-> 3. The app's **dwarf forms often put yellow on top** where the mast form is green (also seen on 406, 426) —
+> 3. The app's **dwarf forms often put yellow on top** where the mast form is green (also seen on 426) —
 >    primaries use the mast/green forms.
 
 Confirmed answers logged here as they arrive, so they don't get lost in the thread.
