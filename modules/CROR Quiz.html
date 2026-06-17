@@ -506,6 +506,19 @@ var COMPONENTS=[
   {id:"paper",   name:"Bulletins, Clearances & Forms", d:"131–157: recording, copying/repeating, GBO delivery, brevity."},
   {id:"tow",     name:"Track-Work Protection",   d:"40–42: planned protection, prescribed form, the foreman."}
 ];
+var FAMILIES=[
+  {id:"core",    name:"Core rules",       d:"Definitions, speeds, and crew roles — the foundation.", comps:["def","speeds","roles"]},
+  {id:"yard",    name:"Yard & switching", d:"Switches & derails, securing, coupling, kicking, shoving.", comps:["switches","secure","move"]},
+  {id:"signals", name:"Signals",          d:"Block & interlocking indications, plates, the speed grammar.", comps:["signals"]},
+  {id:"control", name:"Control systems",  d:"OCS, ABS, CTC and Interlocking territory.", comps:["ocs","abs","ctc","interlock"]},
+  {id:"job",     name:"On the job",       d:"Radio, general rules, crossings, bulletins, track-work.", comps:["radio","gen","cross","paper","tow"]}
+];
+var ROUND=10;
+function famById(id){return FAMILIES.filter(function(f){return f.id===id;})[0];}
+function famOf(compId){for(var i=0;i<FAMILIES.length;i++){if(FAMILIES[i].comps.indexOf(compId)>-1)return FAMILIES[i];}return null;}
+function famCount(f){return f.comps.reduce(function(s,c){return s+compCount(c);},0);}
+function compName(id){var c=COMPONENTS.filter(function(x){return x.id===id;})[0];return c?c.name:id;}
+function backTarget(){ if(!S||S.id==="all"||S.id.indexOf("fam:")===0) return "landing()"; var f=famOf(S.id); return f?"familyView('"+f.id+"')":"landing()"; }
 var TIERNAME={1:"Recall",2:"Application",3:"Distinctions"};
 
 /* ---------- helpers ---------- */
@@ -539,8 +552,11 @@ function buildSession(compId){
   if(compId==="all"){
     COMPONENTS.forEach(function(c){list=list.concat(rawFor(c.id));});
     list=sampleEscalating(list,26);
+  } else if(compId.indexOf("fam:")===0){
+    famById(compId.slice(4)).comps.forEach(function(c){list=list.concat(rawFor(c));});
+    list=sampleEscalating(list,ROUND);
   } else {
-    list=sampleEscalating(rawFor(compId), compId==="def"?22:99);
+    list=sampleEscalating(rawFor(compId), ROUND);
   }
   return list.map(function(item){return item.build();});
 }
@@ -570,14 +586,26 @@ var app=document.getElementById("app");
 var S=null;
 function landing(){
   S=null;
-  var tiles=COMPONENTS.map(function(c){
-    return '<button class="tile" onclick="start(\''+c.id+'\')"><div class="t">'+c.name+'<span class="count">'+compCount(c.id)+'</span></div><div class="d">'+c.d+'</div></button>';
+  var cards=FAMILIES.map(function(f){
+    var go=f.comps.length===1?"start('"+f.comps[0]+"')":"familyView('"+f.id+"')";
+    return '<button class="tile" onclick="'+go+'"><div class="t">'+f.name+'<span class="count">'+famCount(f)+'</span></div><div class="d">'+f.d+'</div></button>';
   }).join("");
   app.innerHTML='<div class="card"><h1>Quiz the rulebook.</h1>'+
-    '<p class="lead">Every question comes straight from the January 2025 CROR and cites the rule. Pick a component — each runs <b>Recall → Application → Distinctions</b>.</p>'+
-    '<div class="grid">'+tiles+
-      '<button class="tile exam" onclick="start(\'all\')"><div class="t">Full CROR exam <span class="count">mixed</span></div><div class="d">A 26-question spread across every component, escalating in difficulty.</div></button>'+
+    '<p class="lead">Pick a track. Each round is <b>10 questions</b> straight from the January 2025 CROR — escalating <b>Recall → Application → Distinctions</b>, every answer citing the rule.</p>'+
+    '<div class="grid">'+cards+
+      '<button class="tile exam" onclick="start(\'all\')"><div class="t">Full CROR exam <span class="count">26 mixed</span></div><div class="d">A spread across every component when you want the big test.</div></button>'+
     '</div></div>';
+}
+function familyView(famId){
+  S=null;
+  var f=famById(famId);
+  var tiles=f.comps.map(function(cid){
+    return '<button class="tile" onclick="start(\''+cid+'\')"><div class="t">'+compName(cid)+'<span class="count">'+compCount(cid)+'</span></div><div class="d">'+COMPONENTS.filter(function(x){return x.id===cid;})[0].d+'</div></button>';
+  }).join("");
+  var mixed=f.comps.length>1?'<button class="btn" onclick="start(\'fam:'+f.id+'\')" style="margin:2px 0 16px">Start a 10-question round · '+f.name+'</button>':'';
+  app.innerHTML='<div class="card"><a class="back" style="cursor:pointer" onclick="landing()">← All sections</a>'+
+    '<h1>'+f.name+'</h1><p class="lead">'+f.d+' Pick a topic, or mix the whole section.</p>'+
+    mixed+'<div class="grid">'+tiles+'</div></div>';
 }
 function start(id){
   var qs=buildSession(id);
@@ -586,7 +614,7 @@ function start(id){
 }
 function renderQ(){
   var q=S.qs[S.i], n=S.qs.length;
-  var name=S.id==="all"?"Full CROR exam":(COMPONENTS.filter(function(c){return c.id===S.id;})[0].name);
+  var name=S.id==="all"?"Full CROR exam":(S.id.indexOf("fam:")===0?famById(S.id.slice(4)).name+" · mixed":compName(S.id));
   var pct=Math.round(S.i/n*100);
   var opts=q.o.map(function(t,i){return '<button class="opt" id="o'+i+'" onclick="pick('+i+')">'+t+'</button>';}).join("");
   app.innerHTML='<div class="card">'+
@@ -594,7 +622,7 @@ function renderQ(){
     '<div class="bar"><i style="width:'+pct+'%"></i></div>'+
     '<div class="q">'+q.q+'</div>'+opts+
     '<div id="fb"></div>'+
-    '<div class="row"><button class="btn ghost" onclick="landing()">Quit</button></div>'+
+    '<div class="row"><button class="btn ghost" onclick="'+backTarget()+'">Quit</button></div>'+
   '</div>';
 }
 function pick(i){
@@ -612,12 +640,14 @@ function pick(i){
 function next(){S.i++;S.answered=false;renderQ();}
 function finish(){
   var n=S.qs.length,pct=Math.round(S.score/n*100);
+  var enc=pct===100?"Clean board — every one.":pct>=80?"Strong run. You know this.":pct>=60?"Solid — a few to tighten.":"Reps build it. Run it again.";
+  var again=S.id==="all"?"Retake exam":"Another 10";
   var miss=S.missed.length? '<h2 style="margin-top:18px">Review ('+S.missed.length+')</h2>'+S.missed.map(function(m){
     return '<div class="miss"><div class="mq">'+m.q+'</div><div class="my">Your answer: '+m.your+'</div><div class="mc">Correct: '+m.correct+'</div><div class="mw"><b>'+m.cite+'</b> — '+m.w+'</div></div>';
-  }).join("") : '<p class="lead" style="margin-top:16px;color:var(--green)">Clean sweep — every one correct.</p>';
+  }).join("") : '<p class="lead" style="margin-top:16px;color:var(--accent)">Clean sweep — every one correct.</p>';
   app.innerHTML='<div class="card"><div class="hud"><span>Results</span></div>'+
-    '<div class="score">'+S.score+' / '+n+'</div><p class="lead">'+pct+'% on this run.</p>'+
-    '<div class="row"><button class="btn" onclick="start(\''+S.id+'\')">Try again</button><button class="btn ghost" onclick="landing()">All components</button></div>'+
+    '<div class="score">'+S.score+' / '+n+'</div><p class="lead">'+pct+'% · '+enc+'</p>'+
+    '<div class="row"><button class="btn" onclick="start(\''+S.id+'\')">'+again+'</button><button class="btn ghost" onclick="'+backTarget()+'">Back</button></div>'+
     miss+'</div>';
 }
 landing();
