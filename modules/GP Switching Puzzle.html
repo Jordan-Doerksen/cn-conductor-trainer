@@ -56,6 +56,13 @@
   .refimg svg{position:absolute;top:0;left:0;width:100%;height:100%}
   .band{opacity:.5}.band.pulse{opacity:.9}
   .reflegend{font-size:11px;color:var(--muted);margin-top:7px}
+  .refbox{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .refbox>summary{cursor:pointer;list-style:none;padding:11px 14px;font-size:13px;color:var(--muted);font-weight:600}
+  .refbox>summary::-webkit-details-marker{display:none}
+  .refbox>summary::before{content:"\25B8";color:var(--accent);margin-right:7px;font-size:11px}
+  .refbox[open]>summary::before{content:"\25BE"}
+  .refbox>summary:hover{color:var(--ink)}
+  .refbox .ref{margin:0;border:none;border-top:1px solid var(--line);border-radius:0}
   .log{font-size:12.5px;color:var(--muted);font-family:monospace;margin-top:6px}
   .log .nar{color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:13px}
   .log .sys{color:var(--muted)}
@@ -119,10 +126,13 @@
   <div class="fb" id="fb"></div>
   <button class="parbtn" id="parBtn" style="margin-top:10px;display:none">Show a tight (par) solution</button>
   <div class="fb" id="parsol"></div>
-  <div class="ref"><h3>Where the tracks are — the Grande Prairie yard</h3>
-    <div class="refimg"><img src="../assets/GP%20Yard%20(tracks).png" alt="Grande Prairie yard tracks"><svg id="refsvg" viewBox="0 0 1170 220" preserveAspectRatio="none"></svg></div>
-    <div class="reflegend">Gold = set-out track · blue = inbound · grey = scratch · orange dots = switches. Engine works the throat (left) end. <span style="color:var(--green)">⚡kick</span> = a track you can kick into on the end you're working.</div>
-  </div>
+  <details class="refbox">
+    <summary>Yard map — where the tracks are</summary>
+    <div class="ref">
+      <div class="refimg"><img src="../assets/GP%20Yard%20(tracks).png" alt="Grande Prairie yard tracks"><svg id="refsvg" viewBox="0 0 1170 220" preserveAspectRatio="none"></svg></div>
+      <div class="reflegend">Gold = set-out track · blue = inbound · grey = scratch · orange dots = switches. Engine works the throat (left) end. <span style="color:var(--green)">⚡kick</span> = a track you can kick into on the end you're working.</div>
+    </div>
+  </details>
 </div>
 <div class="modal" id="help">
  <div class="sheet">
