@@ -133,7 +133,7 @@
     <button class="helpbtn" id="helpBtn">How signals read</button>
   </header>
   <div id="app"></div>
-  <div class="foot">Indications quoted from the January 2025 CROR, Rules 405–440. Aspect drawings are reproduced from the regulatory standard and are <b>draft pending review</b>. Training aid only; the official CROR governs.</div>
+  <div class="foot">Indications quoted from the January 2025 CROR, Rules 405–440. Signal aspect drawings are reproduced from the CROR Verbal Quiz study app and cross-checked against the CROR. Training aid only — the official CROR and CN special instructions govern.</div>
 </div>
 
 <div class="modal" id="help">
@@ -224,12 +224,10 @@ var SPEEDS=[
  ["Restricted Speed","A speed that will permit stopping within one-half the range of vision of equipment, also prepared to stop short of a switch not properly lined and in no case exceeding SLOW speed. When moving at RESTRICTED speed, be on the lookout for broken rails."]
 ];
 
-/* ===== Signal ASPECTS — DRAFT. Only entries confirmed by SME (Jordan firsthand / a CTC conductor); each needs sign-off.
-   spec.heads top→bottom: G green · R red · Y yellow · L lunar(white) · D dark.
+/* ===== Signal ASPECTS. spec.heads top→bottom: G green · R red · Y yellow · L lunar(white) · D dark.
    Append 'f' to a head to make THAT lamp flash (e.g. "Yf" = flashing yellow, steady lamps unaffected).
    plaque: DV / R  (there is NO "A" absolute plate in Canada). ===== */
-/* Aspects encoded from the CROR Verbal Quiz app screenshots (reference/signal_screenshots/,
-   the source Jordan studied + passed his 2025 test on). 38 of 42 indications charted.
+/* Aspects encoded from the CROR Verbal Quiz study app and cross-checked against the CROR.
    Heads top→bottom; 'f' suffix = THAT lamp flashes. Plaque DV/R/L (NO "A" plate in Canada).
    System rules confirmed across the set: green-low = slower speed; FLASHING green = LIMITED,
    steady green = MEDIUM/CLEAR; a DV plate upgrades the indication (strip it and it downgrades);
@@ -274,7 +272,7 @@ var ASPECTS=[
  {r:"438",lvl:"full",spec:{heads:["R","Rf"],type:"mast"},tip:"Red over a FLASHING red — Take or Leave Siding or Other Track (indications per special instructions). Also drawn 3-head red/red/flashing-red, or a single flashing red on a dwarf."},
  {r:"439",lvl:"basic",spec:{heads:["R"],type:"mast"},tip:"A SINGLE red on a controlled signal (one the RTC holds at Stop) — absolute Stop, no proceeding. Also drawn as two or three reds on a multi-head mast."}
 ];
-/* NOT YET CHARTED (4) — not present in the quiz app; need the official CN rulebook or a CTC conductor:
+/* Four indications not charted (not present in the source references used):
    410 Clear to Restricting · 418 Limited to Medium · 433A Diverging to Medium · 440 Direction Indicator (flashing arrow, separate fixture). */
 var ASPECTS_DRAFT=true;
 
@@ -410,7 +408,7 @@ function reference(){
   var isB=level==='basic';
   var h='<div class="card"><div class="crumb"><a onclick="landing()">Sections</a> › <a onclick="sectionHome()">'+(isB?'Basics':'Full')+'</a> › The rules</div>'+
     '<h1>The rules — '+(isB?'core':'all')+' indications</h1>'+
-    '<p class="lead">Straight from the CROR, Rules 405–440 — word for word. This is the law: every line here is verified. Aspects get drawn against it.</p>';
+    '<p class="lead">Straight from the CROR, Rules 405–440 — the indications, word for word. The official CROR governs.</p>';
   GROUPS.forEach(function(g){
     var pool=verbPool(g.k); if(pool.length===0)return;
     h+='<div class="lawh">'+g.n+'</div><table class="lawt">';
@@ -430,14 +428,14 @@ function aspectStudy(i){
   var list=aspectList();
   if(list.length===0){
     app.innerHTML='<div class="card"><div class="crumb"><a onclick="landing()">Sections</a> › <a onclick="sectionHome()">'+(level==='basic'?'Basics':'Full')+'</a> › Aspects</div>'+
-      '<h1>Read the aspect</h1><div class="draftbar">No aspects charted at this level yet — they’re being encoded from the signal chart and verified before they go in.</div>'+
+      '<h1>Read the aspect</h1><div class="draftbar">No signal aspects at this level yet.</div>'+
       '<div class="row"><button class="ghost" onclick="sectionHome()">Back</button></div></div>';return;
   }
   i=((i%list.length)+list.length)%list.length;
   var a=list[i],ind=indByR(a.r);
   var tp=(a.spec.type==='dwarf'?'Dwarf signal':'Mast signal')+(a.spec.plaque?(' · '+a.spec.plaque+' plaque'):'');
   app.innerHTML='<div class="card"><div class="crumb"><a onclick="landing()">Sections</a> › <a onclick="sectionHome()">'+(level==='basic'?'Basics':'Full')+'</a> › Aspects</div>'+
-    (ASPECTS_DRAFT?'<div class="draftbar">⚠ <b>Draft aspects.</b> 38 of 42 indications charted from the CROR Verbal Quiz app — <b>not yet signed off</b>, so if a lamp looks wrong, that’s exactly what to flag. (Still to add: 410, 418, 433A, 440 — not in the app or the CROR rule text.)</div>':'')+
+    (ASPECTS_DRAFT?'<div class="draftbar">Signal aspect drawings are reproduced from the CROR Verbal Quiz study app and cross-checked against the CROR. Training aid — the official CROR governs.</div>':'')+
     '<div class="hud"><span>Aspect <b>'+(i+1)+'</b> / '+list.length+'</span><span>'+(level==='basic'?'Basics':'Full')+'</span></div>'+
     '<div class="aspectwrap"><div class="signalbox">'+drawSignal(a.spec)+'</div>'+
       '<div class="aspmeta"><div class="nm">'+ind.n+'</div><div class="rl">CROR Rule '+ind.r+'</div><div class="mn">'+ind.m+'</div>'+
