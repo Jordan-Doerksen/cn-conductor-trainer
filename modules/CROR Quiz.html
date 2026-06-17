@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CROR Quiz</title>
+<style>
+  :root{
+    --bg:#0e1622; --card:#18293c; --card2:#1b2c40; --line:#2b3f56;
+    --ink:#e8eef6; --muted:#93a6bd; --yellow:#f5b301; --yellow-d:#caa000;
+    --green:#33c27f; --green-bg:#123326; --red:#ef5a5a; --red-bg:#3a1717; --blue:#4aa3ff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:linear-gradient(180deg,#0c1320,#0e1622 40%);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;min-height:100vh;line-height:1.5}
+  .wrap{max-width:780px;margin:0 auto;padding:22px 18px 70px}
+  a.back{color:var(--muted);text-decoration:none;font-size:13px}
+  a.back:hover{color:var(--ink)}
+  header.top{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:14px;margin:6px 0 4px}
+  .badge{width:40px;height:40px;border-radius:9px;flex:none;background:var(--yellow);color:#1a1206;font-weight:800;
+    display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 2px 10px rgba(245,179,1,.25)}
+  .title{font-size:18px;font-weight:700;letter-spacing:.3px}
+  .subtitle{font-size:12.5px;color:var(--muted);margin-top:1px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-top:16px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+  h1{font-size:22px;margin:2px 0 6px}
+  p.lead{color:var(--muted);margin:0 0 16px;font-size:14.5px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .tile{text-align:left;background:var(--card2);border:1px solid var(--line);color:var(--ink);border-radius:12px;
+    padding:14px 15px;cursor:pointer;transition:.12s;font:inherit}
+  .tile:hover{border-color:var(--yellow);transform:translateY(-1px)}
+  .tile .t{font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .tile .d{color:var(--muted);font-size:12.5px;margin-top:4px}
+  .count{font-size:11px;color:#0c1320;background:var(--yellow);border-radius:20px;padding:2px 8px;font-weight:700;white-space:nowrap}
+  .tile.exam{grid-column:1/-1;background:#1b2c40;border-color:var(--yellow-d)}
+  .hud{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:13px;color:var(--muted)}
+  .hud b{color:var(--ink)}
+  .bar{height:7px;background:#0c1622;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0 16px}
+  .bar>i{display:block;height:100%;background:var(--yellow);width:0;transition:width .25s}
+  .tag{display:inline-block;font-size:10.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--yellow);font-weight:700}
+  .tier{font-size:10.5px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:1px 8px;margin-left:8px}
+  .q{font-size:17px;font-weight:600;margin:8px 0 16px}
+  .q .term{color:var(--yellow)}
+  .opt{display:block;width:100%;text-align:left;background:var(--card2);border:1px solid var(--line);color:var(--ink);
+    border-radius:10px;padding:12px 14px;margin:8px 0;cursor:pointer;font:inherit;font-size:14px;transition:.1s}
+  .opt:hover{border-color:var(--blue)}
+  .opt:disabled{cursor:default}
+  .opt.right{background:var(--green-bg);border-color:var(--green)}
+  .opt.wrong{background:var(--red-bg);border-color:var(--red)}
+  .fb{margin-top:12px;border-radius:10px;padding:13px 15px;font-size:13.5px;border:1px solid var(--line);background:#0f1a28}
+  .fb .v{font-weight:800;font-size:14px}
+  .fb .v.ok{color:var(--green)} .fb .v.no{color:var(--red)}
+  .fb .cite{display:inline-block;font-weight:700;color:#0c1320;background:var(--blue);border-radius:6px;padding:1px 8px;margin:6px 8px 6px 0;font-size:12px}
+  .fb .why{color:var(--muted);margin-top:2px}
+  .btn{background:var(--yellow);color:#1a1206;border:none;border-radius:10px;padding:11px 20px;font-weight:800;cursor:pointer;font:inherit;font-size:14px}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .row{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+  .score{font-size:34px;font-weight:800}
+  .miss{border-top:1px solid var(--line);padding:11px 0;font-size:13px}
+  .miss .mq{font-weight:600}
+  .miss .mc{color:var(--green);margin-top:2px}.miss .my{color:var(--red)}
+  .miss .mw{color:var(--muted);margin-top:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">← All modules</a>
+  <header class="top">
+    <div class="badge">CN</div>
+    <div><div class="title">CROR Quiz</div><div class="subtitle">Canadian Rail Operating Rules · straight from the rulebook · escalating by tier</div></div>
+  </header>
+  <div id="app"></div>
+</div>
+<script>
+/* ============================================================================
+   CROR QUIZ — every question is drawn from the Jan 28 2025 CROR and cites its rule.
+   Components mirror the CROR's own structure; each runs Tier 1 (recall) →
+   Tier 2 (application) → Tier 3 (distinctions/edge cases).
+   DEFINITIONS are verbatim from the CROR Definitions section (auto-generated MC).
+   ============================================================================ */
+
+var DEFS=[
+  {t:"ADVANCE SIGNAL",d:"A fixed signal used in connection with one or more signals to govern the approach of a movement to such signal.",k:3},
+  {t:"ADVANCED TRAIN DISPATCHING SYSTEM",d:"Train control technologies that provide enhancements for protecting overlapping authorities with ability to provide signal indications into protected track.",k:3},
+  {t:"AUTOMATIC BLOCK SIGNAL SYSTEM (ABS)",d:"A series of consecutive blocks in which ABS rules apply.",k:3},
+  {t:"BLOCK",d:"A length of track of defined limits, the use of which by a movement is governed by block signals.",k:1},
+  {t:"BLOCK SIGNAL",d:"A fixed signal at the entrance to a block to govern a movement entering or using that block.",k:3},
+  {t:"CAUTIONARY LIMITS",d:"That portion of the main track or main tracks within limits defined by cautionary limit sign(s).",k:3},
+  {t:"CENTRALIZED TRAFFIC CONTROL SYSTEM (CTC)",d:"A system in which CTC rules apply.",k:3},
+  {t:"CONTROLLED BLOCK",d:"A block in CTC between consecutive controlled locations or points.",k:3},
+  {t:"CONTROLLED LOCATION",d:"A location in CTC the limits of which are defined by opposing controlled signals.",k:3},
+  {t:"CONTROLLED POINT",d:"A signal location in CTC consisting of controlled signal(s) in one direction only.",k:3},
+  {t:"CONTROLLED SIGNAL",d:"A CTC block signal which is capable of displaying a Stop indication until requested to display a less restrictive indication by the RTC.",k:3},
+  {t:"CROSSOVER",d:"A track joining adjacent main tracks, or a main track and another track.",k:1},
+  {t:"DAILY OPERATING BULLETIN (DOB)",d:"A document containing applicable information from each GBO, instructions and other information requiring compliance within limits indicated in special instructions.",k:2},
+  {t:"ELECTRONIC COMMUNICATIONS METHOD (ECM)",d:"An electronic method for transmission and cancellation of authorities, instructions or information.",k:2},
+  {t:"ENGINE",d:"A locomotive(s) operated from a single control or a cab control car, used in train, transfer or yard service.",k:1},
+  {t:"ENGINE IN YARD SERVICE",d:"An engine with or without cars utilized exclusively in switching, marshalling, humping, trimming and industrial switching.",k:2},
+  {t:"EQUIPMENT",d:"One or more engines and/or cars which can be handled on their own wheels in a movement.",k:1},
+  {t:"EXCLUSIVE TOP",d:"A TOP that provides exclusive occupancy of the track to one foreman. No more than two track units can operate within the limits of an Exclusive TOP.",k:2},
+  {t:"EXCLUSIVE TRACK UNIT SPEED",d:"When protected by an Exclusive TOP, a speed that permits a track unit to stop short of a switch not properly lined. Track units handling equipment must not exceed the lesser of authorized freight, passenger or temporary speed restrictions.",k:2},
+  {t:"FIXED SIGNAL",d:"A signal or sign at a fixed location indicating a condition affecting the operation of a movement.",k:1},
+  {t:"FOLLOW-UP TOP",d:"A TOP issued within limits of a movement(s) that has passed or will be identified by the foreman as having passed the foreman's location.",k:2},
+  {t:"GENERAL BULLETIN ORDER(S) (GBO)",d:"Instructions regarding track condition restrictions and other information that affect the safety and operation of a movement.",k:2},
+  {t:"GRADE CROSSING",d:"Any location where a railway track intersects with an authorized road, sidewalk, path, or trail, excluding Railway Company Grade Crossings.",k:2},
+  {t:"GRAVITY DROP",d:"Releasing stationary equipment and permitting it to roll under its own momentum.",k:2},
+  {t:"HEAVY GRADE",d:"A portion of a track 2 miles in length or greater, with an average grade greater than 1.0%, and less than or equal to 1.8%.",k:2},
+  {t:"HIGH RISK LOCATION",d:"A track, or portion of a track, other than a main track, subdivision track, or siding; identified in special instructions, on which unattended equipment requires the application of Rule 112(a).",k:2},
+  {t:"HUMPING",d:"Pushing equipment at a regulated speed then releasing it under its own momentum, in an engineered environment where the route and speed are controlled through automated or assisted devices.",k:2},
+  {t:"INTERLOCKING",d:"An arrangement of interconnected signals and signal appliances for which interlocking rules and special instructions are in effect.",k:2},
+  {t:"INTERLOCKING LIMITS",d:"The tracks between the extreme or outer opposing interlocking signals of an interlocking.",k:2},
+  {t:"INTERLOCKING SIGNAL",d:"A fixed signal at the entrance to or within interlocking limits to govern the use of the routes.",k:3},
+  {t:"KICKING",d:"Pushing equipment then releasing it under its own momentum. Does not include humping.",k:2},
+  {t:"MAIN TRACK",d:"A track of a subdivision extending through and between stations governed by one or more methods of control upon which movements, track units and track work must be authorized.",k:1},
+  {t:"MARKER",d:"When used, will indicate the last piece of equipment in a movement. It will be one of the following: a red light, a red reflectorized plaque, a sense and braking unit (SBU); or an occupied caboose, distributed power remote locomotive consist or distributed braking car, when the last piece of equipment in the direction of travel.",k:2},
+  {t:"METHOD OF CONTROL",d:"Rules and/or special instructions governing the use of a track(s).",k:2},
+  {t:"MOUNTAIN GRADE",d:"A portion of a track 2 miles in length or greater, with an average grade greater than 1.8%.",k:2},
+  {t:"MOVEMENT(S)",d:"The term used in these rules to indicate that the rule is applicable to trains, transfers or engines in yard service.",k:1},
+  {t:"MULTI-TRACK",d:"Two or more main tracks of a subdivision at the same location.",k:2},
+  {t:"NON-MAIN TRACK (NMT)",d:"Any track(s) other than those listed in time table columns as having CTC, OCS, ABS or Cautionary Limits applicable and unless otherwise provided include a requirement to operate at REDUCED speed.",k:2},
+  {t:"NON-SIGNALLED SIDING",d:"A siding where non-main track rules apply, the use of which may be governed by special instructions.",k:3},
+  {t:"OCCUPANCY CONTROL SYSTEM (OCS)",d:"A system in which OCS rules apply.",k:2},
+  {t:"RAILWAY COMPANY GRADE CROSSING",d:"Any location where a railway track intersects with a road, sidewalk, path, or trail, that is opened or maintained by a railway company that is the sole authority of the crossing.",k:2},
+  {t:"RUNNING SWITCH",d:"Pulling equipment then releasing it under its own momentum.",k:2},
+  {t:"SCHEDULE",d:"Information pertaining to the operating times of a passenger train.",k:2},
+  {t:"SIDING",d:"A track adjacent and connected to the main track which is so designated in the time table, GBO or operating bulletin.",k:1},
+  {t:"SIDING CONTROL TERRITORY (SCT)",d:"Non-signalled sidings indicated in special instructions where SCT rules are applicable.",k:2},
+  {t:"SIGNAL INDICATION",d:"The information conveyed by a fixed signal.",k:2},
+  {t:"SIGNALLED SIDING",d:"A siding where CTC rules apply.",k:3},
+  {t:"SINGLE TRACK",d:"One main track on a subdivision at a location.",k:2},
+  {t:"STATION",d:"A location identified by a station name sign and designated by that name in the time table.",k:2},
+  {t:"SUBDIVISION",d:"Railway trackage designated by time table.",k:2},
+  {t:"SUBDIVISION TRACK",d:"A Non-Main Track so indicated in the time table method of control column that is an extension of the main track, and the through track at that location, defined with subdivision mile posts. REDUCED speed is applicable to a maximum speed as indicated in the time table. Transfers must not exceed 15 MPH.",k:2},
+  {t:"TABULAR GENERAL BULLETIN ORDER (TGBO)",d:"A document specific to a movement, containing applicable information from each GBO, instructions and other information requiring compliance within limits indicated in the TGBO.",k:2},
+  {t:"TIME TABLE",d:"The special instruction that contains subdivision description information and footnotes relating to the operation of movements and track units.",k:2},
+  {t:"TRACK OCCUPANCY PERMIT (TOP)",d:"Authority issued for the protection of track units and track work.",k:2},
+  {t:"TRACK UNIT (TU)",d:"A vehicle or machine capable of on-track operation utilized for track inspection, track work and other railway activities when on a track.",k:2},
+  {t:"TRACK UNIT SPEED",d:"A speed that (a) permits a track unit to stop within one-half the range of vision of equipment or a track unit; (b) permits a track unit to stop short of a switch not properly lined or any obstruction or track defect that may prevent safe passage; and (c) does not exceed maximum authorized speed for that track unit.",k:2},
+  {t:"TRACK WORK",d:"Any work on or near the track that may render the track unsafe for movements at normal speed or where protection against movements may be required for employees and machines involved in track construction and repairs.",k:2},
+  {t:"TRAILING END",d:"The tail end of the last piece of equipment in a movement in the direction of travel.",k:1},
+  {t:"TRAIN",d:"An engine with or without cars intended to operate on the main track at speeds in excess of 15 MPH or a track unit when so designated.",k:1},
+  {t:"TRAIN INFORMATION BRAKING SYSTEM (TIBS)",d:"A system with rear and front communication components capable of monitoring brake pipe pressure on the rear car, calculating distance, and initiating an emergency brake application at the rear of the train from the controlling locomotive.",k:3},
+  {t:"TRANSFER",d:"An engine with or without cars operating on main track at speeds not exceeding 15 MPH.",k:1},
+  {t:"UNATTENDED",d:"When an employee is not in close enough proximity to take effective action.",k:3},
+  {t:"YARD",d:"A system of non-main tracks, utilized to switch equipment and for other purposes over which movements may operate subject to prescribed signals, rules and special instructions.",k:1}
+];
+
+/* Hand-authored questions. a = index of correct choice. cite = rule. */
+var BANK=[
+ /* ---------- SPEEDS (Definitions: Speeds) ---------- */
+ {c:"speeds",k:1,q:"LIMITED speed is a speed not exceeding…",o:["45 MPH","30 MPH","25 MPH","15 MPH"],a:0,cite:"Definitions — Speeds",w:"LIMITED Speed = not exceeding 45 MPH."},
+ {c:"speeds",k:1,q:"MEDIUM speed is a speed not exceeding…",o:["30 MPH","45 MPH","25 MPH","15 MPH"],a:0,cite:"Definitions — Speeds",w:"MEDIUM Speed = not exceeding 30 MPH."},
+ {c:"speeds",k:1,q:"DIVERGING speed is a speed not exceeding…",o:["25 MPH","15 MPH","30 MPH","45 MPH"],a:0,cite:"Definitions — Speeds",w:"DIVERGING Speed = not exceeding 25 MPH."},
+ {c:"speeds",k:1,q:"SLOW speed is a speed not exceeding…",o:["15 MPH","25 MPH","20 MPH","10 MPH"],a:0,cite:"Definitions — Speeds",w:"SLOW Speed = not exceeding 15 MPH."},
+ {c:"speeds",k:2,q:"Unless otherwise provided, TURNOUT speed is a speed not exceeding…",o:["15 MPH","25 MPH","30 MPH","10 MPH"],a:0,cite:"Definitions — Speeds",w:"TURNOUT Speed = not exceeding 15 MPH unless otherwise provided by signal indication or special instructions."},
+ {c:"speeds",k:2,q:"REDUCED speed means a speed that will permit stopping…",o:["within one-half the range of vision of equipment","within the range of vision of equipment","within 100 feet","short of any signal"],a:0,cite:"Definitions — Speeds",w:"REDUCED Speed = a speed that will permit stopping within one-half the range of vision of equipment."},
+ {c:"speeds",k:3,q:"What distinguishes RESTRICTED speed from REDUCED speed?",o:["RESTRICTED adds: prepared to stop short of a switch not properly lined, not exceeding SLOW, and lookout for broken rails","RESTRICTED is a fixed 10 MPH","REDUCED applies only on grades","There is no difference"],a:0,cite:"Definitions — Speeds",w:"Both stop within one-half range of vision, but RESTRICTED also requires being prepared to stop short of a switch not properly lined, in no case exceeding SLOW speed, and being on the lookout for broken rails."},
+ {c:"speeds",k:3,q:"A TRAIN is intended to operate on the main track at speeds in excess of ___, while a TRANSFER must not exceed ___.",o:["15 MPH / 15 MPH","25 MPH / 15 MPH","15 MPH / 10 MPH","30 MPH / 15 MPH"],a:0,cite:"Definitions",w:"TRAIN = operates above 15 MPH on the main track; TRANSFER = operates on the main track at speeds not exceeding 15 MPH."},
+
+ /* ---------- CREW & ROLES (Definitions: Occupational Terms) ---------- */
+ {c:"roles",k:1,q:"Per the CROR, the Conductor is the employee…",o:["in charge of the operation of a movement","in control of the engine","in charge of protection of track work","who couples air hoses"],a:0,cite:"Definitions — Occupational Terms",w:"Conductor = an employee in charge of the operation of a movement."},
+ {c:"roles",k:1,q:"The Locomotive Engineer is the employee…",o:["in control of the engine","in charge of the operation of a movement","in charge of track units","assigned when a crew is unfamiliar with the territory"],a:0,cite:"Definitions — Occupational Terms",w:"Locomotive Engineer = an employee in control of the engine."},
+ {c:"roles",k:2,q:"The Foreman is the employee in charge of…",o:["the protection of track work and track units","the operation of a movement","the engine","copying GBOs"],a:0,cite:"Definitions — Occupational Terms",w:"Foreman = an employee in charge of the protection of track work and track units."},
+ {c:"roles",k:3,q:"A Pilot is assigned to a movement when…",o:["the locomotive engineer or conductor, or both, are not fully acquainted","the conductor is off duty","two engines are coupled","the train exceeds a set length"],a:0,cite:"Definitions — Occupational Terms",w:"Pilot = an employee assigned to a movement when the locomotive engineer or conductor, or both, are not fully acquainted (with the physical characteristics/instructions)."},
+
+ /* ---------- SWITCHES & DERAILS (104, 104.5) ---------- */
+ {c:"switches",k:1,q:"Hand operated switches in sidings may be considered lined for the normal position unless advised otherwise by…",o:["the RTC, GBO or special instruction","the conductor","any crew member","the yardmaster only"],a:0,cite:"Rule 104",w:"Hand operated switches in sidings may be considered lined for the normal position unless advised otherwise by the RTC, GBO or special instruction."},
+ {c:"switches",k:2,q:"A derail is identified in the field by…",o:["a reflective red letter “D” on a reflective yellow target (or a “Special Derail” sign)","a blue flag","a red lantern only","a white “X” board"],a:0,cite:"Rule 104.5",w:"Derails are switch-stand operated and identified by a reflective red letter “D” on a reflective yellow target, or a sign indicating “Special Derail,” visible when in the derailing position."},
+ {c:"switches",k:3,q:"A Dual Control Switch is…",o:["a switch equipped for powered and hand operation","a switch that restores itself after a move","a switch locked by the RTC","two switches worked as one"],a:0,cite:"Definitions — Switches",w:"Dual Control Switch = a switch equipped for powered and hand operation (governed by Rule 104.2)."},
+
+ /* ---------- SECURING (112) ---------- */
+ {c:"secure",k:1,q:"When equipment is left unattended, it must be…",o:["secured to prevent it from moving unintentionally","left with the air applied only","coupled to an engine","reported to the RTC within one hour"],a:0,cite:"Rule 112",w:"Rule 112: when equipment is left unattended it must be secured to prevent it from moving unintentionally."},
+ {c:"secure",k:3,q:"For securement purposes, equipment is “unattended” when…",o:["an employee is not in close enough proximity to take effective action","the engine is shut down","it is left for more than 30 minutes","no hand brakes are applied"],a:0,cite:"Rule 112 / Definitions",w:"UNATTENDED = when an employee is not in close enough proximity to take effective action (to stop the equipment)."},
+
+ /* ---------- COUPLING, KICKING & SHOVING (113.5/.6/.7, 114, 115) ---------- */
+ {c:"move",k:1,q:"On tracks NOT listed in Rule 113.4, unless special instructions indicate otherwise, kicking of equipment is…",o:["prohibited","permitted at SLOW speed","permitted with two hand brakes","permitted from the north end only"],a:0,cite:"Rule 113.5",w:"Rule 113.5(a): on tracks not listed in Rule 113.4, unless otherwise indicated in special instructions, the kicking of equipment is prohibited."},
+ {c:"move",k:1,q:"When equipment is shoved by an engine, a crew member must be…",o:["on the leading piece of equipment or on the ground, positioned to observe the track and give signals","on the rear of the engine","in the cab beside the engineer","at the next switch"],a:0,cite:"Rule 115",w:"Rule 115: when shoving (or headed by an unmanned remote engine), a crew member must be on the leading piece of equipment or on the ground, in a position to observe the track to be used and give the signals/instructions to control the move (point protection)."},
+ {c:"move",k:2,q:"Before a running switch is commenced, what must be verified?",o:["the switch and hand brakes are in working order","the air is fully charged","two hand brakes are applied","the RTC has issued a clearance"],a:0,cite:"Rule 113.6",w:"Rule 113.6(a): it must be verified that the switch and hand brakes are in working order before the move is commenced."},
+ {c:"move",k:2,q:"A running switch must NOT be made…",o:["with or onto occupied equipment, or equipment placarded for dangerous goods","on level track","with fewer than three cars","without radio contact"],a:0,cite:"Rule 113.6",w:"Rule 113.6(b): a running switch must not be made with or onto occupied equipment, equipment placarded for dangerous goods, or where the switch to be used is not suitable."},
+ {c:"move",k:2,q:"A movement must not foul a track until…",o:["the switches connected with the move are properly lined (or, for semi-automatic/spring switches, the conflicting route is known to be clear)","the RTC grants verbal permission","the air brakes are cut in","a blue flag is removed"],a:0,cite:"Rule 114",w:"Rule 114(b): a movement must not foul a track until the switches connected with the move are properly lined, or for semi-automatic/spring switches, the conflicting route is known to be clear. Equipment must not move foul of another track unless properly protected."},
+ {c:"move",k:3,q:"“Pushing equipment then releasing it under its own momentum” (not humping) defines…",o:["Kicking","Running switch","Gravity drop","Shoving"],a:0,cite:"Definitions",w:"KICKING = pushing equipment then releasing it under its own momentum; it does not include humping."},
+ {c:"move",k:3,q:"“Pulling equipment then releasing it under its own momentum” defines…",o:["Running switch","Kicking","Gravity drop","Humping"],a:0,cite:"Definitions",w:"RUNNING SWITCH = pulling equipment then releasing it under its own momentum."},
+ {c:"move",k:3,q:"“Releasing stationary equipment and permitting it to roll under its own momentum” defines…",o:["Gravity drop","Kicking","Running switch","Humping"],a:0,cite:"Definitions",w:"GRAVITY DROP = releasing stationary equipment and permitting it to roll under its own momentum."},
+
+ /* ---------- RADIO (120, 121, 123, 123.2) ---------- */
+ {c:"radio",k:1,q:"In radio communication, “OVER” denotes…",o:["transmission is ended and a response is expected","transmission is ended and no response is expected","monitor this channel for my next transmission","stop the movement"],a:0,cite:"Rule 120",w:"Rule 120(a): “OVER” = transmission is ended and a response is expected."},
+ {c:"radio",k:1,q:"In radio communication, “OUT” denotes…",o:["transmission is ended and no response is expected","transmission is ended and a response is expected","monitor for my next transmission","emergency"],a:0,cite:"Rule 120",w:"Rule 120(a): “OUT” = transmission is ended and no response is expected."},
+ {c:"radio",k:1,q:"In radio communication, “STAND BY” denotes…",o:["monitor this channel for my next transmission","a response is expected","no response is expected","switch channels"],a:0,cite:"Rule 120",w:"Rule 120(a): “STAND BY” = monitor this channel for my next transmission."},
+ {c:"radio",k:2,q:"An initial radio call must commence with…",o:["the railway company initials of the person being called","the caller's own name","the engine number","the word OVER"],a:0,cite:"Rule 121",w:"Rule 121(a): the initial call must commence with the railway company initials of the person being called (positive identification)."},
+ {c:"radio",k:2,q:"In switching by radio, direction must be given in relation to…",o:["the front of the controlling locomotive","the conductor's position","the nearest switch","compass north"],a:0,cite:"Rule 123.2",w:"Rule 123.2(i): direction in relation to the front of the controlling locomotive must be given in the initial instruction and whenever the direction changes."},
+ {c:"radio",k:3,q:"Safety-affecting radio instructions (e.g. car/distance counts in a back-up) must be…",o:["repeated back to the sender","acknowledged with OVER only","logged after the move","given twice by the sender"],a:0,cite:"Rule 123",w:"Verification (Rule 123): safety-affecting radio instructions must be repeated back to the sender — this is why the engineer repeats each car/distance count."},
+
+ /* ---------- SIGNALS — indications & plates (401–440) ---------- */
+ {c:"signals",k:2,q:"Two staggered red lamps with NO plate indicate…",o:["Stop and Proceed (437)","Stop (439)","Restricting (436)","Diverging (430)"],a:0,cite:"Rule 437",w:"Two staggered reds with no plate = a non-controlled (automatic) signal: Stop and Proceed (437) — stop, then proceed at restricted speed."},
+ {c:"signals",k:2,q:"Which plates does the CROR actually use? (There is no “A” plate in Canada.)",o:["DV and R","A and DV","R and A","A, DV and R"],a:0,cite:"Rules 403 / 573",w:"Only DV (diverging) and R (restricting) plates are used. An “A”/absolute plate is US practice and does not exist in the CROR."},
+ {c:"signals",k:3,q:"On a non-controlled signal, what is the tell between Restricting (436) and Stop and Proceed (437)?",o:["The R plate — same two staggered reds, but 436 carries an R plate and 437 does not","The colour of the lamps","The number of heads","Whether the lamps flash"],a:0,cite:"Rules 436 / 437",w:"Two staggered reds with an R plate = Restricting (436); the same two staggered reds with no plate = Stop and Proceed (437)."},
+ {c:"signals",k:3,q:"A single red on a controlled signal (one the RTC can hold at Stop) indicates…",o:["Stop (439) — absolute, no proceeding","Stop and Proceed (437)","Restricting (436)","Take Siding (438)"],a:0,cite:"Rule 439",w:"A single red on a controlled signal = Stop (439): an absolute stop with no proceeding (contrast the permissive two-staggered-reds of 437)."}
+];
+
+var COMPONENTS=[
+  {id:"def",     name:"Definitions",            d:"Every CROR defined term, both directions, verbatim."},
+  {id:"speeds",  name:"Speeds",                 d:"Limited / Medium / Diverging / Slow / Reduced / Restricted."},
+  {id:"roles",   name:"Crew & roles",          d:"Conductor, locomotive engineer, foreman, pilot."},
+  {id:"switches",name:"Switches & derails",    d:"Hand-operated switches, derails, dual control."},
+  {id:"secure",  name:"Securing equipment",    d:"Rule 112 — unattended equipment."},
+  {id:"move",    name:"Coupling, kicking & shoving", d:"113.5–115: kicking, running switch, fouling, shoving."},
+  {id:"radio",   name:"Radio",                 d:"120–123.2: terms, positive ID, switching by radio."},
+  {id:"signals", name:"Signals & plates",      d:"401–440: indications, plates, controlled vs non-controlled."}
+];
+var TIERNAME={1:"Recall",2:"Application",3:"Distinctions"};
+
+/* ---------- helpers ---------- */
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function compCount(id){ if(id==="def") return DEFS.length; return BANK.filter(function(q){return q.c===id;}).length; }
+function shareWord(a,b){var A=a.replace(/[^A-Z ]/gi,"").toUpperCase().split(/\s+/);var B=b.toUpperCase();for(var i=0;i<A.length;i++){if(A[i].length>3&&B.indexOf(A[i])>-1)return true;}return false;}
+
+/* build one definition MC question */
+function defQ(idx,dir){
+  var item=DEFS[idx];
+  var pool=DEFS.filter(function(_,i){return i!==idx;});
+  // tier 3: prefer confusable siblings (shared word in the term)
+  if(item.k>=3){var sib=pool.filter(function(p){return shareWord(item.t,p.t);});if(sib.length>=3)pool=sib;}
+  var dis=shuffle(pool).slice(0,3);
+  if(dir==="t2d"){
+    var opts=shuffle([{t:item.d,ok:true}].concat(dis.map(function(p){return {t:p.d,ok:false};})));
+    return {k:item.k,q:'What does the CROR term “<span class="term">'+item.t+'</span>” mean?',
+      o:opts.map(function(x){return x.t;}),a:opts.map(function(x){return x.ok;}).indexOf(true),
+      cite:"Definitions",w:item.t+" — "+item.d};
+  } else {
+    var opts2=shuffle([{t:item.t,ok:true}].concat(dis.map(function(p){return {t:p.t,ok:false};})));
+    return {k:item.k,q:'Which CROR term is defined as:<br><span class="term">“'+item.d+'”</span>',
+      o:opts2.map(function(x){return x.t;}),a:opts2.map(function(x){return x.ok;}).indexOf(true),
+      cite:"Definitions",w:item.t+" — "+item.d};
+  }
+}
+
+/* assemble a session (escalating by tier) */
+function buildSession(compId){
+  var list=[];
+  if(compId==="all"){
+    COMPONENTS.forEach(function(c){list=list.concat(rawFor(c.id));});
+    list=sampleEscalating(list,26);
+  } else {
+    list=sampleEscalating(rawFor(compId), compId==="def"?22:99);
+  }
+  return list.map(function(item){return item.build();});
+}
+function rawFor(compId){
+  if(compId==="def"){
+    return DEFS.map(function(_,i){var k=DEFS[i].k;var dir=(k===1)?"t2d":(k===3?"d2t":(i%2?"t2d":"d2t"));
+      return {k:k,build:function(){return defQ(i,dir);}};});
+  }
+  return BANK.filter(function(q){return q.c===compId;}).map(function(q){
+    return {k:q.k,build:function(){var opts=shuffle(q.o.map(function(t,i){return {t:t,ok:i===q.a};}));
+      return {k:q.k,q:q.q,o:opts.map(function(x){return x.t;}),a:opts.map(function(x){return x.ok;}).indexOf(true),cite:q.cite,w:q.w};}};
+  });
+}
+function sampleEscalating(items,limit){
+  var by={1:[],2:[],3:[]}; items.forEach(function(it){(by[it.k]||by[2]).push(it);});
+  var out=[];
+  [1,2,3].forEach(function(t){
+    var b=shuffle(by[t]);
+    var take=items.length<=limit? b.length : Math.max(1,Math.round(limit*by[t].length/items.length));
+    out=out.concat(b.slice(0,take));
+  });
+  return out.slice(0,limit);
+}
+
+/* ---------- UI / state ---------- */
+var app=document.getElementById("app");
+var S=null;
+function landing(){
+  S=null;
+  var tiles=COMPONENTS.map(function(c){
+    return '<button class="tile" onclick="start(\''+c.id+'\')"><div class="t">'+c.name+'<span class="count">'+compCount(c.id)+'</span></div><div class="d">'+c.d+'</div></button>';
+  }).join("");
+  app.innerHTML='<div class="card"><h1>Quiz the rulebook.</h1>'+
+    '<p class="lead">Every question comes straight from the January 2025 CROR and cites the rule. Pick a component — each runs <b>Recall → Application → Distinctions</b>.</p>'+
+    '<div class="grid">'+tiles+
+      '<button class="tile exam" onclick="start(\'all\')"><div class="t">Full CROR exam <span class="count">mixed</span></div><div class="d">A 26-question spread across every component, escalating in difficulty.</div></button>'+
+    '</div></div>';
+}
+function start(id){
+  var qs=buildSession(id);
+  S={id:id,qs:qs,i:0,score:0,answered:false,missed:[]};
+  renderQ();
+}
+function renderQ(){
+  var q=S.qs[S.i], n=S.qs.length;
+  var name=S.id==="all"?"Full CROR exam":(COMPONENTS.filter(function(c){return c.id===S.id;})[0].name);
+  var pct=Math.round(S.i/n*100);
+  var opts=q.o.map(function(t,i){return '<button class="opt" id="o'+i+'" onclick="pick('+i+')">'+t+'</button>';}).join("");
+  app.innerHTML='<div class="card">'+
+    '<div class="hud"><span><b>'+name+'</b> <span class="tier">Tier '+q.k+' · '+TIERNAME[q.k]+'</span></span><span>Q <b>'+(S.i+1)+'</b>/'+n+' · Score <b>'+S.score+'</b></span></div>'+
+    '<div class="bar"><i style="width:'+pct+'%"></i></div>'+
+    '<div class="q">'+q.q+'</div>'+opts+
+    '<div id="fb"></div>'+
+    '<div class="row"><button class="btn ghost" onclick="landing()">Quit</button></div>'+
+  '</div>';
+}
+function pick(i){
+  if(S.answered)return; S.answered=true;
+  var q=S.qs[S.i];
+  for(var j=0;j<q.o.length;j++){var b=document.getElementById("o"+j);b.disabled=true;if(j===q.a)b.className="opt right";}
+  var ok=i===q.a;
+  if(ok){S.score++;}else{document.getElementById("o"+i).className="opt wrong";
+    S.missed.push({q:q.q,your:q.o[i],correct:q.o[q.a],cite:q.cite,w:q.w});}
+  var last=S.i===S.qs.length-1;
+  document.getElementById("fb").innerHTML='<div class="fb"><div class="v '+(ok?"ok":"no")+'">'+(ok?"✓ Correct":"✗ Not quite")+'</div>'+
+    '<span class="cite">'+q.cite+'</span><div class="why">'+q.w+'</div>'+
+    '<div class="row"><button class="btn" onclick="'+(last?"finish()":"next()")+'">'+(last?"See results":"Next →")+'</button></div></div>';
+}
+function next(){S.i++;S.answered=false;renderQ();}
+function finish(){
+  var n=S.qs.length,pct=Math.round(S.score/n*100);
+  var miss=S.missed.length? '<h2 style="margin-top:18px">Review ('+S.missed.length+')</h2>'+S.missed.map(function(m){
+    return '<div class="miss"><div class="mq">'+m.q+'</div><div class="my">Your answer: '+m.your+'</div><div class="mc">Correct: '+m.correct+'</div><div class="mw"><b>'+m.cite+'</b> — '+m.w+'</div></div>';
+  }).join("") : '<p class="lead" style="margin-top:16px;color:var(--green)">Clean sweep — every one correct.</p>';
+  app.innerHTML='<div class="card"><div class="hud"><span>Results</span></div>'+
+    '<div class="score">'+S.score+' / '+n+'</div><p class="lead">'+pct+'% on this run.</p>'+
+    '<div class="row"><button class="btn" onclick="start(\''+S.id+'\')">Try again</button><button class="btn ghost" onclick="landing()">All components</button></div>'+
+    miss+'</div>';
+}
+landing();
+</script>
+</body>
+</html>

@@ -68,7 +68,8 @@ CN Conductor Trainer/              (repo root; entry = index.html)
 │  ├─ GP Yard Board.html           Interactive yard map (clickable tracks + switch dots)
 │  ├─ GP Radio Steps.html          Guided "Back to a Joint" radio call sequence
 │  ├─ GP Switching Drill.html      "Classify the cut" quiz
-│  └─ Signal Reading.html          CROR signal aspects (405–440) + SVG lamp renderer + aspect study
+│  ├─ Signal Reading.html          CROR signal aspects (405–440) + SVG lamp renderer + aspect study
+│  └─ CROR Quiz.html               Data-driven CROR rules quiz (text rules, by component, escalating tiers)
 ├─ assets/
 │  ├─ GP Yard (cleaned).png        Denoised black-on-white trace of the yard photo
 │  └─ GP Yard (tracks).png         Cropped strip used as the puzzle reference image
@@ -134,6 +135,14 @@ Two-section trainer (Basics / Full) over the CROR signal indications. The **word
 - **Policy (Jordan's call): one card per *indication*, variants noted in the card's tip** — not one card per hardware combo. (A future separate Quiz module will use all ~136 individual variant cards; the study set stays grouped.)
 - **`ASPECTS_DRAFT` stays `true`** until the full set is encoded. Progress, the resolved/open questions, and the "what's next" pointer live in **`reference/signal-questions.md`** (the live log — update it every batch).
 - **Verify** new aspects with the stubbed-DOM harness (asserts lamp count + flash-vs-steady per head against the real `drawSignal`); screenshots of the live page are blocked by the infinite SMIL flash animations, so trust the renderer's counts.
+
+### 5.7 CROR Quiz (text-rules quiz, the "use the CROR as law" track)
+A **data-driven** quiz over the **text** of the CROR (everything except the signal lamp pictures, which live in §5.6). Unlike the signals work, the CROR text *is* the authoritative source, so questions are pulled straight from the rulebook and cite the rule — no screenshots, no SME loop.
+- **Structured by the CROR's own components** (`var COMPONENTS`): Definitions · Speeds · Crew & roles · Switches & derails · Securing (112) · Coupling/kicking/shoving (113–115) · Radio (120–123.2) · Signals & plates (401–440). Plus a "Full CROR exam" mixed mode. Easy to add components.
+- **Escalating tiers** every run: Tier 1 Recall → Tier 2 Application → Tier 3 Distinctions (`sampleEscalating` orders tiers ascending). Each answer shows a **rule citation + the CROR text**; wrong answers collect into an end-of-run review.
+- **Definitions are verbatim CROR** (`var DEFS`, 63 terms) and generate MC at runtime in both directions (term→def, def→term); Tier-3 terms pull *confusable* distractors (e.g., the CONTROLLED Block/Signal/Location/Point cluster). Operating-rule questions are hand-authored in `var BANK`, each cited to its rule.
+- **Source extraction:** parsed from `reference/Jan_2025_Canadian_rail_operating_rules_EN.pdf` with `pymupdf` (working JSON in `%TEMP%\sigshots\`: `cror_defs.json`, `cror_rules.json` 224 rules, `cror_bodies.json`). **Reuse this to expand the bank** — the rulebook text has no lamp/aspect descriptions but is complete for the rules themselves.
+- **Verify** with the stubbed-DOM harness (`%TEMP%\sigshots\verify_quiz.js`): every static + generated question has 4 distinct options, a valid answer index, a citation, and a tier; every component builds a non-empty escalating session.
 
 ---
 
@@ -308,7 +317,7 @@ Module **ends** at step 8. Initial transmissions end "over"; the conversation's 
 
 ## 12. Status & roadmap
 
-**Done:** all **six** modules built and live on GitHub Pages; folder restructured (hub/modules/assets/reference) with relative links; outbound + mixed + **Full-yard** puzzle batches; **KICKING shipped** as a puzzle move (PULL/SPOT/KICK/TIE-DOWN, secured-cut rule, two scores moves+joints, BFS pars recomputed + verified) — ⚠ the secured-cut model (kick only onto a secured 2+-car standing cut; SME Kourtney) **supersedes §7.1's simpler KICKABLE list**; expand §7.1 from the code the next time the puzzle is touched; radio module through "going for hand brakes"; How-to-play onboarding on the Switching Puzzle (verified); **Signal Reading module built** (§5.6) with the SVG lamp renderer + aspect-study mode.
+**Done:** all **seven** modules built and live on GitHub Pages (incl. the **CROR Quiz**, §5.7 — data-driven text-rules quiz, 63 verbatim definitions + 35 cited operating questions, escalating tiers, verified); folder restructured (hub/modules/assets/reference) with relative links; outbound + mixed + **Full-yard** puzzle batches; **KICKING shipped** as a puzzle move (PULL/SPOT/KICK/TIE-DOWN, secured-cut rule, two scores moves+joints, BFS pars recomputed + verified) — ⚠ the secured-cut model (kick only onto a secured 2+-car standing cut; SME Kourtney) **supersedes §7.1's simpler KICKABLE list**; expand §7.1 from the code the next time the puzzle is touched; radio module through "going for hand brakes"; How-to-play onboarding on the Switching Puzzle (verified); **Signal Reading module built** (§5.6) with the SVG lamp renderer + aspect-study mode.
 
 **In progress:**
 - **Signal-aspect encoding** (`Signal Reading.html`, §5.6): **38 of 42 indications encoded** from all 136 CROR Verbal Quiz shots (full pass done 2026-06-16, verified via stubbed-DOM harness + live in-browser render, 0 errors). `ASPECTS_DRAFT` stays `true` until the last 4 + the 407 question close. Full status + the system rules + open conflicts are in `reference/signal-questions.md` (the FULL PASS COMPLETE block).
