@@ -17,10 +17,9 @@
        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55}
   .wrap{max-width:900px;margin:0 auto;padding:34px 20px 70px}
   header{display:flex;align-items:center;gap:14px;margin-bottom:8px}
-  .mark{width:46px;height:46px;border-radius:11px;background:var(--panel);border:1px solid var(--line);
-        display:flex;align-items:center;justify-content:center;gap:4px;flex:none}
-  .mark span{width:9px;height:9px;border-radius:50%}
-  .mark .g{background:var(--accent)} .mark .a{background:var(--amber)} .mark .r{background:var(--red)}
+  .mark{width:38px;height:54px;border-radius:10px;background:var(--panel);border:1px solid var(--line);
+        display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:none}
+  .mark span{width:9px;height:9px;border-radius:50%;background:#262b34;transition:background .5s ease,box-shadow .5s ease}
   h1{font-size:23px;margin:0;font-weight:700;letter-spacing:.2px}
   .sub{font-size:12.5px;color:var(--muted);margin-top:3px}
   .tagline{display:inline-block;font-size:11px;color:var(--accent);border:1px solid var(--line);
@@ -47,7 +46,7 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="mark" aria-hidden="true"><span class="g"></span><span class="a"></span><span class="r"></span></div>
+    <div class="mark" id="mark" title="Clear" aria-label="Signal aspect indicator"><span></span><span></span><span></span></div>
     <div>
       <h1>Conductor Trainer</h1>
       <div class="sub">Grande Prairie yard · Canadian Rail Operating Rules</div>
@@ -97,5 +96,24 @@
 
   <div class="foot">Built on the January 2025 CROR and the September 2020 Grande Prairie yard diagram. A personal study aid — not affiliated with or endorsed by CN; the official CROR and CN special instructions govern.</div>
 </div>
+<script>
+(function(){
+  var m=document.getElementById('mark'); if(!m) return;
+  var L=m.getElementsByTagName('span'), DIM='#262b34';
+  var C={g:'#36d07f',y:'#f7b733',r:'#e25555'};
+  var ASP=[
+    {n:'Clear',l:['g',0,0]},
+    {n:'Clear to Medium',l:['y','g',0]},
+    {n:'Clear to Stop',l:['y','r',0]},
+    {n:'Diverging',l:['r','y',0]},
+    {n:'Restricting',l:[0,'r','r']},
+    {n:'Stop',l:['r','r','r']}
+  ];
+  function show(a){ m.title=a.n+' — signal aspect'; for(var k=0;k<3;k++){ var c=a.l[k]; L[k].style.background=c?C[c]:DIM; L[k].style.boxShadow=c?'0 0 7px '+C[c]:'none'; } }
+  show(ASP[0]);
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var i=0; setInterval(function(){ i=(i+1)%ASP.length; show(ASP[i]); }, 3500);
+})();
+</script>
 </body>
 </html>
