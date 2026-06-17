@@ -271,7 +271,7 @@ document.getElementById('act').addEventListener('change',function(){document.get
 function narrate(s,m){
   if(m.act==='pull')return 'Tie onto '+m.track+', pull '+m.n+' — '+m.n+(m.n>1?' cars':' car')+' on the engine now. <span style="color:var(--orange)">(+1 joint — you coupled on.)</span>';
   if(m.act==='kick')return 'Kick '+m.n+' to '+m.track+' — cut ’em off rolling onto the secured cut. <span style="color:var(--green)">(no joint.)</span>';
-  var occ=s.tracks[m.track].length>0;var sn=(s.tracks[m.track].length+m.n>=2)?' Hand brake on — cut’s secured now, kickable.':'';
+  var occ=s.tracks[m.track].length>0;var sn=(s.tracks[m.track].length+m.n>=2)?' Hand brake on — cut’s tied and kickable now.':' Hand brake on — you tie down every car you leave; it just can’t take a kick until it’s a 2+ cut.';
   return occ?('Shove '+m.n+' into '+m.track+', couple to the cars there.'+sn+' <span style="color:var(--orange)">(+1 joint.)</span>'):('Spot '+m.n+' into the empty '+m.track+'.'+sn+' <span style="color:var(--green)">(no joint.)</span>');
 }
 function runPlan(narrated){
