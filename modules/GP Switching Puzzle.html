@@ -125,8 +125,6 @@
     <div class="plan"><h3>Your plan</h3><div id="steps"></div><div class="log" id="log"></div></div>
   </div>
   <div class="fb" id="fb"></div>
-  <button class="parbtn" id="parBtn" style="margin-top:10px;display:none">Show a tight (par) solution</button>
-  <div class="fb" id="parsol"></div>
   <details class="refbox">
     <summary>Yard map — where the tracks are</summary>
     <div class="ref">
@@ -172,7 +170,7 @@
    <li>Pick <b>PULL</b>, <b>SPOT</b>, <b>KICK</b>, set the count, choose the track, hit <b>Add move</b>.</li>
    <li>Stack up the full plan — it lists under <i>Your plan</i>.</li>
    <li>Hit <b>Run plan</b> to watch it work down the yard. <b>Reset</b> starts over.</li>
-   <li>Stuck? <b>Show a tight (par) solution</b> reveals one clean line, and after a win you can <b>watch the low-joint kick line</b>.</li>
+   <li>Stuck? <b>▶ Watch solution</b> plays a clean, tight line for you, move by move — no guessing. Beat it on <i>moves</i> <b>and</b> <i>couplings</i>: after a win, if a tighter kick line exists, you’ll get to <b>watch the low-joint line</b> too.</li>
   </ol>
 
   <h4>Worked example — puzzle #1</h4>
@@ -227,7 +225,6 @@ function loadPuzzle(i){
   document.getElementById('act').innerHTML='<option value="pull">PULL</option><option value="spot">SPOT</option><option value="kick">KICK</option>';
   document.getElementById('cnt').style.display=''; document.getElementById('prepos').textContent='from';
   document.getElementById('fb').className='fb'; document.getElementById('log').textContent='';
-  document.getElementById('parBtn').style.display='none'; var psl=document.getElementById('parsol'); if(psl)psl.className='fb';
   renderNav(); renderYard(); renderPlan(); renderRef();
 }
 var GROUPS=[{k:'dig',n:'Dig-outs',c:'#'},{k:'cap',n:'Tight room',c:'C'},{k:'out',n:'Build outbound',c:'O'},{k:'tidy',n:'Leave it clean',c:'T'},{k:'full',n:'Full yard',c:'F'}];
@@ -286,7 +283,7 @@ function narrate(s,m){
 }
 function runPlan(narrated){
   if(running||plan.length===0)return; running=true; state=freshState(); jointsUsed=0; renderYard();
-  document.getElementById('fb').className='fb'; var psr=document.getElementById('parsol'); if(psr)psr.className='fb';
+  document.getElementById('fb').className='fb';
   var i=0;
   function step(){
     if(i>=plan.length){ finish(); running=false; return; }
@@ -320,7 +317,6 @@ function finish(){
     var eff= used<=par?('Tight — '+used+' moves, par '+par+'. That\'s an efficient line.'):(used+' moves (par '+par+') — '+extra+' wasted. There\'s a shorter trip-count.');
     fb.className='fb show ok'; var w=(P().type==='outbound')?('<b>Outbound built.</b> '+P().goal+' reads '+P().target.join('-')+', engine clear. '):('<b>Cut worked.</b> '+P().setouts.join(', ')+' spotted on '+P().goal+', engine clear. '); fb.innerHTML=w+eff+(P().tidy?' Yard left clean.':'')+jointsLine(jointsUsed);
     var wt=document.getElementById('wtBtn'); if(wt)wt.addEventListener('click',walkThrough);
-    document.getElementById('parBtn').style.display='inline-block';
   }else if(setdone&&clear&&P().tidy&&!tidyOK){
     fail('Set-outs placed and the lead is clear — but you left cars fouling the yard: '+scratch.filter(function(t){return state.tracks[t].length;}).map(function(t){return t+' ['+state.tracks[t].join(',')+']';}).join(', ')+'. Re-make the rest on '+P().inbound+' and clear the scratch tracks.');
   }else if(setdone&&!clear){
@@ -329,16 +325,12 @@ function finish(){
     fail('Not there yet — '+P().goal+' holds ['+state.tracks[P().goal].join(', ')+'], you need '+((P().type==='outbound')?('the order '+P().target.join('-')):('exactly '+P().setouts.join(', ')))+'. Reset and re-plan.');
   }
 }
-function fail(m){var fb=document.getElementById('fb');fb.className='fb show no';fb.innerHTML=m;document.getElementById('parBtn').style.display='inline-block';}
+function fail(m){var fb=document.getElementById('fb');fb.className='fb show no';fb.innerHTML=m;}
 function walkThrough(){
   if(running)return; var k=KICKLINE[P().title]; if(!k)return;
   plan=k.ksol.map(function(m){return {act:m[0],track:m[1],n:m[2]};});
   renderPlan(); runPlan(true);
 }
-document.getElementById('parBtn').addEventListener('click',function(){
-  var s=P().parsol.map(function(m,i){return (i+1)+'. '+(m[0]==='pull'?'PULL '+m[2]+' from '+m[1]:'SPOT '+m[2]+' to '+m[1]);}).join('<br>');
-  var ps=document.getElementById('parsol'); ps.className='fb show ok'; ps.innerHTML='<b>One tight line ('+P().par+' moves):</b><div class="sol">'+s+'</div>';
-});
 document.getElementById('addBtn').addEventListener('click',addMove);
 document.getElementById('runBtn').addEventListener('click',function(){runPlan(false);});
 document.getElementById('solveBtn').addEventListener('click',function(){if(running)return;plan=P().parsol.map(function(m){return {act:m[0],track:m[1],n:m[2]};});renderPlan();runPlan(true);});
