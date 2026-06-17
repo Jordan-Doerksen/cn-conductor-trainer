@@ -115,7 +115,8 @@
     <label id="prepos">from</label>
     <label><select id="trk"></select></label>
     <button class="add" id="addBtn">Add move</button>
-    <div style="margin-left:auto;display:flex;gap:8px">
+    <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="reset" id="solveBtn">▶ Watch solution</button>
       <button class="run" id="runBtn">Run plan</button>
       <button class="reset" id="resetBtn">Reset</button>
     </div>
@@ -340,6 +341,7 @@ document.getElementById('parBtn').addEventListener('click',function(){
 });
 document.getElementById('addBtn').addEventListener('click',addMove);
 document.getElementById('runBtn').addEventListener('click',function(){runPlan(false);});
+document.getElementById('solveBtn').addEventListener('click',function(){if(running)return;plan=P().parsol.map(function(m){return {act:m[0],track:m[1],n:m[2]};});renderPlan();runPlan(true);});
 document.getElementById('resetBtn').addEventListener('click',function(){loadPuzzle(pi);});
 function showHelp(){document.getElementById('help').className='modal show';}
 function hideHelp(){document.getElementById('help').className='modal';try{localStorage.setItem('gpsp_seen','1');}catch(e){}}
