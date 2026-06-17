@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Grande Prairie Yard — Interactive Board</title>
 <style>
-  :root{--bg:#0e1622;--card:#18293c;--line:#2b3f56;--ink:#e8eef6;--muted:#93a6bd;
+  :root{--bg:#14181d;--card:#1d222b;--card2:#232a34;--line:#2c3340;--ink:#eef2f6;--muted:#9aa3b0;--accent:#36d07f;--accent-d:#1f9e5e;--on-accent:#06301c;
         --yellow:#f5b301;--blue:#4aa3ff;--green:#33c27f;--orange:#ff8a3d;}
   *{box-sizing:border-box}
-  body{margin:0;background:linear-gradient(180deg,#0c1320,#0e1622 40%);color:var(--ink);
+  body{margin:0;background:linear-gradient(180deg,#10131a,#14181d 42%);color:var(--ink);
        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
   .wrap{max-width:1280px;margin:0 auto;padding:18px}
   header{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}
@@ -23,7 +23,7 @@
   .hit{fill:transparent;stroke:transparent;stroke-width:2;cursor:pointer;transition:.08s}
   .hit:hover{fill:rgba(245,179,1,.38);stroke:var(--yellow)}
   .hit.sel{fill:rgba(74,163,255,.42);stroke:var(--blue)}
-  .sw{fill:var(--orange);stroke:#0e1622;stroke-width:1.5;cursor:pointer}
+  .sw{fill:var(--orange);stroke:#14181d;stroke-width:1.5;cursor:pointer}
   .sw:hover{fill:#ffd400}
   .green{cursor:pointer}
   .hovname{position:absolute;top:8px;left:8px;background:rgba(14,22,34,.92);color:var(--ink);
@@ -36,7 +36,7 @@
   .swatch{width:12px;height:12px;border-radius:3px;display:inline-block}
   .sel-box{background:#15263a;border:1px solid var(--line);border-radius:9px;padding:12px;margin-bottom:14px}
   .sel-box .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-  .sel-box input{width:100%;margin-top:6px;background:#0e1622;border:1px solid var(--line);color:var(--ink);
+  .sel-box input{width:100%;margin-top:6px;background:#14181d;border:1px solid var(--line);color:var(--ink);
                  border-radius:7px;padding:8px 10px;font-size:14px;font-family:monospace}
   .row{display:flex;gap:8px;margin-top:8px}
   button{font:inherit;border:none;border-radius:7px;padding:8px 12px;font-weight:700;cursor:pointer}

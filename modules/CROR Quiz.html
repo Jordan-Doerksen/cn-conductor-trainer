@@ -6,13 +6,13 @@
 <title>CROR Quiz</title>
 <style>
   :root{
-    --bg:#0e1622; --card:#18293c; --card2:#1b2c40; --line:#2b3f56;
-    --ink:#e8eef6; --muted:#93a6bd; --yellow:#f5b301; --yellow-d:#caa000;
+    --bg:#14181d; --card:#1d222b; --card2:#232a34; --line:#2c3340;
+    --ink:#eef2f6; --muted:#9aa3b0; --yellow:#f5b301; --yellow-d:#caa000; --accent:#36d07f; --accent-d:#1f9e5e; --on-accent:#06301c;
     --green:#33c27f; --green-bg:#123326; --red:#ef5a5a; --red-bg:#3a1717; --blue:#4aa3ff;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{background:linear-gradient(180deg,#0c1320,#0e1622 40%);color:var(--ink);
+  body{background:linear-gradient(180deg,#10131a,#14181d 40%);color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;min-height:100vh;line-height:1.5}
   .wrap{max-width:780px;margin:0 auto;padding:22px 18px 70px}
   a.back{color:var(--muted);text-decoration:none;font-size:13px}
@@ -32,11 +32,11 @@
   .tile:hover{border-color:var(--yellow);transform:translateY(-1px)}
   .tile .t{font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
   .tile .d{color:var(--muted);font-size:12.5px;margin-top:4px}
-  .count{font-size:11px;color:#0c1320;background:var(--yellow);border-radius:20px;padding:2px 8px;font-weight:700;white-space:nowrap}
+  .count{font-size:11px;color:#10131a;background:var(--yellow);border-radius:20px;padding:2px 8px;font-weight:700;white-space:nowrap}
   .tile.exam{grid-column:1/-1;background:#1b2c40;border-color:var(--yellow-d)}
   .hud{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:13px;color:var(--muted)}
   .hud b{color:var(--ink)}
-  .bar{height:7px;background:#0c1622;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0 16px}
+  .bar{height:7px;background:#10131a;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0 16px}
   .bar>i{display:block;height:100%;background:var(--yellow);width:0;transition:width .25s}
   .tag{display:inline-block;font-size:10.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--yellow);font-weight:700}
   .tier{font-size:10.5px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:1px 8px;margin-left:8px}
@@ -51,7 +51,7 @@
   .fb{margin-top:12px;border-radius:10px;padding:13px 15px;font-size:13.5px;border:1px solid var(--line);background:#0f1a28}
   .fb .v{font-weight:800;font-size:14px}
   .fb .v.ok{color:var(--green)} .fb .v.no{color:var(--red)}
-  .fb .cite{display:inline-block;font-weight:700;color:#0c1320;background:var(--blue);border-radius:6px;padding:1px 8px;margin:6px 8px 6px 0;font-size:12px}
+  .fb .cite{display:inline-block;font-weight:700;color:#10131a;background:var(--blue);border-radius:6px;padding:1px 8px;margin:6px 8px 6px 0;font-size:12px}
   .fb .why{color:var(--muted);margin-top:2px}
   .btn{background:var(--yellow);color:#1a1206;border:none;border-radius:10px;padding:11px 20px;font-weight:800;cursor:pointer;font:inherit;font-size:14px}
   .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
