@@ -48,6 +48,34 @@ fallback if the chart isn't handy.
 > official diagrams as ground truth; the 5 quiz-app aspects (esp. 409 Clear to Slow) are **to be
 > cross-checked** against the official before sign-off.
 
+> **UPDATE 2026-06-16 (FULL PASS COMPLETE) — all 136 quiz-app shots read + encoded.** Jordan
+> extracted the entire CROR Verbal Quiz set (137 files = 136 items, a couple dupes) into
+> `reference/signal_screenshots/`. All read and parsed (working notes were in `%TEMP%\sigshots\parsed.md`).
+> **`var ASPECTS` now holds 38 of 42 indications**, one card per indication with variants noted in the tip.
+> Verified twice: a stubbed-DOM harness over the real `drawSignal` (lamp counts, per-head flash, plaque,
+> no-A-plate, no dupes, every rule present in `IND`) and a live in-browser render of all 38 — 0 errors.
+> `ASPECTS_DRAFT` stays **true** until the 4 gaps + the 407 question are closed.
+>
+> **System confirmed across the set:** green-low = slower speed; **flashing green = LIMITED, steady green =
+> MEDIUM/CLEAR**; a **DV plate upgrades** the indication (e.g. 435 Slow-to-Stop + DV = 429 Diverging-to-Stop;
+> 432 Slow-to-Limited + DV = 432A Diverging-to-Limited); an **L plate upgrades Medium→Limited** (427 Medium-to-Stop
+> + L = 421 Limited-to-Stop; 422 Medium-to-Clear + L = 416 Limited-to-Clear); **two staggered reds + R plate =
+> Restricting (436)** vs no plate = **Stop & Proceed (437)**. 429 is UN-HELD — clean shots (items 65/98/132)
+> show R/Yf + DV.
+>
+> **4 NOT in the quiz app — still need the official rulebook or a CTC conductor (do NOT guess these):**
+> **410** Clear to Restricting · **418** Limited to Medium · **433A** Diverging to Medium · **440** Direction
+> Indicator (flashing arrow, needs a separate fixture). System-based guesses (unconfirmed): 410≈Y/Rf,
+> 418≈R/Gf/G, 433A≈R/Yf/G+DV.
+>
+> **3 conflicts for Jordan to settle:**
+> 1. **407 Clear to Medium** — you said firsthand "green over green," but the app draws **yellow over green**
+>    in ALL of its 407 shots (items 55, 64, 69, 84), and it fits the app's family (Clear-to-Slow=Y/Y,
+>    Clear-to-Stop=Y/R → Clear-to-Medium=Y/G). Kept **G/G** in the code pending your call.
+> 2. **421 dwarf** form (Yf/R, item 102) is visually identical to **415** (Yf/R) — primary kept as the 3-head R/Y/R+L.
+> 3. The app's **dwarf forms often put yellow on top** where the mast form is green (also seen on 406, 426) —
+>    primaries use the mast/green forms.
+
 Confirmed answers logged here as they arrive, so they don't get lost in the thread.
 
 - **Framing correction (conductor, CTC territory):** the straight-route aspects are **not**
@@ -90,12 +118,10 @@ noted in the card. Clean contrast with **437** (two STAGGERED reds, no plate) is
 - **Hypothesis to confirm:** is the diverging/slow base **red over yellow**? (would make 430 = R/Y +DV,
   431 Slow to Clear = R/Y no plate, and the "to Stop" versions flash the lower lamp.)
 
-**Encoded so far (24 — verified 271-check stubbed-DOM harness + live renderer):** 405 Clear · 406 Clear to Limited ·
-407 Clear to Medium · 409 Clear to Slow · 411 Clear to Stop · 412 Advance Clear to Limited · 413 Advance Clear to Medium ·
-415 Advance Clear to Stop · 419A Limited to Diverging · 420 Limited to Restricting · 421 Limited to Stop ·
-425 Medium to Slow · 425A Medium to Diverging · 426 Medium to Restricting · 428 Diverging to Clear ·
-430 Diverging · 431 Slow to Clear · 432A Diverging to Limited · 434 Slow to Slow · 434A Diverging to Diverging ·
-436 Restricting · 437 Stop & Proceed · 438 Take or Leave Siding · 439 Stop.
+**Encoded now (38 of 42 — verified stubbed-DOM harness + live renderer, see FULL PASS COMPLETE block above):**
+405 · 406 · 407 · 408 · 409 · 411 · 412 · 413 · 414 · 414A · 415 · 416 · 417 · 419 · 419A · 420 · 421 · 422 · 423 ·
+424 · 425 · 425A · 426 · 427 · 428 · 429 · 430 · 431 · 432 · 432A · 433 · 434 · 434A · 435 · 436 · 437 · 438 · 439.
+**Not yet charted (4):** 410 Clear to Restricting · 418 Limited to Medium · 433A Diverging to Medium · 440 Direction Indicator.
 **Batch 5 (2026-06-16) — items 19–25:** new cards **412** (Yf/Gf, flashing-green = Limited vs 413's steady-green = Medium),
 **434 Slow to Slow** (R/Yf/Yf, = 434A minus the DV plate), **436 Restricting** (R/R/Y, no plate — resolves the conflict).
 Variants folded into existing cards: **420** (3-head R/Y/R + L plate, bottom-red flashing), **428** (2-head mast form,
@@ -121,11 +147,9 @@ shot needs no markup.)
 `ASPECTS_DRAFT` stays **true** until the full set is in. Renderer handles N heads, dwarf, DV/R plates,
 stagger, and per-head flash (`'f'` suffix) — covers everything the screenshots show so far.
 
-**Remaining screenshots to encode (in `signal_screenshots/`):** ALL 26 shots now in the folder are encoded —
-read through **item 25 of 136** (the 7-file tail 19–25 covered 420/428/413 variants plus new 412/434/436; item 25
-was a 2-head 412). **Next: Jordan captures items 26–136.** Still holding **429 Diverging to Stop** (its shot used the
-caption for the A-plate trap, flash unconfirmed). **Tip for reading shots:** they're 1080×2424; downscale to ≤1600px
-tall first (`%TEMP%\sigshots`) or the image API rejects them once several are already loaded.
+**Remaining screenshots to encode (in `signal_screenshots/`):** ✅ DONE — all 136 items read + encoded (see the
+FULL PASS COMPLETE block above). 429 is no longer held (clean R/Yf+DV shots confirmed). **Tip for any future shots:**
+they're 1080×2424; downscale to ≤1400px tall first (`%TEMP%\sigshots`) or the image API rejects them once several are loaded.
 
 **Still needed (next):**
 - The **exact lower-head colour** for each "Clear to [speed]": Clear to Limited (406) /

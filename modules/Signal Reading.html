@@ -228,32 +228,54 @@ var SPEEDS=[
    spec.heads top→bottom: G green · R red · Y yellow · L lunar(white) · D dark.
    Append 'f' to a head to make THAT lamp flash (e.g. "Yf" = flashing yellow, steady lamps unaffected).
    plaque: DV / R  (there is NO "A" absolute plate in Canada). ===== */
+/* Aspects encoded from the CROR Verbal Quiz app screenshots (reference/signal_screenshots/,
+   the source Jordan studied + passed his 2025 test on). 38 of 42 indications charted.
+   Heads top→bottom; 'f' suffix = THAT lamp flashes. Plaque DV/R/L (NO "A" plate in Canada).
+   System rules confirmed across the set: green-low = slower speed; FLASHING green = LIMITED,
+   steady green = MEDIUM/CLEAR; a DV plate upgrades the indication (strip it and it downgrades);
+   an L plate upgrades Medium→Limited; two STAGGERED reds + R plate = Restricting vs no plate = Stop & Proceed. */
 var ASPECTS=[
- {r:"405",lvl:"basic",spec:{heads:["G"],type:"mast"},tip:"A SINGLE green — proceed (Clear), high mast or low. Two greens is NOT Clear — that's Clear to Medium (407)."},
- {r:"406",lvl:"basic",spec:{heads:["G","R","Gf"],type:"mast"},tip:"Green over red over FLASHING green — Clear to Limited (flashing green = LIMITED at the next signal)."},
- {r:"407",lvl:"full",spec:{heads:["G","G"],type:"mast"},tip:"Two greens (green over green) — Clear to MEDIUM: proceed, be prepared for MEDIUM speed at the next signal."},
- {r:"409",lvl:"basic",spec:{heads:["Y","Y"],type:"dwarf"},tip:"Two yellows (dwarf) — Clear to Slow: proceed, be prepared for SLOW speed at the next signal."},
- {r:"411",lvl:"basic",spec:{heads:["Y","R"],type:"mast"},tip:"Yellow over red — APPROACH: your block is clear, the next one is occupied, so be prepared to stop at the next signal. (On a 3-head mast: yellow over red over red.)"},
- {r:"412",lvl:"full",spec:{heads:["Yf","Gf"],type:"mast"},tip:"FLASHING yellow over FLASHING green — Advance Clear to Limited: proceed, be prepared for LIMITED speed at the SECOND signal. (Flashing green = LIMITED; steady green here is Advance Clear to Medium, 413.) Also drawn 3-head: flashing yellow over flashing green over red."},
- {r:"413",lvl:"full",spec:{heads:["Yf","G"],type:"mast"},tip:"FLASHING yellow over green — Advance Clear to Medium: proceed, be prepared for MEDIUM speed at the SECOND signal. (Also drawn staggered, and 3-head as flashing yellow over green over red.)"},
- {r:"415",lvl:"basic",spec:{heads:["Yf","R"],type:"mast"},tip:"FLASHING yellow over red — ADVANCE approach: your block and the next are clear, the THIRD is occupied; be prepared to stop at the second signal."},
- {r:"419A",lvl:"full",spec:{heads:["Gf","Yf"],type:"dwarf",plaque:"DV"},tip:"Flashing green over flashing yellow, DV plate (dwarf) — Limited to Diverging."},
- {r:"420",lvl:"full",spec:{heads:["Gf","Rf"],type:"mast",stagger:true},tip:"FLASHING green over FLASHING red, staggered — Limited to Restricting (flashing green = LIMITED). Steady green here would be Medium to Restricting (426). Also drawn 3-head red/yellow/red with an L plate, bottom red flashing."},
- {r:"421",lvl:"full",spec:{heads:["R","Y","R"],type:"mast",plaque:"L"},tip:"Red over yellow over red with an L plate — Limited to Stop. The L plate upgrades the Medium-to-Stop aspect to LIMITED."},
- {r:"425",lvl:"full",spec:{heads:["R","G","Yf"],type:"mast"},tip:"Red over green over FLASHING yellow — Medium to Slow."},
- {r:"425A",lvl:"full",spec:{heads:["G","Yf"],type:"dwarf",plaque:"DV"},tip:"Green over FLASHING yellow, DV plate (dwarf) — Medium to Diverging. (Steady green = Medium; a flashing green here would make it Limited to Diverging, 419A.)"},
- {r:"426",lvl:"full",spec:{heads:["G","Rf"],type:"mast",stagger:true},tip:"Green over a FLASHING red, staggered — Medium to Restricting."},
- {r:"428",lvl:"full",spec:{heads:["R","G"],type:"dwarf",plaque:"DV"},tip:"Red over green, DV plate — Diverging to Clear. (The DV plate is what separates this from 431 Slow to Clear, which is red/green with no plate.) Appears as a dwarf or a 2-head mast."},
- {r:"430",lvl:"basic",spec:{heads:["R","Y"],type:"dwarf",plaque:"DV"},tip:"Red over yellow, DV plate — Diverging: proceed at REDUCED speed, not over diverging speed. (Strip the DV plate and the same aspect downgrades to Slow.)"},
- {r:"431",lvl:"basic",spec:{heads:["R","G"],type:"mast"},tip:"Red over green — Slow to Clear (slow = the proceed/green lamp sits low). Official CN also draws it red/red/green on a 3-head, or as a single green / red-over-green on a dwarf."},
- {r:"432A",lvl:"full",spec:{heads:["R","Yf","Gf"],type:"mast",plaque:"DV"},tip:"Red over flashing yellow over flashing green, DV plate — Diverging to Limited."},
- {r:"434",lvl:"full",spec:{heads:["R","Yf","Yf"],type:"mast"},tip:"Red over FLASHING yellow over FLASHING yellow, NO plate — Slow to Slow. (Same lamps as 434A Diverging to Diverging; the DV plate is the only difference — strip it and Diverging downgrades to Slow.)"},
- {r:"434A",lvl:"full",spec:{heads:["R","Yf","Yf"],type:"mast",plaque:"DV"},tip:"Red over flashing yellow over flashing yellow, DV plate — Diverging to Diverging. (Add the DV plate to 434 Slow to Slow and it upgrades to Diverging.)"},
- {r:"436",lvl:"basic",spec:{heads:["R","R","Y"],type:"mast"},tip:"Red over red over yellow, NO plate — Restricting: proceed at RESTRICTED speed. (Contrast 437 Stop and Proceed, which is two STAGGERED reds; Restricting can also appear as two staggered reds carrying an R plate.)"},
+ {r:"405",lvl:"basic",spec:{heads:["G"],type:"mast"},tip:"A SINGLE green — proceed (Clear), high mast or low. Also drawn green/red/red on a 3-head. (Two greens is NOT Clear.)"},
+ {r:"406",lvl:"basic",spec:{heads:["G","R","Gf"],type:"mast"},tip:"Green over red over FLASHING green — Clear to Limited (flashing green = LIMITED at the next signal). Also drawn yellow over flashing green, or yellow/green with an L plate."},
+ {r:"407",lvl:"full",spec:{heads:["G","G"],type:"mast"},tip:"Green over green — Clear to MEDIUM: be prepared for MEDIUM speed at the next signal. ⚠ NOTE: the quiz app draws this YELLOW over green in every shot — verify which CN uses before sign-off."},
+ {r:"408",lvl:"full",spec:{heads:["Y","Y"],type:"dwarf",plaque:"DV"},tip:"Two yellows with a DV plate — Clear to Diverging: be prepared for DIVERGING speed at the next signal. (= Clear to Slow plus a DV plate; the DV upgrades Slow→Diverging.)"},
+ {r:"409",lvl:"basic",spec:{heads:["Y","Y"],type:"dwarf"},tip:"Two yellows, no plate — Clear to Slow: be prepared for SLOW speed at the next signal. Also drawn yellow/yellow/red on a 3-head."},
+ {r:"411",lvl:"basic",spec:{heads:["Y","R"],type:"mast"},tip:"Yellow over red — APPROACH (Clear to Stop): your block is clear, the next is occupied, prepare to stop at the next signal. (On a 3-head: yellow over red over red.)"},
+ {r:"412",lvl:"full",spec:{heads:["Yf","Gf"],type:"mast"},tip:"FLASHING yellow over FLASHING green — Advance Clear to Limited: be prepared for LIMITED speed at the SECOND signal. (Flashing green = LIMITED.) Also drawn 3-head over a red."},
+ {r:"413",lvl:"full",spec:{heads:["Yf","G"],type:"mast"},tip:"FLASHING yellow over green — Advance Clear to Medium: be prepared for MEDIUM speed at the SECOND signal. (Also drawn staggered, and 3-head over a red.)"},
+ {r:"414",lvl:"full",spec:{heads:["Yf","Y"],type:"mast"},tip:"FLASHING yellow over steady yellow — Advance Clear to Slow: be prepared for SLOW speed at the SECOND signal. (Also drawn 3-head over a red.)"},
+ {r:"414A",lvl:"full",spec:{heads:["Yf","Y"],type:"mast",plaque:"DV"},tip:"FLASHING yellow over steady yellow with a DV plate — Advance Clear to Diverging. (= Advance Clear to Slow plus the DV upgrade.)"},
+ {r:"415",lvl:"basic",spec:{heads:["Yf","R"],type:"mast"},tip:"FLASHING yellow over red — ADVANCE approach (Advance Clear to Stop): your block and the next are clear, the THIRD is occupied; prepare to stop at the second signal."},
+ {r:"416",lvl:"full",spec:{heads:["R","G","R"],type:"mast",plaque:"L"},tip:"Red over green over red with an L plate — Limited to Clear. (Same lamps as Medium to Clear (422); the L plate upgrades Medium→LIMITED. Also drawn on a dwarf as flashing-green over red.)"},
+ {r:"417",lvl:"full",spec:{heads:["R","Gf","Gf"],type:"mast"},tip:"Red over FLASHING green over FLASHING green — Limited to Limited: LIMITED through the turnouts, prepared for LIMITED at the next signal (flashing green = limited, both heads)."},
+ {r:"419",lvl:"full",spec:{heads:["R","Gf","Yf"],type:"mast"},tip:"Red over FLASHING green over FLASHING yellow — Limited to Slow (flashing green = LIMITED through, flashing yellow = SLOW ahead). Also drawn on a dwarf as flashing-green over flashing-yellow."},
+ {r:"419A",lvl:"full",spec:{heads:["Gf","Yf"],type:"dwarf",plaque:"DV"},tip:"FLASHING green over FLASHING yellow with a DV plate (dwarf) — Limited to Diverging."},
+ {r:"420",lvl:"full",spec:{heads:["Gf","Rf"],type:"mast",stagger:true},tip:"FLASHING green over FLASHING red, staggered — Limited to Restricting (flashing green = LIMITED). Steady green here would be Medium to Restricting (426). Also drawn 3-head red/yellow/flashing-red with an L plate."},
+ {r:"421",lvl:"full",spec:{heads:["R","Y","R"],type:"mast",plaque:"L"},tip:"Red over yellow over red with an L plate — Limited to Stop. The L plate upgrades the Medium-to-Stop aspect (427, same lamps no plate) to LIMITED."},
+ {r:"422",lvl:"full",spec:{heads:["R","G","R"],type:"mast"},tip:"Red over green over red, NO plate — Medium to Clear: MEDIUM speed through the turnouts, then clear. (Add an L plate and it becomes Limited to Clear (416).)"},
+ {r:"423",lvl:"full",spec:{heads:["G","Gf"],type:"dwarf"},tip:"Green over FLASHING green (dwarf) — Medium to Limited: steady green = MEDIUM through, flashing green = LIMITED at the next signal. Also drawn 3-head red/green/flashing-green."},
+ {r:"424",lvl:"full",spec:{heads:["R","G","G"],type:"mast"},tip:"Red over green over green — Medium to Medium: MEDIUM speed through the turnouts, prepared for MEDIUM at the next signal."},
+ {r:"425",lvl:"full",spec:{heads:["R","G","Yf"],type:"mast"},tip:"Red over green over FLASHING yellow — Medium to Slow (steady green = MEDIUM, flashing yellow = SLOW ahead). Also drawn on a dwarf as green over flashing-yellow."},
+ {r:"425A",lvl:"full",spec:{heads:["G","Yf"],type:"dwarf",plaque:"DV"},tip:"Green over FLASHING yellow with a DV plate (dwarf) — Medium to Diverging. (Steady green = MEDIUM; the DV makes the SLOW into DIVERGING. Flashing green here = Limited to Diverging, 419A.)"},
+ {r:"426",lvl:"full",spec:{heads:["G","Rf"],type:"mast",stagger:true},tip:"Green over a FLASHING red, staggered — Medium to Restricting. (Flashing green instead = Limited to Restricting, 420. Also drawn 3-head red/yellow/flashing-red.)"},
+ {r:"427",lvl:"full",spec:{heads:["R","Y","R"],type:"mast"},tip:"Red over yellow over red, NO plate — Medium to Stop: MEDIUM through the turnouts, prepare to stop at the next signal. (Add an L plate and it upgrades to Limited to Stop, 421.)"},
+ {r:"428",lvl:"full",spec:{heads:["R","G"],type:"dwarf",plaque:"DV"},tip:"Red over green with a DV plate — Diverging to Clear. (The DV plate is what separates this from Slow to Clear (431), which is red/green with no plate.)"},
+ {r:"429",lvl:"full",spec:{heads:["R","Yf"],type:"dwarf",plaque:"DV"},tip:"Red over FLASHING yellow with a DV plate — Diverging to Stop. (= Slow to Stop (435) plus the DV upgrade. The app draws an A plate on this one as a trap — there is NO A plate in Canada.)"},
+ {r:"430",lvl:"basic",spec:{heads:["R","Y"],type:"dwarf",plaque:"DV"},tip:"Red over yellow with a DV plate — Diverging: proceed at REDUCED speed, not over diverging speed. (Strip the DV plate and the same aspect downgrades to Slow.)"},
+ {r:"431",lvl:"basic",spec:{heads:["R","G"],type:"mast"},tip:"Red over green — Slow to Clear (slow = the proceed/green lamp sits low). Also drawn as a single green or red-over-green on a dwarf."},
+ {r:"432",lvl:"full",spec:{heads:["R","Yf","Gf"],type:"mast"},tip:"Red over FLASHING yellow over FLASHING green, NO plate — Slow to Limited. (Add a DV plate and it becomes Diverging to Limited, 432A.)"},
+ {r:"432A",lvl:"full",spec:{heads:["R","Yf","Gf"],type:"mast",plaque:"DV"},tip:"Red over FLASHING yellow over FLASHING green with a DV plate — Diverging to Limited. (= Slow to Limited (432) plus the DV upgrade.)"},
+ {r:"433",lvl:"full",spec:{heads:["R","Yf","G"],type:"mast"},tip:"Red over FLASHING yellow over steady green — Slow to Medium: SLOW through the turnouts, prepared for MEDIUM at the next signal."},
+ {r:"434",lvl:"full",spec:{heads:["R","Yf","Yf"],type:"mast"},tip:"Red over FLASHING yellow over FLASHING yellow, NO plate — Slow to Slow. (Same lamps as Diverging to Diverging (434A); the DV plate is the only difference.)"},
+ {r:"434A",lvl:"full",spec:{heads:["R","Yf","Yf"],type:"mast",plaque:"DV"},tip:"Red over FLASHING yellow over FLASHING yellow with a DV plate — Diverging to Diverging. (Add the DV plate to Slow to Slow (434) and it upgrades to Diverging.)"},
+ {r:"435",lvl:"full",spec:{heads:["R","Yf"],type:"dwarf"},tip:"Red over FLASHING yellow, NO plate — Slow to Stop. (Add a DV plate and it becomes Diverging to Stop, 429.) Also seen as a single flashing yellow."},
+ {r:"436",lvl:"basic",spec:{heads:["R","R"],type:"mast",stagger:true,plaque:"R"},tip:"Two staggered reds WITH an R plate — Restricting: proceed at RESTRICTED speed. The R plate is the ONLY difference from Stop and Proceed (437). Also appears as red/red/yellow on a 3-head, or a single steady yellow on a dwarf."},
  {r:"437",lvl:"basic",spec:{heads:["R","R"],type:"mast",stagger:true},tip:"Two reds, STAGGERED, NO plate — the mark of a non-controlled (automatic) signal: stop, then proceed at restricted speed. (Those same two staggered reds WITH an R plate read as Restricting, 436.)"},
- {r:"438",lvl:"full",spec:{heads:["R","Rf"],type:"mast"},tip:"Red over a FLASHING red — Take or Leave Siding or Other Track (indications per special instructions)."},
- {r:"439",lvl:"basic",spec:{heads:["R"],type:"mast"},tip:"A SINGLE red on a controlled signal (one the RTC holds at Stop) — absolute Stop, no proceeding. Also drawn as three reds on a 3-head mast."}
+ {r:"438",lvl:"full",spec:{heads:["R","Rf"],type:"mast"},tip:"Red over a FLASHING red — Take or Leave Siding or Other Track (indications per special instructions). Also drawn 3-head red/red/flashing-red, or a single flashing red on a dwarf."},
+ {r:"439",lvl:"basic",spec:{heads:["R"],type:"mast"},tip:"A SINGLE red on a controlled signal (one the RTC holds at Stop) — absolute Stop, no proceeding. Also drawn as two or three reds on a multi-head mast."}
 ];
+/* NOT YET CHARTED (4) — not present in the quiz app; need the official CN rulebook or a CTC conductor:
+   410 Clear to Restricting · 418 Limited to Medium · 433A Diverging to Medium · 440 Direction Indicator (flashing arrow, separate fixture). */
 var ASPECTS_DRAFT=true;
 
 function lampFill(c){return ({G:"#27d65a",R:"#ff453a",Y:"#ffd60a",L:"#dfe9ff",D:"#16202c"})[c]||"#16202c";}
@@ -415,7 +437,7 @@ function aspectStudy(i){
   var a=list[i],ind=indByR(a.r);
   var tp=(a.spec.type==='dwarf'?'Dwarf signal':'Mast signal')+(a.spec.plaque?(' · '+a.spec.plaque+' plaque'):'');
   app.innerHTML='<div class="card"><div class="crumb"><a onclick="landing()">Sections</a> › <a onclick="sectionHome()">'+(level==='basic'?'Basics':'Full')+'</a> › Aspects</div>'+
-    (ASPECTS_DRAFT?'<div class="draftbar">⚠ <b>Draft aspects.</b> Reproduced from the CROR signal chart and <b>not yet signed off</b> — if a lamp looks wrong, that’s exactly what to flag. Only the confirmed few are seeded so far.</div>':'')+
+    (ASPECTS_DRAFT?'<div class="draftbar">⚠ <b>Draft aspects.</b> 38 of 42 indications charted from the CROR Verbal Quiz app — <b>not yet signed off</b>, so if a lamp looks wrong, that’s exactly what to flag. (Still to add: 410, 418, 433A, 440; and 407 to confirm.)</div>':'')+
     '<div class="hud"><span>Aspect <b>'+(i+1)+'</b> / '+list.length+'</span><span>'+(level==='basic'?'Basics':'Full')+'</span></div>'+
     '<div class="aspectwrap"><div class="signalbox">'+drawSignal(a.spec)+'</div>'+
       '<div class="aspmeta"><div class="nm">'+ind.n+'</div><div class="rl">CROR Rule '+ind.r+'</div><div class="mn">'+ind.m+'</div>'+
