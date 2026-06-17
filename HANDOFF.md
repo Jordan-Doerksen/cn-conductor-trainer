@@ -63,7 +63,6 @@ Every non-trivial change to a module gets checked before it's called done: `node
 CN Conductor Trainer/              (repo root; entry = index.html)
 ├─ index.html                      Hub / module launcher (served at site root by GitHub Pages)
 ├─ modules/
-│  ├─ Yard Conductor Trainer.html  CROR rule drills (~33 Q across 4 domains)
 │  ├─ GP Switching Puzzle.html     The dig-out / build puzzle (PULL/SPOT engine, BFS pars)
 │  ├─ GP Yard Board.html           Interactive yard map (clickable tracks + switch dots)
 │  ├─ GP Radio Steps.html          Guided "Back to a Joint" radio call sequence
@@ -112,8 +111,8 @@ The entry file was deliberately renamed to **`index.html`** so GitHub Pages serv
 
 ## 5. The modules
 
-### 5.1 Yard Conductor Trainer (CROR rule drills)
-~33 multiple-choice questions spanning the four domains (switch lists, CROR recall, switching moves, radio/signals). Straight Q&A drill; the volume is the value. Future: expand the bank, add explanations citing rule numbers.
+### 5.1 ~~Yard Conductor Trainer~~ → FOLDED into the CROR Quiz (§5.7)
+The old standalone "Rule Drills" module was **retired 2026-06-16** (file deleted; recoverable from git history). All of its rule-cited questions were folded into the CROR Quiz's components (switching, switches/derails, securement, radio/hand-signals, signals); the two pure "job knowledge" switch-list questions were dropped as non-rule content. **One quiz now, not two.**
 
 ### 5.2 GP Switching Puzzle (the core sim) — most-developed module
 A plan-then-run yard puzzle. The player composes a list of moves, hits **Run plan**, and watches the engine work the yard; the module grades correctness, clean-up, and efficiency vs. **par**. Full data model in **§6**.
@@ -138,7 +137,7 @@ Two-section trainer (Basics / Full) over the CROR signal indications. The **word
 
 ### 5.7 CROR Quiz (text-rules quiz, the "use the CROR as law" track)
 A **data-driven** quiz over the **text** of the CROR (everything except the signal lamp pictures, which live in §5.6). Unlike the signals work, the CROR text *is* the authoritative source, so questions are pulled straight from the rulebook and cite the rule — no screenshots, no SME loop.
-- **Structured by the CROR's own components** (`var COMPONENTS`): Definitions · Speeds · Crew & roles · Switches & derails · Securing (112) · Coupling/kicking/shoving (113–115) · Radio (120–123.2) · Signals & plates (401–440). Plus a "Full CROR exam" mixed mode. Easy to add components.
+- **Structured by the CROR's own components** (`var COMPONENTS`, 8): Definitions · Speeds · Crew & responsibilities · Switches/derails/track · Securing (112) · Coupling/kicking/shoving (113–115) · Radio & hand signals (12, 120–123.2) · Signals/flags/plates (26, 405–440, 564). Plus a "Full CROR exam" mixed mode. The retired Rule Drills questions are folded in here. Easy to add components.
 - **Escalating tiers** every run: Tier 1 Recall → Tier 2 Application → Tier 3 Distinctions (`sampleEscalating` orders tiers ascending). Each answer shows a **rule citation + the CROR text**; wrong answers collect into an end-of-run review.
 - **Definitions are verbatim CROR** (`var DEFS`, 63 terms) and generate MC at runtime in both directions (term→def, def→term); Tier-3 terms pull *confusable* distractors (e.g., the CONTROLLED Block/Signal/Location/Point cluster). Operating-rule questions are hand-authored in `var BANK`, each cited to its rule.
 - **Source extraction:** parsed from `reference/Jan_2025_Canadian_rail_operating_rules_EN.pdf` with `pymupdf` (working JSON in `%TEMP%\sigshots\`: `cror_defs.json`, `cror_rules.json` 224 rules, `cror_bodies.json`). **Reuse this to expand the bank** — the rulebook text has no lamp/aspect descriptions but is complete for the rules themselves.
@@ -317,7 +316,7 @@ Module **ends** at step 8. Initial transmissions end "over"; the conversation's 
 
 ## 12. Status & roadmap
 
-**Done:** all **seven** modules built and live on GitHub Pages (incl. the **CROR Quiz**, §5.7 — data-driven text-rules quiz, 63 verbatim definitions + 35 cited operating questions, escalating tiers, verified); folder restructured (hub/modules/assets/reference) with relative links; outbound + mixed + **Full-yard** puzzle batches; **KICKING shipped** as a puzzle move (PULL/SPOT/KICK/TIE-DOWN, secured-cut rule, two scores moves+joints, BFS pars recomputed + verified) — ⚠ the secured-cut model (kick only onto a secured 2+-car standing cut; SME Kourtney) **supersedes §7.1's simpler KICKABLE list**; expand §7.1 from the code the next time the puzzle is touched; radio module through "going for hand brakes"; How-to-play onboarding on the Switching Puzzle (verified); **Signal Reading module built** (§5.6) with the SVG lamp renderer + aspect-study mode.
+**Done:** all **six** modules built and live on GitHub Pages (incl. the **CROR Quiz**, §5.7 — data-driven text-rules quiz, 63 verbatim definitions + ~72 cited operating questions across 8 components, escalating tiers, verified; the old Rule Drills module was folded into it and retired); folder restructured (hub/modules/assets/reference) with relative links; outbound + mixed + **Full-yard** puzzle batches; **KICKING shipped** as a puzzle move (PULL/SPOT/KICK/TIE-DOWN, secured-cut rule, two scores moves+joints, BFS pars recomputed + verified) — ⚠ the secured-cut model (kick only onto a secured 2+-car standing cut; SME Kourtney) **supersedes §7.1's simpler KICKABLE list**; expand §7.1 from the code the next time the puzzle is touched; radio module through "going for hand brakes"; How-to-play onboarding on the Switching Puzzle (verified); **Signal Reading module built** (§5.6) with the SVG lamp renderer + aspect-study mode.
 
 **In progress:**
 - **Signal-aspect encoding** (`Signal Reading.html`, §5.6): **38 of 42 indications encoded** from all 136 CROR Verbal Quiz shots (full pass done 2026-06-16, verified via stubbed-DOM harness + live in-browser render, 0 errors). `ASPECTS_DRAFT` stays `true` until the last 4 + the 407 question close. Full status + the system rules + open conflicts are in `reference/signal-questions.md` (the FULL PASS COMPLETE block).
