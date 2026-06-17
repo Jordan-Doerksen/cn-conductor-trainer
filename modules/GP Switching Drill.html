@@ -6,13 +6,13 @@
 <title>GP Switching Drill #1 — Classify the Cut</title>
 <style>
   :root{--bg:#14181d;--card:#1d222b;--card2:#232a34;--line:#2c3340;--ink:#eef2f6;--muted:#9aa3b0;--accent:#36d07f;--accent-d:#1f9e5e;--on-accent:#06301c;
-        --yellow:#f5b301;--blue:#4aa3ff;--green:#33c27f;--red:#ef5a5a;--orange:#ff8a3d;}
+        --yellow:#36d07f;--blue:#4aa3ff;--green:#33c27f;--red:#ef5a5a;--orange:#ff8a3d;}
   *{box-sizing:border-box}
   body{margin:0;background:linear-gradient(180deg,#10131a,#14181d 42%);color:var(--ink);
        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
   .wrap{max-width:1280px;margin:0 auto;padding:18px}
   header{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}
-  .badge{width:38px;height:38px;border-radius:8px;background:var(--yellow);color:#1a1206;font-weight:800;
+  .badge{width:38px;height:38px;border-radius:8px;background:var(--yellow);color:#06301c;font-weight:800;
          display:flex;align-items:center;justify-content:center;font-size:16px}
   .title{font-size:17px;font-weight:700}
   .sub{font-size:12.5px;color:var(--muted)}
@@ -29,19 +29,19 @@
   .panel{flex:0 0 350px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:300px}
   h2{font-size:14px;margin:0 0 8px}
   .list{font-size:12.5px;font-family:monospace;margin-bottom:14px}
-  .car{display:flex;justify-content:space-between;padding:5px 8px;border:1px solid var(--line);border-radius:6px;margin-bottom:5px;background:#15263a}
+  .car{display:flex;justify-content:space-between;padding:5px 8px;border:1px solid var(--line);border-radius:6px;margin-bottom:5px;background:#1d222b}
   .car.cur{border-color:var(--yellow);background:#1c2c1c}
   .car.done{opacity:.7}
   .car .st{font-weight:700}
   .car .ok{color:var(--green)} .car .no{color:var(--red)}
-  .prompt{background:#15263a;border:1px solid var(--line);border-radius:9px;padding:12px;margin-bottom:12px;font-size:13.5px}
+  .prompt{background:#1d222b;border:1px solid var(--line);border-radius:9px;padding:12px;margin-bottom:12px;font-size:13.5px}
   .prompt b{color:var(--yellow)}
   .methods{display:flex;gap:8px;margin-top:10px}
   button{font:inherit;border:none;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;font-size:14px}
   button:disabled{opacity:.4;cursor:default}
-  .kick{background:var(--orange);color:#1a1206;flex:1}
+  .kick{background:var(--orange);color:#06301c;flex:1}
   .shove{background:var(--blue);color:#06182e;flex:1}
-  .next{background:var(--yellow);color:#1a1206;width:100%;margin-top:10px}
+  .next{background:var(--yellow);color:#06301c;width:100%;margin-top:10px}
   .fb{border-radius:9px;padding:11px 13px;margin-top:12px;font-size:13px;display:none}
   .fb.show{display:block}
   .fb.ok{background:#123326;border:1px solid var(--green)}
@@ -57,7 +57,7 @@
 <div class="wrap">
   <a href="../index.html" style="display:inline-block;color:#9fb2c9;text-decoration:none;font-size:13px;margin:0 0 10px">&larr; All modules</a>
   <header>
-    <div class="badge">CN</div>
+    <div style="width:44px;height:44px;border-radius:10px;flex:none;background:var(--card2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:3px" aria-hidden="true"><span style="width:8px;height:8px;border-radius:50%;background:#36d07f"></span><span style="width:8px;height:8px;border-radius:50%;background:#f7b733"></span><span style="width:8px;height:8px;border-radius:50%;background:#e25555"></span></div>
     <div>
       <div class="title">Switching Drill #1 — Classify the Cut</div>
       <div class="sub">Grande Prairie · read the list, send each car to its track, pick a legal move</div>

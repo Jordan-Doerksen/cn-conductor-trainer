@@ -7,7 +7,7 @@
 <style>
   :root{
     --bg:#14181d; --card:#1d222b; --card2:#232a34; --line:#2c3340;
-    --ink:#eef2f6; --muted:#9aa3b0; --yellow:#f5b301; --yellow-d:#caa000; --accent:#36d07f; --accent-d:#1f9e5e; --on-accent:#06301c;
+    --ink:#eef2f6; --muted:#9aa3b0; --yellow:#36d07f; --yellow-d:#1f9e5e; --accent:#36d07f; --accent-d:#1f9e5e; --on-accent:#06301c; --gold:#f7b733;
     --green:#33c27f; --green-bg:#123326; --red:#ef5a5a; --red-bg:#3a1717; --blue:#4aa3ff;
   }
   *{box-sizing:border-box}
@@ -18,8 +18,9 @@
   a.back{color:var(--muted);text-decoration:none;font-size:13px}
   a.back:hover{color:var(--ink)}
   header.top{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:14px;margin:6px 0 4px}
-  .badge{width:40px;height:40px;border-radius:9px;flex:none;background:var(--yellow);color:#1a1206;font-weight:800;
-    display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 2px 10px rgba(245,179,1,.25)}
+  .badge{width:40px;height:40px;border-radius:9px;flex:none;background:var(--card2);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;gap:3px}
+  .badge span{width:8px;height:8px;border-radius:50%}
   .title{font-size:18px;font-weight:700;letter-spacing:.3px}
   .subtitle{font-size:12.5px;color:var(--muted);margin-top:1px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-top:16px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
@@ -33,7 +34,7 @@
   .tile .t{font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
   .tile .d{color:var(--muted);font-size:12.5px;margin-top:4px}
   .count{font-size:11px;color:#10131a;background:var(--yellow);border-radius:20px;padding:2px 8px;font-weight:700;white-space:nowrap}
-  .tile.exam{grid-column:1/-1;background:#1b2c40;border-color:var(--yellow-d)}
+  .tile.exam{grid-column:1/-1;background:#232a34;border-color:var(--yellow-d)}
   .hud{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:13px;color:var(--muted)}
   .hud b{color:var(--ink)}
   .bar{height:7px;background:#10131a;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0 16px}
@@ -53,7 +54,7 @@
   .fb .v.ok{color:var(--green)} .fb .v.no{color:var(--red)}
   .fb .cite{display:inline-block;font-weight:700;color:#10131a;background:var(--blue);border-radius:6px;padding:1px 8px;margin:6px 8px 6px 0;font-size:12px}
   .fb .why{color:var(--muted);margin-top:2px}
-  .btn{background:var(--yellow);color:#1a1206;border:none;border-radius:10px;padding:11px 20px;font-weight:800;cursor:pointer;font:inherit;font-size:14px}
+  .btn{background:var(--yellow);color:#06301c;border:none;border-radius:10px;padding:11px 20px;font-weight:800;cursor:pointer;font:inherit;font-size:14px}
   .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
   .row{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
   .score{font-size:34px;font-weight:800}
@@ -67,7 +68,7 @@
 <div class="wrap">
   <a class="back" href="../index.html">← All modules</a>
   <header class="top">
-    <div class="badge">CN</div>
+    <div class="badge" aria-hidden="true"><span style="background:#36d07f"></span><span style="background:#f7b733"></span><span style="background:#e25555"></span></div>
     <div><div class="title">CROR Quiz</div><div class="subtitle">Canadian Rail Operating Rules · straight from the rulebook · escalating by tier</div></div>
   </header>
   <div id="app"></div>
