@@ -181,7 +181,7 @@ var PUZZLES=[
  {tier:'Yard work',title:'The transfer', start:{AS71:['A','B','C','D','E'],AS72:['p','q'],AS73:['X','Y'], AS76:['m','n']}, goal:{track:'AS73',cars:['D','E','X','Y']},
   hint:'The works: set out <b>D, E, X, Y</b> together on <b>AS73</b> — dig deep, kick the spares on.', par:2, opt:[['pull','AS71',3],['spot','AS75',3],['pull','AS71',2],['kick','AS73',2]]}
 ];
-var pi=0, state=null, jointsUsed=0, auto=null, moveDone=null, slowmo=1;
+var pi=0, state=null, jointsUsed=0, auto=null, moveDone=null, slowmo=1, startState=null;
 function clone(o){return JSON.parse(JSON.stringify(o));}
 function freshState(){var p=PUZZLES[pi];var s={tracks:{},engine:[],secured:{},offset:{}};
   TRACKS.forEach(function(t){s.tracks[t]=[];s.offset[t]=0;});
@@ -305,7 +305,7 @@ function doPull(i,n,T){
   if(n<1||n>arr.length){refuse('Only <b>'+arr.length+'</b> car'+(arr.length===1?'':'s')+' on '+T+' to pull.');return;}
   if(state.engine.length+n>LEAD_CAP){refuse('Not enough room to clear the switch — the lead only holds the engine and <b>'+LEAD_CAP+'</b> cars clear of the points. Spot some off first.');return;}
   engRoute=routePts(i);
-  var sC=sBody(i,0)-COUP, d=Math.abs(sC-parkS());
+  var sC=sBody(i,0)-COUP-state.engine.length*CARLEN, d=Math.abs(sC-parkS());   // back in past any cars already on the engine
   play([
     {dur:durFor(d),fn:function(p){engS=lerp(parkS(),sC,ease(p));}},                              // back in (cars wait on the track)
     {dur:240,fn:function(p){engS=sC;},done:function(){pullApply(state,T,n);jointsUsed+=1;reSecure(state);}}, // couple on
@@ -372,7 +372,7 @@ function throwSwitch(t){ if(animBusy||auto)return; SW[t]=SW[t]==='reverse'?'norm
 function renderTrk(){var sel=document.getElementById('trk');sel.innerHTML=TRACKS.map(function(t){return '<option>'+t+'</option>';}).join('');}
 function renderStat(){var on=state.engine.length;
   document.getElementById('stat').innerHTML='<span>On the engine: <b>'+(on?state.engine.join('-'):'—')+'</b></span><span>Joints: <b>'+jointsUsed+'</b> · par <b>'+PUZZLES[pi].par+'</b></span>';}
-function loadPuzzle(k){pi=k;state=freshState();jointsUsed=0;engS=parkS();engRoute=SPINE;flying=null;animBusy=false;auto=null;slowmo=1;resetSwitches();
+function loadPuzzle(k){pi=k;state=freshState();startState=JSON.parse(JSON.stringify(state));jointsUsed=0;engS=parkS();engRoute=SPINE;flying=null;animBusy=false;auto=null;slowmo=1;resetSwitches();
   document.getElementById('obj').innerHTML='<b>'+PUZZLES[k].title+'</b> — '+PUZZLES[k].hint;
   renderPz();renderSwitches();renderTrk();renderStat();setFb('','<span class="sys">Line the road, then call your move.</span>');draw();}
 
@@ -384,10 +384,11 @@ cv.addEventListener('click',function(ev){ if(animBusy)return;
 });
 document.getElementById('act').addEventListener('change',function(){document.getElementById('prep').textContent=this.value==='pull'?'from':'to';});
 document.getElementById('workBtn').addEventListener('click',workIt);
-document.getElementById('resetBtn').addEventListener('click',function(){if(animBusy)return;loadPuzzle(pi);});
+document.getElementById('resetBtn').addEventListener('click',function(){if(animBusy)return;resetRun();});
 document.getElementById('optBtn').addEventListener('click',watchOptimal);
 function autoLine(i){TRACKS.forEach(function(t,k){SW[t]=(k===i)?'reverse':'normal';});renderSwitches();draw();}
-function watchOptimal(){ if(animBusy||auto)return; loadPuzzle(pi); slowmo=1.7;
+function resetRun(){ if(!startState){loadPuzzle(pi);return;} state=JSON.parse(JSON.stringify(startState)); jointsUsed=0; engS=parkS(); engRoute=SPINE; flying=null; auto=null; slowmo=1; resetSwitches(); renderSwitches(); renderStat(); setFb('','<span class="sys">Line the road, then call your move.</span>'); draw(); }
+function watchOptimal(){ if(animBusy||auto)return; resetRun(); slowmo=1.7;
   auto=PUZZLES[pi].opt.map(function(m){return m.slice();});
   setFb('','<span class="sys">▶ Watching the optimal line — '+PUZZLES[pi].par+' joint'+(PUZZLES[pi].par===1?'':'s')+'…</span>');
   setTimeout(autoStep,650); }
