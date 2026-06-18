@@ -62,7 +62,7 @@
       <div class="title">Switching Sim — line it, call it, work it</div>
       <div class="sub">A conductor's yard: line the switches, call the move, watch the engineer work it.</div>
     </div>
-    <div class="pill"><button class="helpbtn" id="helpBtn">How to play</button></div>
+    <div class="pill"><button class="helpbtn" id="muteBtn" title="Sound on/off">🔊</button><button class="helpbtn" id="helpBtn">How to play</button></div>
   </header>
 
   <div class="pz" id="pz"></div>
@@ -71,7 +71,7 @@
     <div class="obj" id="obj"></div>
     <canvas id="yard" width="980" height="460"></canvas>
     <div class="switches" id="switches"></div>
-    <div class="note">Amber tick = clearance point — keep every cut clear of its switch, or you foul the route.</div>
+    <div class="note">Amber tick = clearance point — keep cuts clear of the switch. Solid car = loaded, hollow = empty · kick limit <b>5 empties / 3 loaded</b> (113.5 special instruction).</div>
   </div>
 
   <div class="stat" id="stat"></div>
@@ -99,12 +99,13 @@
   <h4>2 · Call the move</h4>
   <p><b>PULL</b> n from a track — back in, couple, pull the cars out onto the lead. <code>+1 joint</code> (you coupled on).<br>
   <b>SPOT</b> n to a track — shove cars in and leave them. Spotting <b>2+</b> ties the cut down (hand brake on) — now it can take a kick. <code>+1 joint if you couple onto cars already there</code>.<br>
-  <b>KICK</b> n to a track — shove and cut away rolling; the cars coast on by themselves onto a <b>secured 2+ cut</b> on a kickable track. <code>no joint</code>.</p>
+  <b>KICK</b> n to a track — shove and cut away rolling; the cars coast on by themselves onto a <b>secured 2+ cut</b> on a kickable track. <code>no joint</code>. Kicking is capped at <b>5 empties / 3 loaded</b> at once (113.5 special instruction); solid car = loaded, hollow = empty.</p>
   <p><b>Don’t foul the switch.</b> Leave every cut clear of its switch — the <span style="color:#caa53a">amber tick</span> on each track is the clearance point. Park a car closer than that and it fouls the route into the next track, so the engineer won’t leave it there. Same on the lead — pull back far enough to clear the points.</p>
   <h4>The rules it follows — and why</h4>
   <ul>
     <li><b>112</b> — securing: every cut you leave gets a hand brake; a 2+ cut is then tied and kickable.</li>
     <li><b>113.4 / 113.5</b> — kicking: only onto a secured standing cut, never an empty or short track.</li>
+    <li><b>113.5 special instruction</b> — kick at most <b>5 empties</b> or <b>3 loaded</b> at once.</li>
     <li><b>114</b> — fouling other tracks: every cut left standing must be clear of the clearance point.</li>
     <li><b>115</b> — shoving: you line and protect the route before the move.</li>
   </ul>
@@ -195,9 +196,10 @@ var PUZZLES=[
 ];
 var pi=0, state=null, jointsUsed=0, auto=null, moveDone=null, slowmo=1, startState=null;
 function clone(o){return JSON.parse(JSON.stringify(o));}
-function freshState(){var p=PUZZLES[pi];var s={tracks:{},engine:[],secured:{},head:{}};
+function freshState(){var p=PUZZLES[pi];var s={tracks:{},engine:[],secured:{},head:{},loaded:{}};
   TRACKS.forEach(function(t){s.tracks[t]=[];s.head[t]=0;});
   for(var k in p.start){s.tracks[k]=p.start[k].slice();s.head[k]=randHead();}
+  TRACKS.forEach(function(t){s.tracks[t].forEach(function(c){s.loaded[c]=Math.random()<0.45;});});  // some cars loaded, most empty
   TRACKS.forEach(function(t){if(s.tracks[t].length>=2)s.secured[t]=true;});   // any standing cut of 2+ is tied down (Rule 112)
   return s;}
 function place(s,T,n){var t=s.tracks[T];var b=s.engine.slice(s.engine.length-n);s.engine=s.engine.slice(0,s.engine.length-n);s.tracks[T]=b.concat(t);}
@@ -226,13 +228,26 @@ function fitCanvas(){cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR
 fitCanvas();
 var engS=120, engRoute=SPINE, flying=null;  // engine arclength + the route it's on; flying = a kicked cut coasting on its own
 var animBusy=false;
+// ===================== sound (Web Audio, synthesized — no files) =====================
+var muted=false; try{muted=localStorage.getItem('gpss_mute')==='1';}catch(e){}
+var _ac=null;
+function ac(){ if(!_ac){try{_ac=new (window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}} if(_ac.state==='suspended')_ac.resume(); return _ac; }
+function tone(freq,dur,type,vol,slideTo){ if(muted)return; var c=ac(); if(!c)return; var o=c.createOscillator(),g=c.createGain(); o.type=type||'sine'; o.frequency.value=freq; if(slideTo)o.frequency.exponentialRampToValueAtTime(slideTo,c.currentTime+dur); g.gain.value=vol||0.08; g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+dur); o.connect(g);g.connect(c.destination); o.start(); o.stop(c.currentTime+dur); }
+function noise(dur,vol){ if(muted)return; var c=ac(); if(!c)return; var n=Math.max(1,Math.floor(c.sampleRate*dur)),b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0); for(var i=0;i<n;i++)d[i]=(Math.random()*2-1)*(1-i/n); var sN=c.createBufferSource();sN.buffer=b; var g=c.createGain();g.gain.value=vol||0.06; var fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=900; sN.connect(fl);fl.connect(g);g.connect(c.destination); sN.start(); }
+function sCouple(){ tone(150,0.13,'square',0.09); }                 // coupling clunk
+function sKick(){ noise(0.34,0.07); tone(220,0.30,'sawtooth',0.05,90); }  // cut-away roll
+function sSwitch(){ tone(720,0.05,'square',0.05); }                 // points click
+function sWin(){ tone(523,0.16,'sine',0.08); setTimeout(function(){tone(784,0.30,'sine',0.08);},150); }
+function sErr(){ tone(150,0.22,'square',0.07,110); }                // refusal buzz
+(function(){var mb=document.getElementById('muteBtn'); if(!mb)return; mb.textContent=muted?'\uD83D\uDD07':'\uD83D\uDD0A';
+  mb.addEventListener('click',function(){muted=!muted; try{localStorage.setItem('gpss_mute',muted?'1':'0');}catch(e){} mb.textContent=muted?'\uD83D\uDD07':'\uD83D\uDD0A'; if(!muted)sSwitch();});})();
 
 function rail(p,q,color,wdt){ctx.strokeStyle=color;ctx.lineWidth=wdt||3;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke();}
-function drawCar(x,y,ang,label,kind,sec,len){
+function drawCar(x,y,ang,label,kind,sec,len,loaded){
   ctx.save();ctx.translate(x,y);ctx.rotate(ang||0);
   var w=kind==='eng'?ENGLEN:(len-3), h=kind==='eng'?ENGW:CARW;
-  ctx.fillStyle=kind==='eng'?'#2a1c0e':'#262d38';
-  ctx.strokeStyle=kind==='eng'?'#ff8a3d':'#46505f';
+  ctx.fillStyle=kind==='eng'?'#2a1c0e':(loaded?'#3c4a5e':'#171c22');   // loaded = solid/filled, empty = hollow/dark
+  ctx.strokeStyle=kind==='eng'?'#ff8a3d':(loaded?'#5d6e86':'#3a444f');
   roundRect(-w/2,-h/2,w,h,5);ctx.fill();ctx.lineWidth=1.6;ctx.stroke();
   if(kind==='eng'){ctx.fillStyle='#ff8a3d';roundRect(-w/2+6,-h/2+4,12,h-8,2);ctx.fill();}
   ctx.rotate(-(ang||0));
@@ -264,15 +279,15 @@ function draw(){
   // 1) cars standing on tracks (laid out by their real lengths from the throat)
   for(var ti=0;ti<6;ti++){var T=TRACKS[ti], arr=state.tracks[T], cx=JX[ti][0]+state.head[T];
     for(var c=0;c<arr.length;c++){ var L=carLen(arr[c]);
-      drawCar(cx+L/2,TY[ti],0,arr[c],'car', state.secured[T] && c===0, L); cx+=L;
+      drawCar(cx+L/2,TY[ti],0,arr[c],'car', state.secured[T] && c===0, L, state.loaded[arr[c]]); cx+=L;
     }}
   // 2) the engine + whatever is coupled to it, along its current route at engS (cars trail on the yard side)
   var ep=polyAt(engRoute,engS); drawCar(ep.x,ep.y,ep.ang,'ENG','eng',false,ENGLEN);
   for(var e=0;e<state.engine.length;e++){ var cp=polyAt(engRoute,engSlotS(e));
-    drawCar(cp.x,cp.y,cp.ang,state.engine[e],'car',false,carLen(state.engine[e])); }
+    drawCar(cp.x,cp.y,cp.ang,state.engine[e],'car',false,carLen(state.engine[e]),state.loaded[state.engine[e]]); }
   // 3) a kicked cut coasting on its own (only mid-kick)
   if(flying){ var fs=flying.s0; for(var fk=0;fk<flying.labels.length;fk++){ var FL=carLen(flying.labels[fk]);
-    var fp=polyAt(flying.route,fs+FL/2); drawCar(fp.x,fp.y,fp.ang,flying.labels[fk],'car',false,FL); fs+=FL; } }
+    var fp=polyAt(flying.route,fs+FL/2); drawCar(fp.x,fp.y,fp.ang,flying.labels[fk],'car',false,FL,state.loaded[flying.labels[fk]]); fs+=FL; } }
 }
 
 // ===================== animation driver =====================
@@ -293,7 +308,7 @@ function tick(now){
 // ===================== moves =====================
 function curTrack(){return document.getElementById('trk').value;}
 function setFb(cls,html){var fb=document.getElementById('fb');fb.className='fb'+(cls?' '+cls:'');fb.innerHTML=html;}
-function refuse(msg){setFb('no',msg);}
+function refuse(msg){setFb('no',msg);sErr();}
 
 function workIt(){
   if(animBusy||auto)return;
@@ -318,7 +333,7 @@ function doPull(i,n,T){
   var sC=throatS(i)-ENGLEN/2-sumLen(state.engine), d=Math.abs(sC-parkS());   // back in so the far held car reaches the throat car
   play([
     {dur:durFor(d),fn:function(p){engS=lerp(parkS(),sC,ease(p));}},                              // back in (cars wait on the track)
-    {dur:240,fn:function(p){engS=sC;},done:function(){pullApply(state,T,n);jointsUsed+=1;reSecure(state);}}, // couple on
+    {dur:240,fn:function(p){engS=sC;},done:function(){pullApply(state,T,n);jointsUsed+=1;reSecure(state);sCouple();}}, // couple on
     {dur:durFor(d)+n*30,fn:function(p){engS=lerp(sC,parkS(),ease(p));}}                          // pull out — cars now trail the engine
   ],function(){after('Backed in, pulled '+n+' off '+T+'. <span style="color:var(--orange)">(+1 joint)</span>');});
 }
@@ -331,7 +346,7 @@ function doSpot(i,n,T){
   var sShove=preJ(i)+nh-ENGLEN/2-sumLen(state.engine.slice(0,len-n)), d=Math.abs(sShove-parkS());
   play([
     {dur:durFor(d)+n*30,fn:function(p){engS=lerp(parkS(),sShove,ease(p));}},                     // shove the string in
-    {dur:240,fn:function(p){engS=sShove;},done:function(){spotApply(state,T,n,nh);jointsUsed+=(occ?1:0);reSecure(state);}}, // cut away, leave them standing
+    {dur:240,fn:function(p){engS=sShove;},done:function(){spotApply(state,T,n,nh);jointsUsed+=(occ?1:0);reSecure(state);sCouple();}}, // cut away, leave them standing
     {dur:durFor(d),fn:function(p){engS=lerp(sShove,parkS(),ease(p));}}                           // pull back with the rest
   ],function(){var sn=state.tracks[T].length>=2?' Tied down — kickable now. ⛓':' Hand brake on.';
      after('Shoved '+n+' into '+T+'.'+sn+(occ?' <span style="color:var(--orange)">(+1 joint)</span>':' <span style="color:var(--green)">(no joint)</span>'));});
@@ -341,6 +356,9 @@ function doKick(i,n,T){
   if(state.tracks[T].length<2){refuse('Can’t kick into <b>'+T+'</b> — you only kick onto a standing cut of 2+ cars, never an empty/short track.');return;}
   if(!state.secured[T]){refuse('Can’t kick into <b>'+T+'</b> yet — that cut isn’t tied down. Two hand brakes must be on first.');return;}
   if(n<1||n>state.engine.length){refuse('Only <b>'+state.engine.length+'</b> car'+(state.engine.length===1?'':'s')+' on the engine to kick.');return;}
+  if(n>5){refuse('Special instruction (113.5): at most <b>5 empties</b> can be kicked at once.');return;}
+  var loadedKicked=0; for(var q=state.engine.length-n;q<state.engine.length;q++)if(state.loaded[state.engine[q]])loadedKicked++;
+  if(loadedKicked>0&&n>3){refuse('That cut has <b>loaded</b> cars — special instruction (113.5) caps a loaded kick at <b>3</b>.');return;}
   var nh=nextHead(T,n), len=state.engine.length;
   if(nh<FZONE){refuse('That’d foul the switch — no room on <b>'+T+'</b> to take '+n+' more clear of the points.');return;}
   engRoute=routePts(i);
@@ -350,10 +368,10 @@ function doKick(i,n,T){
   play([
     // shove up, building speed (ease-in); the cut still rides the engine here
     {dur:durFor(d),fn:function(p){engS=lerp(parkS(),relEng,p*p);},
-      done:function(){flying={route:engRoute,labels:state.engine.splice(len-n,n),s0:relThroat};}}, // cut away — now it's on its own
+      done:function(){flying={route:engRoute,labels:state.engine.splice(len-n,n),s0:relThroat};sKick();}}, // cut away — now it's on its own
     // the free cut coasts on (decelerating) onto the tied cut; engine drifts back a touch
     {dur:820,fn:function(p){flying.s0=lerp(relThroat,tgtThroat,1-Math.pow(1-p,2));engS=lerp(relEng,relEng-26,ease(p));},
-      done:function(){state.tracks[T]=flying.labels.concat(state.tracks[T]);state.head[T]=nh;flying=null;reSecure(state);}}, // it stops against the cut
+      done:function(){state.tracks[T]=flying.labels.concat(state.tracks[T]);state.head[T]=nh;flying=null;reSecure(state);sCouple();}}, // it stops against the cut
     // engine returns to the lead
     {dur:durFor(d),fn:function(p){engS=lerp(relEng-26,parkS(),ease(p));}}
   ],function(){after('Kicked '+n+' onto the tied cut in '+T+'. <span style="color:var(--green)">(no joint)</span>');});
@@ -364,7 +382,7 @@ function after(nar){setFb('',  '<span class="nar">'+nar+'</span>'); renderStat()
 function checkWin(){
   var g=PUZZLES[pi].goal, hit=g.ordered?eqArr(state.tracks[g.track],g.cars):setEq(state.tracks[g.track],g.cars), ok=hit&&state.engine.length===0;
   var unsecured=TRACKS.some(function(t){return state.tracks[t].length>=2&&!state.secured[t];});
-  if(ok&&!unsecured){ var par=PUZZLES[pi].par, v=jointsUsed<=par?(' <b style="color:var(--green)">Par — '+jointsUsed+' joint'+(jointsUsed===1?'':'s')+'!</b>'):(' <b>'+jointsUsed+' joints</b> — par is <b>'+par+'</b>. Watch the optimal line, or kick onto a tied cut.'); var rev=TRACKS.some(function(t){return SW[t]==='reverse';}); setFb('ok','<b>Job done.</b> '+g.track+' holds '+g.cars.join('-')+', engine clear, cuts tied.'+v+(rev?' <span style="color:var(--muted)">Now restore your switches to normal (Rule 104).</span>':'')); }
+  if(ok&&!unsecured){ var par=PUZZLES[pi].par, v=jointsUsed<=par?(' <b style="color:var(--green)">Par — '+jointsUsed+' joint'+(jointsUsed===1?'':'s')+'!</b>'):(' <b>'+jointsUsed+' joints</b> — par is <b>'+par+'</b>. Watch the optimal line, or kick onto a tied cut.'); var rev=TRACKS.some(function(t){return SW[t]==='reverse';}); setFb('ok','<b>Job done.</b> '+g.track+' holds '+g.cars.join('-')+', engine clear, cuts tied.'+v+(rev?' <span style="color:var(--muted)">Now restore your switches to normal (Rule 104).</span>':'')); sWin(); }
   else if(ok&&unsecured){ setFb('no','Cars are placed and the engine’s clear — but a 2+ cut is left untied. Spot it or tie it (Rule 112).'); }
 }
 
@@ -378,7 +396,7 @@ function renderSwitches(){var h='';TRACKS.forEach(function(t){var rev=SW[t]==='r
    h+='<div class="sw'+(rev?' rev':'')+'" data-t="'+t+'"><span class="dot"></span>'+t+' · '+(rev?'REV':'NORM')+'</div>';});
   document.getElementById('switches').innerHTML=h;
   Array.prototype.forEach.call(document.querySelectorAll('#switches .sw'),function(c){c.onclick=function(){throwSwitch(c.getAttribute('data-t'));};});}
-function throwSwitch(t){ if(animBusy||auto)return; SW[t]=SW[t]==='reverse'?'normal':'reverse'; renderSwitches(); draw(); }
+function throwSwitch(t){ if(animBusy||auto)return; SW[t]=SW[t]==='reverse'?'normal':'reverse'; sSwitch(); renderSwitches(); draw(); }
 function renderTrk(){var sel=document.getElementById('trk');sel.innerHTML=TRACKS.map(function(t){return '<option>'+t+'</option>';}).join('');}
 function renderStat(){var on=state.engine.length;
   document.getElementById('stat').innerHTML='<span>On the engine: <b>'+(on?state.engine.join('-'):'—')+'</b></span><span>Joints: <b>'+jointsUsed+'</b> · par <b>'+PUZZLES[pi].par+'</b></span>';}
