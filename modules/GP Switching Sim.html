@@ -130,9 +130,10 @@ function polyAt(pts,s){ // {x,y,ang} at arclength s
     return {x:lerp(pts[k-1][0],pts[k][0],t),y:lerp(pts[k-1][1],pts[k][1],t),ang:Math.atan2(pts[k][1]-pts[k-1][1],pts[k][0]-pts[k-1][0])};}
     s-=L;}
 }
+var SPINE=[A,B,TOP]; function sbAt(s){return polyAt(SPINE,s);}
 var dLead=dist(A,B);
 function preJ(i){return dLead+dist(B,JX[i]);}              // arclength from route start to the junction
-function sBody(i,k){return preJ(i)+CLEAR+(k+0.5)*CARLEN;}  // arclength of body slot k centre (throat-anchored)
+function sBody(i,k){return preJ(i)+CLEAR+state.offset[TRACKS[i]]+k*CARLEN;}  // offset = how far down the track the cut sits
 function parkS(){return PARKX-A[0];}                       // engine park arclength (on the lead)
 
 // ===================== puzzles + rules brain (reused model) =====================
@@ -152,15 +153,17 @@ var PUZZLES=[
 ];
 var pi=0, state=null, jointsUsed=0;
 function clone(o){return JSON.parse(JSON.stringify(o));}
-function freshState(){var p=PUZZLES[pi];var s={tracks:{},engine:[],secured:{}};
-  TRACKS.forEach(function(t){s.tracks[t]=[];});
-  for(var k in p.start)s.tracks[k]=p.start[k].slice();
+function freshState(){var p=PUZZLES[pi];var s={tracks:{},engine:[],secured:{},offset:{}};
+  TRACKS.forEach(function(t){s.tracks[t]=[];s.offset[t]=0;});
+  for(var k in p.start){s.tracks[k]=p.start[k].slice();s.offset[k]=randOffset();}
   if(p.startSecured)p.startSecured.forEach(function(t){if(s.tracks[t].length>=2)s.secured[t]=true;});
   return s;}
 function place(s,T,n){var t=s.tracks[T];var b=s.engine.slice(s.engine.length-n);s.engine=s.engine.slice(0,s.engine.length-n);s.tracks[T]=b.concat(t);}
-function pullApply(s,T,n){var t=s.tracks[T];s.engine=s.engine.concat(t.slice(0,n));s.tracks[T]=t.slice(n);s.secured[T]=false;}
-function spotApply(s,T,n){place(s,T,n);if(s.tracks[T].length>=2)s.secured[T]=true;}
-function kickApply(s,T,n){place(s,T,n);}
+function pullApply(s,T,n){var t=s.tracks[T];s.engine=s.engine.concat(t.slice(0,n));s.tracks[T]=t.slice(n);s.secured[T]=false;s.offset[T]+=n*CARLEN;}
+function spotApply(s,T,n,no){place(s,T,n);s.offset[T]=no;if(s.tracks[T].length>=2)s.secured[T]=true;}
+function kickApply(s,T,n,no){place(s,T,n);s.offset[T]=no;}
+function randOffset(){return 92+Math.floor(Math.random()*64);}            // 92..155 px down the track
+function nextOffset(T,n){return state.tracks[T].length?Math.max(CARLEN/2,state.offset[T]-n*CARLEN):randOffset();}
 function reSecure(s){for(var k in s.tracks){if(s.tracks[k].length<2)s.secured[k]=false;}}
 function setEq(a,x){return a.length===x.length&&x.every(function(c){return a.indexOf(c)>=0;});}
 
@@ -217,14 +220,14 @@ function draw(){
   // static cars on tracks
   for(var ti=0;ti<6;ti++){var T=TRACKS[ti], arr=state.tracks[T];
     for(var c=0;c<arr.length;c++){ if(hidden[arr[c]])continue;
-      var x=JX[ti][0]+CLEAR+(c+0.5)*CARLEN, y=TY[ti];
+      var x=JX[ti][0]+CLEAR+state.offset[T]+c*CARLEN, y=TY[ti];
       drawCar(x,y,0,arr[c],'car', state.secured[T] && c===0);
     }}
   // static engine + cars on engine (parked on the lead) when idle
   if(!animBusy){
-    drawCar(PARKX,LEAD_Y,0,'ENG','eng');
-    for(var e=0;e<state.engine.length;e++){ var lbl=state.engine[state.engine.length-1-e];
-      drawCar(PARKX-ENGLEN/2-CARLEN/2-e*CARLEN,LEAD_Y,0,lbl,'car'); }
+    var ep=sbAt(parkS()); drawCar(ep.x,ep.y,ep.ang,'ENG','eng');
+    for(var e=0;e<state.engine.length;e++){ var cp=sbAt(parkS()+COUP+e*CARLEN);
+      drawCar(cp.x,cp.y,cp.ang,state.engine[e],'car'); }
   }
   // moving bodies
   for(var m=0;m<moving.length;m++){var b=moving[m];drawCar(b.x,b.y,b.ang,b.label,b.kind);}
@@ -282,7 +285,8 @@ function doPull(i,n,T){
 }
 function doSpot(i,n,T){
   if(n<1||n>state.engine.length){refuse('Only <b>'+state.engine.length+'</b> car'+(state.engine.length===1?'':'s')+' on the engine to spot.');return;}
-  var route=routePts(i), sC=sBody(i,0)-COUP, occ=state.tracks[T].length>0;
+  var occ=state.tracks[T].length>0, no=nextOffset(T,n);
+  var route=routePts(i), throatS=preJ(i)+CLEAR+no, sC=throatS-COUP;
   var bySlot=[];for(var j=0;j<n;j++)bySlot[j]=state.engine[state.engine.length-1-j];
   for(var c=0;c<n;c++)hidden[bySlot[c]]=1;
   function grp(s){return [engB(route,s)].concat(bySlot.map(function(lb,j){return carB(route,s+COUP+j*CARLEN,lb);}));}
@@ -290,7 +294,7 @@ function doSpot(i,n,T){
     {dur:durFor(sC-parkS())+n*30,fn:function(p){moving=grp(lerp(parkS(),sC,ease(p)));}},
     {dur:240,fn:function(p){moving=grp(sC);}},
     {dur:durFor(sC-parkS()),fn:function(p){moving=[engB(route,lerp(sC,parkS(),ease(p)))];}}
-  ],function(){spotApply(state,T,n);jointsUsed+=(occ?1:0);reSecure(state);
+  ],function(){spotApply(state,T,n,no);jointsUsed+=(occ?1:0);reSecure(state);
      var sn=state.tracks[T].length>=2?' Tied down — kickable now. ⛓':' Hand brake on.';
      after('Shoved '+n+' into '+T+'.'+sn+(occ?' <span style="color:var(--orange)">(+1 joint)</span>':' <span style="color:var(--green)">(no joint)</span>'));});
 }
@@ -299,21 +303,22 @@ function doKick(i,n,T){
   if(state.tracks[T].length<2){refuse('Can’t kick into <b>'+T+'</b> — you only kick onto a standing cut of 2+ cars, never an empty/short track.');return;}
   if(!state.secured[T]){refuse('Can’t kick into <b>'+T+'</b> yet — that cut isn’t tied down. Two hand brakes must be on first.');return;}
   if(n<1||n>state.engine.length){refuse('Only <b>'+state.engine.length+'</b> car'+(state.engine.length===1?'':'s')+' on the engine to kick.');return;}
-  var route=routePts(i), release=preJ(i)+CLEAR*0.4, sStand=sBody(i,0);
+  var route=routePts(i), no=nextOffset(T,n);
+  var relThroat=preJ(i)+CLEAR+CARLEN/2, tgtThroat=preJ(i)+CLEAR+no;   // coast from just inside the clearance up to the standing cut
+  if(tgtThroat<relThroat)tgtThroat=relThroat;
+  var relEng=relThroat-COUP;
   var bySlot=[];for(var j=0;j<n;j++)bySlot[j]=state.engine[state.engine.length-1-j];
   for(var c=0;c<n;c++)hidden[bySlot[c]]=1;
-  var sEngRel=release-COUP;
-  function grp(s){return [engB(route,s)].concat(bySlot.map(function(lb,j){return carB(route,s+COUP+j*CARLEN,lb);}));}
+  function cut(throat){return bySlot.map(function(lb,j){return carB(route,throat+j*CARLEN,lb);});}
   play([
-    // shove up to release, building speed (ease-in)
-    {dur:durFor(sEngRel-parkS()),fn:function(p){moving=grp(lerp(parkS(),sEngRel,p*p));}},
-    // cut away: cars coast on (decelerating) to the standing cut; engine eases back
-    {dur:760,fn:function(p){var cs=lerp(release,sStand-COUP+CARLEN*0.5, 1-Math.pow(1-p,2));
-       var es=lerp(sEngRel,parkS()+ (parkS()-sEngRel)*0, sEngRel>parkS()? p*0.15:0); // hold-ish
-       moving=[engB(route,lerp(sEngRel,sEngRel-20,ease(p)))].concat(bySlot.map(function(lb,j){return carB(route,cs+j*CARLEN,lb);}));}},
-    // engine returns to park
-    {dur:durFor(sEngRel-parkS()),fn:function(p){moving=[engB(route,lerp(sEngRel-20,parkS(),ease(p)))];}}
-  ],function(){kickApply(state,T,n);reSecure(state);after('Kicked '+n+' onto the tied cut in '+T+'. <span style="color:var(--green)">(no joint)</span>');});
+    // shove up, building speed (ease-in), engine pushes the cut to the release point
+    {dur:durFor(relEng-parkS()),fn:function(p){var es=lerp(parkS(),relEng,p*p);moving=[engB(route,es)].concat(cut(es+COUP));}},
+    // cut away: the cars coast on (decelerating) onto the tied cut; engine drifts back a touch
+    {dur:820,fn:function(p){var cs=lerp(relThroat,tgtThroat,1-Math.pow(1-p,2));
+       moving=[engB(route,lerp(relEng,relEng-26,ease(p)))].concat(cut(cs));}},
+    // engine returns to the lead
+    {dur:durFor(relEng-parkS()),fn:function(p){moving=[engB(route,lerp(relEng-26,parkS(),ease(p)))];}}
+  ],function(){kickApply(state,T,n,no);reSecure(state);after('Kicked '+n+' onto the tied cut in '+T+'. <span style="color:var(--green)">(no joint)</span>');});
 }
 function after(nar){setFb('',  '<span class="nar">'+nar+'</span>'); renderStat(); draw(); checkWin();}
 
