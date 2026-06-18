@@ -10,7 +10,7 @@
   *{box-sizing:border-box}
   body{margin:0;background:linear-gradient(180deg,var(--bg2),var(--bg) 42%);color:var(--ink);
        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
-  .wrap{max-width:1000px;margin:0 auto;padding:16px}
+  .wrap{max-width:1400px;margin:0 auto;padding:16px}
   a.back{color:var(--muted);font-size:12.5px;text-decoration:none}
   header{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin:8px 0 12px}
   .badge{width:38px;height:38px;border-radius:8px;background:var(--blue);color:#04223f;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:15px;flex:none}
@@ -115,12 +115,12 @@
 
 <script>
 // ===================== geometry =====================
-var W=980, H=460;
+var W=1340, H=460;
 var LEAD_Y=400, A=[18,LEAD_Y], B=[250,LEAD_Y];            // lead (drill track)
 var TOP=[560,80];                                          // ladder top (AS76 junction)
 var TRACKS=['AS71','AS72','AS73','AS74','AS75','AS76'];    // ladder order: AS71 first off the lead
 var TY=[350,296,242,188,134,80];                           // body-track y, AS71 (nearest lead) lowest
-var RIGHT=946, CLEAR=16, CARLEN=42, CARW=22, ENGLEN=52, ENGW=26, PARKX=120;
+var RIGHT=1306, CLEAR=16, CARLEN=42, CARW=22, ENGLEN=52, ENGW=26, PARKX=120;
 
 function lerp(a,b,t){return a+(b-a)*t;}
 function dist(p,q){return Math.hypot(q[0]-p[0],q[1]-p[1]);}
