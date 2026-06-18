@@ -95,6 +95,7 @@
   <p>You're the <b>conductor</b>, not the engineer. You don't drive — you <b>line the road</b> and <b>call the move</b>, then the engineer works it. Get the cars where the job calls for them.</p>
   <h4>1 · Line the switches</h4>
   <p>Tap a switch on the yard (or its chip below) to throw it <b>normal</b> (stay on the ladder) or <b>reverse</b> (into that track). To reach a track you line <i>its</i> switch reverse and leave the switches between it and the lead <b>normal</b> so you can roll past them. Call a move into a track that isn't lined and the engineer stops — just like real life.</p>
+  <p><b>Restore switches to normal.</b> When you're done with a switch, line it back to <b>normal</b>. Main-track switches must be left lined and locked normal (CROR <b>104(h)</b>, except when the track's occupied or a form authorizes it) — and it's good practice in the yard too. You also can't throw a switch with cars standing across the points (<b>104(c)</b>) — that's the clearance point again.</p>
   <h4>2 · Call the move</h4>
   <p><b>PULL</b> n from a track — back in, couple, pull the cars out onto the lead. <code>+1 joint</code> (you coupled on).<br>
   <b>SPOT</b> n to a track — shove cars in and leave them. Spotting <b>2+</b> ties the cut down (hand brake on) — now it can take a kick. <code>+1 joint if you couple onto cars already there</code>.<br>
@@ -353,7 +354,7 @@ function after(nar){setFb('',  '<span class="nar">'+nar+'</span>'); renderStat()
 function checkWin(){
   var g=PUZZLES[pi].goal, hit=g.ordered?eqArr(state.tracks[g.track],g.cars):setEq(state.tracks[g.track],g.cars), ok=hit&&state.engine.length===0;
   var unsecured=TRACKS.some(function(t){return state.tracks[t].length>=2&&!state.secured[t];});
-  if(ok&&!unsecured){ var par=PUZZLES[pi].par, v=jointsUsed<=par?(' <b style="color:var(--green)">Par — '+jointsUsed+' joint'+(jointsUsed===1?'':'s')+'!</b>'):(' <b>'+jointsUsed+' joints</b> — par is <b>'+par+'</b>. Watch the optimal line, or kick onto a tied cut.'); setFb('ok','<b>Job done.</b> '+g.track+' holds '+g.cars.join('-')+', engine clear, cuts tied.'+v); }
+  if(ok&&!unsecured){ var par=PUZZLES[pi].par, v=jointsUsed<=par?(' <b style="color:var(--green)">Par — '+jointsUsed+' joint'+(jointsUsed===1?'':'s')+'!</b>'):(' <b>'+jointsUsed+' joints</b> — par is <b>'+par+'</b>. Watch the optimal line, or kick onto a tied cut.'); var rev=TRACKS.some(function(t){return SW[t]==='reverse';}); setFb('ok','<b>Job done.</b> '+g.track+' holds '+g.cars.join('-')+', engine clear, cuts tied.'+v+(rev?' <span style="color:var(--muted)">Now restore your switches to normal (Rule 104).</span>':'')); }
   else if(ok&&unsecured){ setFb('no','Cars are placed and the engine’s clear — but a 2+ cut is left untied. Spot it or tie it (Rule 112).'); }
 }
 
@@ -391,7 +392,7 @@ function watchOptimal(){ if(animBusy||auto)return; loadPuzzle(pi); slowmo=1.7;
   setFb('','<span class="sys">▶ Watching the optimal line — '+PUZZLES[pi].par+' joint'+(PUZZLES[pi].par===1?'':'s')+'…</span>');
   setTimeout(autoStep,650); }
 function autoStep(){ if(!auto)return;
-  if(!auto.length){auto=null;slowmo=1;return;}
+  if(!auto.length){auto=null;slowmo=1;resetSwitches();renderSwitches();draw();return;}
   var m=auto.shift(), i=TRACKS.indexOf(m[1]);
   autoLine(i);
   document.getElementById('act').value=m[0]; document.getElementById('prep').textContent=m[0]==='pull'?'from':'to';
