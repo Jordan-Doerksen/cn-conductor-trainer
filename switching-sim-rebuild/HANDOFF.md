@@ -2,7 +2,8 @@
 
 > Read [`SPEC.md`](SPEC.md) first — it’s the full design, the rules, and the tech spec.
 > This file is the **kickoff**: how to stand up the new repo and build it phase by phase.
-> Carry this whole `switching-sim-rebuild/` folder into the new repo as `/docs`.
+> Home repo: **`switch-list`** (`C:\projects\switch-list`) — these docs live there under `/docs`.
+> Rules source of truth: the **`cn-conductor-trainer`** repo (the Jan 2025 CROR PDF + the signal data).
 
 ---
 
@@ -19,7 +20,7 @@ And it cites every rule, with the **CN Conductor Trainer repo as the source of t
 
 ## Stand up the repo
 
-1. New repo, e.g. `gp-switching-sim`. Enable **GitHub Pages** (serve from `main` / root or `/docs`).
+1. **Repo: `switch-list`** (created local at `C:\projects\switch-list`). It’s a **free, open** tool. When you publish: enable **GitHub Pages** (serve from `main` / root or `/docs`) → `<user>.github.io/switch-list`; add a permissive `LICENSE` (MIT suggested).
 2. Pure static — **no build step, no framework.** `index.html` + a `/src` of vanilla JS (or one file to start) + `/docs` (this folder) + `/tools` (the solver).
 3. Copy in from `cn-conductor-trainer` (as reference, then rewrite — don’t fork the prototype HTML wholesale; the prototype carries the old joint‑par metric and accreted state):
    - the **CROR PDF** (or link to it) for citation checking,

@@ -3,6 +3,7 @@
 > A browser-based yard‑switching trainer for CN freight conductors and trainees.
 > This document is the **source design** for a clean, ground‑up rebuild in its own repo.
 > Status: drafted 2026‑06‑18 from the working prototype in `cn-conductor-trainer/modules/GP Switching Sim.html`.
+> Home repo: **`switch-list`** (this is where it’s built, ground‑up). Rules source of truth: the **`cn-conductor-trainer`** repo.
 
 ---
 
@@ -37,7 +38,17 @@ The prototype optimized for **joints** (couplings). **That is wrong as the prima
 
 - **Par = the minimum number of moves** to satisfy the job.
 - **Joints (couplings) are a secondary quality stat**, shown but not the target. Lower is better (kicking onto a tied cut saves a coupling), **but you never add a move just to save a joint.**
-- Display: `7 moves (par 6) · 3 couplings`. Optionally show the joint count of the best min‑move line as a “clean line” benchmark.
+
+**Two on‑screen counters, always both visible:**
+
+| Counter | Meaning | Role |
+|---|---|---|
+| **Moves** | PULL / SPOT / KICK called so far, vs **par** | **The goal** — beat/match par |
+| **Joints** | couplings made (pull +1; spot onto cars +1; kick 0) | **Also good** — efficiency / craft |
+
+- Live readout: `Moves 7 / par 6 · Joints 3`. On a win, grade the **moves** (`Par! 6 moves` / `7 moves — par 6`) and praise low joints as a bonus (`…and only 3 couplings — clean`).
+- A puzzle stores **both** a `par` (min moves) and the **joint count of the best min‑move line** (the “clean” benchmark). The solver ranks by **moves, then joints** so the benchmark line is the fewest‑moves, then fewest‑couplings line.
+- Never let a hint, the solver, or “Watch optimal” prefer a longer (more‑moves) line because it has fewer joints — that was the prototype’s kick‑then‑pull‑back bug.
 
 **Solver rule:** rank solutions by **moves first, joints second**. (See §8.) This single change removes every kick‑then‑pull‑back artifact.
 
