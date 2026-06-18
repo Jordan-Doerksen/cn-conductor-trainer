@@ -131,7 +131,7 @@ var JX=TRACKS.map(function(_,i){return junction(i);});
 function routePts(i){return [A,B,JX[i],[RIGHT,TY[i]]];}
 function polyLen(pts){var d=0;for(var k=1;k<pts.length;k++)d+=dist(pts[k-1],pts[k]);return d;}
 function polyAt(pts,s){ // {x,y,ang} at arclength s
-  if(s<=0){var a0=Math.atan2(pts[1][1]-pts[0][1],pts[1][0]-pts[0][0]);return {x:pts[0][0],y:pts[0][1],ang:a0};}
+  if(s<=0){var a0=Math.atan2(pts[1][1]-pts[0][1],pts[1][0]-pts[0][0]);return {x:pts[0][0]+s*Math.cos(a0),y:pts[0][1]+s*Math.sin(a0),ang:a0};}
   for(var k=1;k<pts.length;k++){var L=dist(pts[k-1],pts[k]); if(s<=L||k===pts.length-1){var t=L?s/L:0; if(t>1)t=1;
     return {x:lerp(pts[k-1][0],pts[k][0],t),y:lerp(pts[k-1][1],pts[k][1],t),ang:Math.atan2(pts[k][1]-pts[k-1][1],pts[k][0]-pts[k-1][0])};}
     s-=L;}
@@ -192,14 +192,20 @@ var PUZZLES=[
  {tier:'Hard mode',title:'Eight-car split', start:{AS71:['A','B','C','D','E','F','G','H'], AS75:['m','n']}, goal:{track:'AS73',cars:['C','F']},
   hint:'Eight-car cut — set out <b>C and F</b> to <b>AS73</b>. Deep digging, and a kick saves you a trip.', par:3, opt:[['pull','AS71',2],['spot','AS72',2],['pull','AS71',3],['spot','AS74',2],['pull','AS71',2],['kick','AS72',1],['spot','AS73',2]]},
  {tier:'Hard mode',title:'Kicker’s special', start:{AS71:['A','B','C','D','E','F'],AS72:['Z','W'],AS73:['X','Y'], AS76:['m','n']}, goal:{track:'AS73',cars:['D','E','F','X','Y']},
-  hint:'Two tied cuts to work with. Land <b>D, E, F</b> on <b>AS73</b> — spot the spares, then kick the cut on (par just 2).', par:2, opt:[['pull','AS71',3],['spot','AS74',3],['pull','AS71',3],['kick','AS73',3]]}
+  hint:'Two tied cuts to work with. Land <b>D, E, F</b> on <b>AS73</b> — spot the spares, then kick the cut on (par just 2).', par:2, opt:[['pull','AS71',3],['spot','AS74',3],['pull','AS71',3],['kick','AS73',3]]},
+ {tier:'Inbound / outbound',title:'Inbound & away', start:{AS76:['m','n']}, inbound:{cars:['A','B'],to:'AS74'}, loads:['A','B'], goal:{track:'AS73',cars:['A','B'],depart:true},
+  hint:'An inbound just set out <b>A-B</b> on AS74. Build them as the outbound on <b>AS73</b>, then send it away.', par:1, opt:[['pull','AS74',2],['spot','AS73',2]]},
+ {tier:'Inbound / outbound',title:'Block the loads', start:{AS72:['E','F'], AS76:['m','n']}, inbound:{cars:['A','B','C','D'],to:'AS74'}, loads:['A','B','E'], goal:{track:'AS73',cars:['A','B','E'],depart:true},
+  hint:'Inbound left a mix on AS74; a load (E) waits on AS72. Don’t mix — block the <b>loads</b> (A, B, E — solid cars) on <b>AS73</b> as the outbound, leave the empties, then depart.', par:2, opt:[['pull','AS74',3],['spot','AS71',1],['pull','AS72',1],['spot','AS73',3]]}
 ];
 var pi=0, state=null, jointsUsed=0, auto=null, moveDone=null, slowmo=1, startState=null;
 function clone(o){return JSON.parse(JSON.stringify(o));}
 function freshState(){var p=PUZZLES[pi];var s={tracks:{},engine:[],secured:{},head:{},loaded:{}};
   TRACKS.forEach(function(t){s.tracks[t]=[];s.head[t]=0;});
   for(var k in p.start){s.tracks[k]=p.start[k].slice();s.head[k]=randHead();}
-  TRACKS.forEach(function(t){s.tracks[t].forEach(function(c){s.loaded[c]=Math.random()<0.45;});});  // some cars loaded, most empty
+  if(p.inbound){s.tracks[p.inbound.to]=p.inbound.cars.slice();s.head[p.inbound.to]=randHead();}   // inbound cut set out (the arrival animates it in)
+  var allc=[];TRACKS.forEach(function(t){allc=allc.concat(s.tracks[t]);});
+  allc.forEach(function(c){s.loaded[c]= p.loads ? p.loads.indexOf(c)>=0 : Math.random()<0.45; });
   TRACKS.forEach(function(t){if(s.tracks[t].length>=2)s.secured[t]=true;});   // any standing cut of 2+ is tied down (Rule 112)
   return s;}
 function place(s,T,n){var t=s.tracks[T];var b=s.engine.slice(s.engine.length-n);s.engine=s.engine.slice(0,s.engine.length-n);s.tracks[T]=b.concat(t);}
@@ -239,6 +245,7 @@ function sKick(){ noise(0.34,0.07); tone(220,0.30,'sawtooth',0.05,90); }  // cut
 function sSwitch(){ tone(720,0.05,'square',0.05); }                 // points click
 function sWin(){ tone(523,0.16,'sine',0.08); setTimeout(function(){tone(784,0.30,'sine',0.08);},150); }
 function sErr(){ tone(150,0.22,'square',0.07,110); }                // refusal buzz
+function sHorn(){ tone(330,0.45,'sawtooth',0.06); setTimeout(function(){tone(247,0.55,'sawtooth',0.06);},130); }  // train horn
 (function(){var mb=document.getElementById('muteBtn'); if(!mb)return; mb.textContent=muted?'\uD83D\uDD07':'\uD83D\uDD0A';
   mb.addEventListener('click',function(){muted=!muted; try{localStorage.setItem('gpss_mute',muted?'1':'0');}catch(e){} mb.textContent=muted?'\uD83D\uDD07':'\uD83D\uDD0A'; if(!muted)sSwitch();});})();
 
@@ -382,7 +389,7 @@ function after(nar){setFb('',  '<span class="nar">'+nar+'</span>'); renderStat()
 function checkWin(){
   var g=PUZZLES[pi].goal, hit=g.ordered?eqArr(state.tracks[g.track],g.cars):setEq(state.tracks[g.track],g.cars), ok=hit&&state.engine.length===0;
   var unsecured=TRACKS.some(function(t){return state.tracks[t].length>=2&&!state.secured[t];});
-  if(ok&&!unsecured){ var par=PUZZLES[pi].par, v=jointsUsed<=par?(' <b style="color:var(--green)">Par — '+jointsUsed+' joint'+(jointsUsed===1?'':'s')+'!</b>'):(' <b>'+jointsUsed+' joints</b> — par is <b>'+par+'</b>. Watch the optimal line, or kick onto a tied cut.'); var rev=TRACKS.some(function(t){return SW[t]==='reverse';}); setFb('ok','<b>Job done.</b> '+g.track+' holds '+g.cars.join('-')+', engine clear, cuts tied.'+v+(rev?' <span style="color:var(--muted)">Now restore your switches to normal (Rule 104).</span>':'')); sWin(); }
+  if(ok&&!unsecured){ if(PUZZLES[pi].goal.depart){departTrain();return;} var par=PUZZLES[pi].par, v=jointsUsed<=par?(' <b style="color:var(--green)">Par — '+jointsUsed+' joint'+(jointsUsed===1?'':'s')+'!</b>'):(' <b>'+jointsUsed+' joints</b> — par is <b>'+par+'</b>. Watch the optimal line, or kick onto a tied cut.'); var rev=TRACKS.some(function(t){return SW[t]==='reverse';}); setFb('ok','<b>Job done.</b> '+g.track+' holds '+g.cars.join('-')+', engine clear, cuts tied.'+v+(rev?' <span style="color:var(--muted)">Now restore your switches to normal (Rule 104).</span>':'')); sWin(); }
   else if(ok&&unsecured){ setFb('no','Cars are placed and the engine’s clear — but a 2+ cut is left untied. Spot it or tie it (Rule 112).'); }
 }
 
@@ -400,9 +407,34 @@ function throwSwitch(t){ if(animBusy||auto)return; SW[t]=SW[t]==='reverse'?'norm
 function renderTrk(){var sel=document.getElementById('trk');sel.innerHTML=TRACKS.map(function(t){return '<option>'+t+'</option>';}).join('');}
 function renderStat(){var on=state.engine.length;
   document.getElementById('stat').innerHTML='<span>On the engine: <b>'+(on?state.engine.join('-'):'—')+'</b></span><span>Joints: <b>'+jointsUsed+'</b> · par <b>'+PUZZLES[pi].par+'</b></span>';}
+function arrive(){var p=PUZZLES[pi], T=p.inbound.to, i=TRACKS.indexOf(T);
+  var cars=state.tracks[T].slice(), nh=state.head[T];
+  state.tracks[T]=[]; state.engine=cars.slice();                       // lift the cut onto the arriving engine
+  engRoute=routePts(i); autoLine(i);
+  var off=-ENGLEN/2-sumLen(cars)-70, sSet=preJ(i)+nh-ENGLEN/2; engS=off; animBusy=true;
+  setFb('','<span class="sys">Inbound on the lead — setting out '+cars.length+' on '+T+'…</span>');
+  play([
+    {dur:1500,fn:function(pp){engS=lerp(off,sSet,ease(pp));},done:function(){sHorn();}},          // roll in from off-screen
+    {dur:260,fn:function(pp){engS=sSet;},done:function(){spotApply(state,T,cars.length,nh);sCouple();}},  // set out + tie down
+    {dur:durFor(Math.abs(sSet-parkS())),fn:function(pp){engS=lerp(sSet,parkS(),ease(pp));}}        // engine pulls clear
+  ],function(){engRoute=SPINE;engS=parkS();setFb('','<span class="sys">Inbound set out on '+T+' — now build the outbound.</span>');draw();});
+}
+function departTrain(){var T=PUZZLES[pi].goal.track, i=TRACKS.indexOf(T), cars=state.tracks[T].slice();
+  engRoute=routePts(i); autoLine(i); auto=null;
+  var sC=throatS(i)-ENGLEN/2, off=-ENGLEN/2-sumLen(cars)-90, d=Math.abs(sC-parkS()); animBusy=true;
+  setFb('','<span class="sys">Outbound built — cleared to depart…</span>');
+  play([
+    {dur:durFor(d),fn:function(pp){engS=lerp(parkS(),sC,ease(pp));}},                              // back onto the outbound
+    {dur:260,fn:function(pp){engS=sC;},done:function(){state.engine=state.tracks[T].slice();state.tracks[T]=[];state.head[T]=0;sCouple();}},  // couple the train
+    {dur:1700,fn:function(pp){engS=lerp(sC,off,ease(pp));},done:function(){sHorn();}}              // pull out and away
+  ],function(){engRoute=SPINE;engS=parkS();state.engine=[];
+     var par=PUZZLES[pi].par, v=jointsUsed<=par?('Par \u2014 '+jointsUsed+' joint'+(jointsUsed===1?'':'s')+'!'):(jointsUsed+' joints (par '+par+')');
+     setFb('ok','<b>Train away.</b> Outbound '+cars.join('-')+' departed. <b>'+v+'</b>');draw();});
+}
 function loadPuzzle(k){pi=k;state=freshState();startState=JSON.parse(JSON.stringify(state));jointsUsed=0;engS=parkS();engRoute=SPINE;flying=null;animBusy=false;auto=null;slowmo=1;resetSwitches();
   document.getElementById('obj').innerHTML='<b>'+PUZZLES[k].title+'</b> — '+PUZZLES[k].hint;
-  renderPz();renderSwitches();renderTrk();renderStat();setFb('','<span class="sys">Line the road, then call your move.</span>');draw();}
+  renderPz();renderSwitches();renderTrk();renderStat();
+  if(PUZZLES[k].inbound){arrive();} else {setFb('','<span class="sys">Line the road, then call your move.</span>');draw();}}
 
 // canvas click -> nearest switch
 cv.addEventListener('click',function(ev){ if(animBusy)return;
