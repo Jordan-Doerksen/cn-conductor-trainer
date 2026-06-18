@@ -134,20 +134,23 @@ var SPINE=[A,B,TOP]; function sbAt(s){return polyAt(SPINE,s);}
 var dLead=dist(A,B);
 function preJ(i){return dLead+dist(B,JX[i]);}              // arclength from route start to the junction
 function sBody(i,k){return preJ(i)+CLEAR+state.offset[TRACKS[i]]+k*CARLEN;}  // offset = how far down the track the cut sits
-function parkS(){return PARKX-A[0];}                       // engine park arclength (on the lead)
+var FOUL=dLead-8;                                          // lead clearance point — just clear of the ladder/switches
+var LEAD_CAP=Math.floor((FOUL-CARLEN/2-(ENGLEN/2+CARLEN/2)-ENGLEN/2-4)/CARLEN)+1;  // cars that fit on the lead clear of the switch
+function parkS(){var n=state?state.engine.length:0;        // engine parks so its whole cut sits clear of the switch
+  return n<=0 ? FOUL-ENGLEN/2 : FOUL-CARLEN/2-(n-1)*CARLEN-COUP;}
 
 // ===================== puzzles + rules brain (reused model) =====================
 var KICKABLE={AS72:1,AS73:1};   // kickable tracks (north-end grade flavor)
 var PUZZLES=[
- {title:'1 · First pull', start:{AS71:['A','B','C']}, goal:{track:'AS73',cars:['B']},
+ {title:'1 · First pull', start:{AS71:['A','B','C'], AS75:['F','G'], AS76:['H','J','K']}, goal:{track:'AS73',cars:['B']},
   hint:'Set out <b>B</b> to <b>AS73</b>. Dig past A, drop B, park the rest.'},
- {title:'2 · Two out', start:{AS71:['A','B','C','D']}, goal:{track:'AS74',cars:['C','D']},
+ {title:'2 · Two out', start:{AS71:['A','B','C','D'], AS76:['F','G']}, goal:{track:'AS74',cars:['C','D']},
   hint:'Set out <b>C and D</b> to <b>AS74</b>.'},
- {title:'3 · From two tracks', start:{AS72:['A','B'],AS75:['C','D']}, goal:{track:'AS73',cars:['B','C']},
+ {title:'3 · From two tracks', start:{AS72:['A','B'],AS75:['C','D'], AS76:['F','G','H']}, goal:{track:'AS73',cars:['B','C']},
   hint:'Build <b>B + C</b> on <b>AS73</b> — pull from two tracks.'},
- {title:'4 · Dig two', start:{AS71:['A','B','C','D','E']}, goal:{track:'AS74',cars:['B','D']},
+ {title:'4 · Dig two', start:{AS71:['A','B','C','D','E'], AS76:['F','G']}, goal:{track:'AS74',cars:['B','D']},
   hint:'Set out <b>B and D</b> to <b>AS74</b> — they’re buried.'},
- {title:'5 · Kick it', start:{AS71:['A','B','C','D'],AS73:['X','Y']}, startSecured:['AS73'],
+ {title:'5 · Kick it', start:{AS71:['A','B','C','D'],AS73:['X','Y'], AS76:['F','G']},
   goal:{track:'AS73',cars:['C','D','X','Y']},
   hint:'AS73 holds a tied cut (X-Y). <b>Kick C and D</b> onto it.'}
 ];
@@ -156,7 +159,7 @@ function clone(o){return JSON.parse(JSON.stringify(o));}
 function freshState(){var p=PUZZLES[pi];var s={tracks:{},engine:[],secured:{},offset:{}};
   TRACKS.forEach(function(t){s.tracks[t]=[];s.offset[t]=0;});
   for(var k in p.start){s.tracks[k]=p.start[k].slice();s.offset[k]=randOffset();}
-  if(p.startSecured)p.startSecured.forEach(function(t){if(s.tracks[t].length>=2)s.secured[t]=true;});
+  TRACKS.forEach(function(t){if(s.tracks[t].length>=2)s.secured[t]=true;});   // any standing cut of 2+ is tied down (Rule 112)
   return s;}
 function place(s,T,n){var t=s.tracks[T];var b=s.engine.slice(s.engine.length-n);s.engine=s.engine.slice(0,s.engine.length-n);s.tracks[T]=b.concat(t);}
 function pullApply(s,T,n){var t=s.tracks[T];s.engine=s.engine.concat(t.slice(0,n));s.tracks[T]=t.slice(n);s.secured[T]=false;s.offset[T]+=n*CARLEN;}
@@ -271,6 +274,7 @@ function lineMsg(lc,i){
 function doPull(i,n,T){
   var arr=state.tracks[T];
   if(n<1||n>arr.length){refuse('Only <b>'+arr.length+'</b> car'+(arr.length===1?'':'s')+' on '+T+' to pull.');return;}
+  if(state.engine.length+n>LEAD_CAP){refuse('Not enough room to clear the switch — the lead only holds the engine and <b>'+LEAD_CAP+'</b> cars clear of the points. Spot some off first.');return;}
   engRoute=routePts(i);
   var sC=sBody(i,0)-COUP, d=Math.abs(sC-parkS());
   play([
