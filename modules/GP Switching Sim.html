@@ -183,7 +183,15 @@ var PUZZLES=[
  {tier:'Yard work',title:'Crowded yard', start:{AS71:['A','B','C','D'],AS72:['m','n'], AS76:['p','q']}, goal:{track:'AS73',cars:['B','D']},
   hint:'Tight yard. Dig <b>B and D</b> to <b>AS73</b> with only a couple of free tracks.', par:2, opt:[['pull','AS71',4],['spot','AS73',1],['spot','AS71',1],['spot','AS73',1],['kick','AS72',1]]},
  {tier:'Yard work',title:'The transfer', start:{AS71:['A','B','C','D','E'],AS72:['p','q'],AS73:['X','Y'], AS76:['m','n']}, goal:{track:'AS73',cars:['D','E','X','Y']},
-  hint:'The works: set out <b>D, E, X, Y</b> together on <b>AS73</b> — dig deep, kick the spares on.', par:2, opt:[['pull','AS71',3],['spot','AS75',3],['pull','AS71',2],['kick','AS73',2]]}
+  hint:'The works: set out <b>D, E, X, Y</b> together on <b>AS73</b> — dig deep, kick the spares on.', par:2, opt:[['pull','AS71',3],['spot','AS75',3],['pull','AS71',2],['kick','AS73',2]]},
+ {tier:'Hard mode',title:'Seven-car dig', start:{AS71:['A','B','C','D','E','F','G'], AS76:['m','n']}, goal:{track:'AS73',cars:['B','F']},
+  hint:'Seven on AS71 — dig out <b>B and F</b> to <b>AS73</b>. The lead only holds four, so work it in stages.', par:3, opt:[['pull','AS71',4],['spot','AS75',2],['spot','AS73',1],['pull','AS71',2],['spot','AS73',1],['spot','AS72',2]]},
+ {tier:'Hard mode',title:'Re-sort four', start:{AS71:['C','A','D','B'], AS76:['m','n']}, goal:{track:'AS74',cars:['A','B','C','D'],ordered:true},
+  hint:'AS71 is out of order (C-A-D-B). Re-lay them on <b>AS74</b> in order <b>A-B-C-D</b> — reordering costs couplings, so par is high.', par:5, opt:[['pull','AS71',3],['spot','AS74',1],['spot','AS71',1],['spot','AS74',1],['pull','AS71',2],['spot','AS74',2]]},
+ {tier:'Hard mode',title:'Eight-car split', start:{AS71:['A','B','C','D','E','F','G','H'], AS75:['m','n']}, goal:{track:'AS73',cars:['C','F']},
+  hint:'Eight-car cut — set out <b>C and F</b> to <b>AS73</b>. Deep digging, and a kick saves you a trip.', par:3, opt:[['pull','AS71',2],['spot','AS72',2],['pull','AS71',3],['spot','AS74',2],['pull','AS71',2],['kick','AS72',1],['spot','AS73',2]]},
+ {tier:'Hard mode',title:'Kicker’s special', start:{AS71:['A','B','C','D','E','F'],AS72:['Z','W'],AS73:['X','Y'], AS76:['m','n']}, goal:{track:'AS73',cars:['D','E','F','X','Y']},
+  hint:'Two tied cuts to work with. Land <b>D, E, F</b> on <b>AS73</b> — spot the spares, then kick the cut on (par just 2).', par:2, opt:[['pull','AS71',3],['spot','AS74',3],['pull','AS71',3],['kick','AS73',3]]}
 ];
 var pi=0, state=null, jointsUsed=0, auto=null, moveDone=null, slowmo=1, startState=null;
 function clone(o){return JSON.parse(JSON.stringify(o));}
