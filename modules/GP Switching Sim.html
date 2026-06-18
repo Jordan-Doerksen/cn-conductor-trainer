@@ -30,6 +30,7 @@
   .sw .dot{width:9px;height:9px;border-radius:50%;background:var(--grey)}
   .sw.rev{border-color:var(--green);color:var(--green)}
   .sw.rev .dot{background:var(--green);box-shadow:0 0 6px var(--green)}
+  .note{font-size:11px;color:var(--muted);margin:8px 2px 2px}
   .builder{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
   .builder label{font-size:12px;color:var(--muted)}
   select,input{background:#14181d;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:7px 9px;font:inherit;font-size:13px}
@@ -70,6 +71,7 @@
     <div class="obj" id="obj"></div>
     <canvas id="yard" width="980" height="460"></canvas>
     <div class="switches" id="switches"></div>
+    <div class="note">Amber tick = clearance point — keep every cut clear of its switch, or you foul the route.</div>
   </div>
 
   <div class="stat" id="stat"></div>
@@ -97,10 +99,12 @@
   <p><b>PULL</b> n from a track — back in, couple, pull the cars out onto the lead. <code>+1 joint</code> (you coupled on).<br>
   <b>SPOT</b> n to a track — shove cars in and leave them. Spotting <b>2+</b> ties the cut down (hand brake on) — now it can take a kick. <code>+1 joint if you couple onto cars already there</code>.<br>
   <b>KICK</b> n to a track — shove and cut away rolling; the cars coast on by themselves onto a <b>secured 2+ cut</b> on a kickable track. <code>no joint</code>.</p>
+  <p><b>Don’t foul the switch.</b> Leave every cut clear of its switch — the <span style="color:#caa53a">amber tick</span> on each track is the clearance point. Park a car closer than that and it fouls the route into the next track, so the engineer won’t leave it there. Same on the lead — pull back far enough to clear the points.</p>
   <h4>The rules it follows — and why</h4>
   <ul>
     <li><b>112</b> — securing: every cut you leave gets a hand brake; a 2+ cut is then tied and kickable.</li>
     <li><b>113.4 / 113.5</b> — kicking: only onto a secured standing cut, never an empty or short track.</li>
+    <li><b>114</b> — fouling other tracks: every cut left standing must be clear of the clearance point.</li>
     <li><b>115</b> — shoving: you line and protect the route before the move.</li>
   </ul>
   <p style="color:var(--muted)">A training aid; the official CROR governs. Flag anything that looks off.</p>
@@ -135,6 +139,7 @@ var dLead=dist(A,B);
 function preJ(i){return dLead+dist(B,JX[i]);}              // arclength from route start to the junction
 function sBody(i,k){return preJ(i)+CLEAR+state.offset[TRACKS[i]]+k*CARLEN;}  // offset = how far down the track the cut sits
 var FOUL=dLead-8;                                          // lead clearance point — just clear of the ladder/switches
+var FZONE=42, MINOFF=FZONE-CLEAR+CARLEN/2;                 // a body cut closer than FZONE to its switch fouls the route
 var LEAD_CAP=Math.floor((FOUL-CARLEN/2-(ENGLEN/2+CARLEN/2)-ENGLEN/2-4)/CARLEN)+1;  // cars that fit on the lead clear of the switch
 function parkS(){var n=state?state.engine.length:0;        // engine parks so its whole cut sits clear of the switch
   return n<=0 ? FOUL-ENGLEN/2 : FOUL-CARLEN/2-(n-1)*CARLEN-COUP;}
@@ -186,8 +191,8 @@ function place(s,T,n){var t=s.tracks[T];var b=s.engine.slice(s.engine.length-n);
 function pullApply(s,T,n){var t=s.tracks[T];s.engine=s.engine.concat(t.slice(0,n));s.tracks[T]=t.slice(n);s.secured[T]=false;s.offset[T]+=n*CARLEN;}
 function spotApply(s,T,n,no){place(s,T,n);s.offset[T]=no;if(s.tracks[T].length>=2)s.secured[T]=true;}
 function kickApply(s,T,n,no){place(s,T,n);s.offset[T]=no;}
-function randOffset(){return 92+Math.floor(Math.random()*64);}            // 92..155 px down the track
-function nextOffset(T,n){return state.tracks[T].length?Math.max(CARLEN/2,state.offset[T]-n*CARLEN):randOffset();}
+function randOffset(){return 185+Math.floor(Math.random()*41);}           // park deep: 185..225 px down the track
+function nextOffset(T,n){return state.tracks[T].length?(state.offset[T]-n*CARLEN):randOffset();}
 function reSecure(s){for(var k in s.tracks){if(s.tracks[k].length<2)s.secured[k]=false;}}
 function setEq(a,x){return a.length===x.length&&x.every(function(c){return a.indexOf(c)>=0;});}
 function eqArr(a,b){return a.length===b.length&&a.every(function(x,i){return x===b[i];});}
@@ -231,6 +236,7 @@ function draw(){
   rail(A,B,'#3a4452',5); rail(B,TOP,'#33414f',4);
   // body tracks
   for(var i=0;i<6;i++){ rail(JX[i],[RIGHT,TY[i]],'#2c3744',4);
+    var fx=JX[i][0]+FZONE; ctx.strokeStyle='#8a6f2c';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(fx,TY[i]-6);ctx.lineTo(fx,TY[i]+6);ctx.stroke();   // clearance (foul) point
     ctx.fillStyle=KICKABLE[TRACKS[i]]?'#33c27f':'#7e93ad';ctx.font='bold 12px ui-monospace,monospace';ctx.textAlign='left';ctx.textBaseline='middle';
     ctx.fillText(TRACKS[i],RIGHT+4,TY[i]); }
   ctx.fillStyle='#56708a';ctx.font='11px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText('LEAD',(A[0]+B[0])/2,LEAD_Y+18);
@@ -308,6 +314,7 @@ function doPull(i,n,T){
 function doSpot(i,n,T){
   if(n<1||n>state.engine.length){refuse('Only <b>'+state.engine.length+'</b> car'+(state.engine.length===1?'':'s')+' on the engine to spot.');return;}
   var occ=state.tracks[T].length>0, no=nextOffset(T,n), len=state.engine.length;
+  if(occ&&no<MINOFF){refuse('That’d foul the switch — <b>'+T+'</b> hasn’t the room to hold '+n+' more clear of the points. Use another track.');return;}
   engRoute=routePts(i);
   // the dropped cars are the tail n; their throat-most (engine[len-n]) ends at depth `no`
   var sShove=(preJ(i)+CLEAR+no)-COUP-(len-n)*CARLEN, d=Math.abs(sShove-parkS());
@@ -324,6 +331,7 @@ function doKick(i,n,T){
   if(!state.secured[T]){refuse('Can’t kick into <b>'+T+'</b> yet — that cut isn’t tied down. Two hand brakes must be on first.');return;}
   if(n<1||n>state.engine.length){refuse('Only <b>'+state.engine.length+'</b> car'+(state.engine.length===1?'':'s')+' on the engine to kick.');return;}
   var no=nextOffset(T,n), len=state.engine.length;
+  if(no<MINOFF){refuse('That’d foul the switch — no room on <b>'+T+'</b> to take '+n+' more clear of the points.');return;}
   engRoute=routePts(i);
   var relThroat=preJ(i)+CLEAR+CARLEN/2, tgtThroat=preJ(i)+CLEAR+no;   // coast from just inside the clearance up to the cut
   if(tgtThroat<relThroat)tgtThroat=relThroat;
