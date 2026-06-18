@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Switching Sim — line it, call it, work it</title>
+<style>
+  :root{--bg:#14181d;--bg2:#10131a;--card:#1d222b;--card2:#232a34;--line:#2c3340;--ink:#eef2f6;--muted:#9aa3b0;
+        --accent:#36d07f;--on-accent:#06301c;--yellow:#f5b301;--blue:#4aa3ff;--green:#33c27f;--red:#ef5a5a;--orange:#ff8a3d;--grey:#7e93ad;}
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,var(--bg2),var(--bg) 42%);color:var(--ink);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:1000px;margin:0 auto;padding:16px}
+  a.back{color:var(--muted);font-size:12.5px;text-decoration:none}
+  header{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin:8px 0 12px}
+  .badge{width:38px;height:38px;border-radius:8px;background:var(--blue);color:#04223f;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:15px;flex:none}
+  .title{font-size:17px;font-weight:700}.sub{font-size:12.5px;color:var(--muted)}
+  .pill{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .helpbtn{background:transparent;color:var(--blue);border:1px solid var(--blue);border-radius:7px;padding:6px 11px;font-weight:700;font-size:12.5px;cursor:pointer}
+  .obj{background:#1d222b;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:8px;padding:10px 14px;font-size:14px;margin-bottom:12px}
+  .obj b{color:var(--blue)}
+  .pz{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+  .pz .chip{background:#1d222b;border:1px solid var(--line);border-radius:7px;padding:6px 11px;font-size:13px;cursor:pointer;font-family:monospace}
+  .pz .chip.on{border-color:var(--blue);color:var(--blue)}
+  .stage{background:#0c1016;border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:12px}
+  canvas{width:100%;height:auto;display:block;border-radius:8px;touch-action:manipulation}
+  .switches{display:flex;gap:6px;flex-wrap:wrap;margin:10px 2px 2px}
+  .sw{display:flex;align-items:center;gap:6px;background:#1d222b;border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:12px;font-family:monospace;cursor:pointer;user-select:none}
+  .sw .dot{width:9px;height:9px;border-radius:50%;background:var(--grey)}
+  .sw.rev{border-color:var(--green);color:var(--green)}
+  .sw.rev .dot{background:var(--green);box-shadow:0 0 6px var(--green)}
+  .builder{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
+  .builder label{font-size:12px;color:var(--muted)}
+  select,input{background:#14181d;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:7px 9px;font:inherit;font-size:13px}
+  input[type=number]{width:54px}
+  button{font:inherit;border:none;border-radius:7px;padding:8px 13px;font-weight:700;cursor:pointer;font-size:13.5px}
+  .work{background:var(--green);color:#06231a}.reset{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  button:disabled{opacity:.45;cursor:default}
+  .right{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .fb{font-size:13.5px;min-height:20px;padding:2px 2px 0}
+  .fb .nar{color:var(--ink)} .fb .sys{color:var(--muted);font-family:monospace;font-size:12.5px}
+  .fb.ok{color:var(--green)} .fb.no{color:var(--red)}
+  .stat{display:flex;gap:16px;font-size:12.5px;color:var(--muted);font-family:monospace;margin-bottom:8px}
+  .stat b{color:var(--ink)}
+  .modal{position:fixed;inset:0;background:rgba(4,7,11,.72);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+  .modal.show{display:flex}
+  .sheet{background:var(--card);border:1px solid var(--line);border-radius:14px;max-width:600px;width:100%;max-height:86vh;overflow:auto;padding:20px 22px}
+  .sheet h3{margin:0 0 4px;font-size:16px}.sheet h4{margin:16px 0 5px;font-size:13.5px;color:var(--blue)}
+  .sheet p,.sheet li{font-size:13.5px;color:#cdd5df}.sheet code{background:#11151b;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:12px}
+  .closeRow{margin-top:16px;text-align:right}
+  .foot{margin-top:18px;border-top:1px solid var(--line);padding-top:12px;font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">← All modules</a>
+  <header>
+    <div class="badge">SIM</div>
+    <div>
+      <div class="title">Switching Sim — line it, call it, work it</div>
+      <div class="sub">A conductor's yard: line the switches, call the move, watch the engineer work it.</div>
+    </div>
+    <div class="pill"><button class="helpbtn" id="helpBtn">How to play</button></div>
+  </header>
+
+  <div class="obj" id="obj"></div>
+
+  <div class="pz" id="pz"></div>
+
+  <div class="stage">
+    <canvas id="yard" width="980" height="460"></canvas>
+    <div class="switches" id="switches"></div>
+  </div>
+
+  <div class="stat" id="stat"></div>
+
+  <div class="builder">
+    <label>Move <select id="act"><option value="pull">PULL</option><option value="spot">SPOT</option><option value="kick">KICK</option></select></label>
+    <label><input type="number" id="cnt" min="1" value="1"></label>
+    <label id="prep">from</label>
+    <label><select id="trk"></select></label>
+    <button class="work" id="workBtn">Work it ▸</button>
+    <div class="right"><button class="reset" id="resetBtn">Reset</button></div>
+  </div>
+
+  <div class="fb" id="fb"></div>
+
+  <div class="foot">An unofficial personal study aid — the official CROR and CN special instructions govern. Securing, coupling and kicking modeled on Rules 112, 113 &amp; 115.</div>
+</div>
+
+<div class="modal" id="help"><div class="sheet">
+  <h3>How to play</h3>
+  <p>You're the <b>conductor</b>, not the engineer. You don't drive — you <b>line the road</b> and <b>call the move</b>, then the engineer works it. Get the cars where the job calls for them.</p>
+  <h4>1 · Line the switches</h4>
+  <p>Tap a switch on the yard (or its chip below) to throw it <b>normal</b> (stay on the ladder) or <b>reverse</b> (into that track). To reach a track you line <i>its</i> switch reverse and leave the switches between it and the lead <b>normal</b> so you can roll past them. Call a move into a track that isn't lined and the engineer stops — just like real life.</p>
+  <h4>2 · Call the move</h4>
+  <p><b>PULL</b> n from a track — back in, couple, pull the cars out onto the lead. <code>+1 joint</code> (you coupled on).<br>
+  <b>SPOT</b> n to a track — shove cars in and leave them. Spotting <b>2+</b> ties the cut down (hand brake on) — now it can take a kick. <code>+1 joint if you couple onto cars already there</code>.<br>
+  <b>KICK</b> n to a track — shove and cut away rolling; the cars coast on by themselves onto a <b>secured 2+ cut</b> on a kickable track. <code>no joint</code>.</p>
+  <h4>The rules it follows — and why</h4>
+  <ul>
+    <li><b>112</b> — securing: every cut you leave gets a hand brake; a 2+ cut is then tied and kickable.</li>
+    <li><b>113.4 / 113.5</b> — kicking: only onto a secured standing cut, never an empty or short track.</li>
+    <li><b>115</b> — shoving: you line and protect the route before the move.</li>
+  </ul>
+  <p style="color:var(--muted)">A training aid; the official CROR governs. Flag anything that looks off.</p>
+  <div class="closeRow"><button class="work" id="helpClose">Got it — let's switch</button></div>
+</div></div>
+
+<script>
+// ===================== geometry =====================
+var W=980, H=460;
+var LEAD_Y=400, A=[18,LEAD_Y], B=[250,LEAD_Y];            // lead (drill track)
+var TOP=[560,80];                                          // ladder top (AS76 junction)
+var TRACKS=['AS71','AS72','AS73','AS74','AS75','AS76'];    // ladder order: AS71 first off the lead
+var TY=[350,296,242,188,134,80];                           // body-track y, AS71 (nearest lead) lowest
+var RIGHT=946, CLEAR=16, CARLEN=42, CARW=22, ENGLEN=52, ENGW=26, PARKX=120;
+
+function lerp(a,b,t){return a+(b-a)*t;}
+function dist(p,q){return Math.hypot(q[0]-p[0],q[1]-p[1]);}
+// where the ladder line (B->TOP) crosses a given y -> that track's junction point
+function junction(i){var t=(B[1]-TY[i])/(B[1]-TOP[1]); return [B[0]+(TOP[0]-B[0])*t, TY[i]];}
+var JX=TRACKS.map(function(_,i){return junction(i);});
+// full route polyline from the lead's outer end to deep in track i
+function routePts(i){return [A,B,JX[i],[RIGHT,TY[i]]];}
+function polyLen(pts){var d=0;for(var k=1;k<pts.length;k++)d+=dist(pts[k-1],pts[k]);return d;}
+function polyAt(pts,s){ // {x,y,ang} at arclength s
+  if(s<=0){var a0=Math.atan2(pts[1][1]-pts[0][1],pts[1][0]-pts[0][0]);return {x:pts[0][0],y:pts[0][1],ang:a0};}
+  for(var k=1;k<pts.length;k++){var L=dist(pts[k-1],pts[k]); if(s<=L||k===pts.length-1){var t=L?s/L:0; if(t>1)t=1;
+    return {x:lerp(pts[k-1][0],pts[k][0],t),y:lerp(pts[k-1][1],pts[k][1],t),ang:Math.atan2(pts[k][1]-pts[k-1][1],pts[k][0]-pts[k-1][0])};}
+    s-=L;}
+}
+var dLead=dist(A,B);
+function preJ(i){return dLead+dist(B,JX[i]);}              // arclength from route start to the junction
+function sBody(i,k){return preJ(i)+CLEAR+(k+0.5)*CARLEN;}  // arclength of body slot k centre (throat-anchored)
+function parkS(){return PARKX-A[0];}                       // engine park arclength (on the lead)
+
+// ===================== puzzles + rules brain (reused model) =====================
+var KICKABLE={AS72:1,AS73:1};   // kickable tracks (north-end grade flavor)
+var PUZZLES=[
+ {title:'1 · First pull', start:{AS71:['A','B','C']}, goal:{track:'AS73',cars:['B']},
+  hint:'Set out <b>B</b> to <b>AS73</b>. Dig past A, drop B, park the rest.'},
+ {title:'2 · Two out', start:{AS71:['A','B','C','D']}, goal:{track:'AS74',cars:['C','D']},
+  hint:'Set out <b>C and D</b> to <b>AS74</b>.'},
+ {title:'3 · From two tracks', start:{AS72:['A','B'],AS75:['C','D']}, goal:{track:'AS73',cars:['B','C']},
+  hint:'Build <b>B + C</b> on <b>AS73</b> — pull from two tracks.'},
+ {title:'4 · Dig two', start:{AS71:['A','B','C','D','E']}, goal:{track:'AS74',cars:['B','D']},
+  hint:'Set out <b>B and D</b> to <b>AS74</b> — they’re buried.'},
+ {title:'5 · Kick it', start:{AS71:['A','B','C','D'],AS73:['X','Y']}, startSecured:['AS73'],
+  goal:{track:'AS73',cars:['C','D','X','Y']},
+  hint:'AS73 holds a tied cut (X-Y). <b>Kick C and D</b> onto it.'}
+];
+var pi=0, state=null, jointsUsed=0;
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function freshState(){var p=PUZZLES[pi];var s={tracks:{},engine:[],secured:{}};
+  TRACKS.forEach(function(t){s.tracks[t]=[];});
+  for(var k in p.start)s.tracks[k]=p.start[k].slice();
+  if(p.startSecured)p.startSecured.forEach(function(t){if(s.tracks[t].length>=2)s.secured[t]=true;});
+  return s;}
+function place(s,T,n){var t=s.tracks[T];var b=s.engine.slice(s.engine.length-n);s.engine=s.engine.slice(0,s.engine.length-n);s.tracks[T]=b.concat(t);}
+function pullApply(s,T,n){var t=s.tracks[T];s.engine=s.engine.concat(t.slice(0,n));s.tracks[T]=t.slice(n);s.secured[T]=false;}
+function spotApply(s,T,n){place(s,T,n);if(s.tracks[T].length>=2)s.secured[T]=true;}
+function kickApply(s,T,n){place(s,T,n);}
+function reSecure(s){for(var k in s.tracks){if(s.tracks[k].length<2)s.secured[k]=false;}}
+function setEq(a,x){return a.length===x.length&&x.every(function(c){return a.indexOf(c)>=0;});}
+
+// ===================== switch lining =====================
+var SW={}; // track -> 'normal' | 'reverse'
+function resetSwitches(){TRACKS.forEach(function(t){SW[t]='normal';});}
+// route to track index i is open iff its switch is reverse and every switch nearer the lead is normal
+function lineCheck(i){
+  for(var k=0;k<i;k++){ if(SW[TRACKS[k]]==='reverse') return {ok:false,bad:k,why:'reverse'}; }
+  if(SW[TRACKS[i]]!=='reverse') return {ok:false,bad:i,why:'normal'};
+  return {ok:true};
+}
+
+// ===================== render =====================
+var cv=document.getElementById('yard'), ctx=cv.getContext('2d'), DPR=Math.max(1,window.devicePixelRatio||1);
+function fitCanvas(){cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+fitCanvas();
+var moving=[];       // bodies in motion: {kind,x,y,ang,label}
+var hidden={};       // car labels currently animated (skip in static draw)
+var animBusy=false;
+
+function rail(p,q,color,wdt){ctx.strokeStyle=color;ctx.lineWidth=wdt||3;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke();}
+function drawCar(x,y,ang,label,kind,sec){
+  ctx.save();ctx.translate(x,y);ctx.rotate(ang||0);
+  var w=kind==='eng'?ENGLEN:CARLEN-4, h=kind==='eng'?ENGW:CARW;
+  ctx.fillStyle=kind==='eng'?'#2a1c0e':'#262d38';
+  ctx.strokeStyle=kind==='eng'?'#ff8a3d':'#46505f';
+  roundRect(-w/2,-h/2,w,h,5);ctx.fill();ctx.lineWidth=1.6;ctx.stroke();
+  if(kind==='eng'){ctx.fillStyle='#ff8a3d';roundRect(-w/2+6,-h/2+4,12,h-8,2);ctx.fill();}
+  ctx.rotate(-(ang||0));
+  ctx.fillStyle=kind==='eng'?'#ffd9b3':'#dfe6ee';ctx.font='bold 12px ui-monospace,monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(kind==='eng'?'ENG':label,kind==='eng'?7:0,0);
+  if(sec){ctx.fillStyle='#33c27f';ctx.font='10px sans-serif';ctx.fillText('⛓',0,-h/2-7);}
+  ctx.restore();
+}
+function roundRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  // lead + ladder spine
+  rail(A,B,'#3a4452',5); rail(B,TOP,'#33414f',4);
+  // body tracks
+  for(var i=0;i<6;i++){ rail(JX[i],[RIGHT,TY[i]],'#2c3744',4);
+    ctx.fillStyle=KICKABLE[TRACKS[i]]?'#33c27f':'#7e93ad';ctx.font='bold 12px ui-monospace,monospace';ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText(TRACKS[i],RIGHT+4,TY[i]); }
+  ctx.fillStyle='#56708a';ctx.font='11px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText('LEAD',(A[0]+B[0])/2,LEAD_Y+18);
+  // switches
+  for(var s=0;s<6;s++){var j=JX[s], rev=SW[TRACKS[s]]==='reverse';
+    // lined-direction stub
+    if(rev) rail(j,[j[0]+22,TY[s]],'#33c27f',4); else { var nx=polyAt([j,TOP],20); rail(j,[nx.x,nx.y],'#5b6b7d',4); }
+    ctx.beginPath();ctx.arc(j[0],j[1],7,0,7);ctx.fillStyle=rev?'#33c27f':'#46525f';ctx.fill();
+    ctx.lineWidth=2;ctx.strokeStyle=rev?'#0c2418':'#1a2128';ctx.stroke();
+  }
+  // static cars on tracks
+  for(var ti=0;ti<6;ti++){var T=TRACKS[ti], arr=state.tracks[T];
+    for(var c=0;c<arr.length;c++){ if(hidden[arr[c]])continue;
+      var x=JX[ti][0]+CLEAR+(c+0.5)*CARLEN, y=TY[ti];
+      drawCar(x,y,0,arr[c],'car', state.secured[T] && c===0);
+    }}
+  // static engine + cars on engine (parked on the lead) when idle
+  if(!animBusy){
+    drawCar(PARKX,LEAD_Y,0,'ENG','eng');
+    for(var e=0;e<state.engine.length;e++){ var lbl=state.engine[state.engine.length-1-e];
+      drawCar(PARKX-ENGLEN/2-CARLEN/2-e*CARLEN,LEAD_Y,0,lbl,'car'); }
+  }
+  // moving bodies
+  for(var m=0;m<moving.length;m++){var b=moving[m];drawCar(b.x,b.y,b.ang,b.label,b.kind);}
+}
+
+// ===================== animation driver =====================
+var steps=null, stepIdx=0, stepStart=0, onAllDone=null;
+function ease(p){return p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;}
+function durFor(d){return Math.max(360,Math.min(1500,Math.abs(d)*2.0));}
+function play(seq,cb){steps=seq;stepIdx=0;stepStart=performance.now();onAllDone=cb;animBusy=true;requestAnimationFrame(tick);}
+function tick(now){
+  if(!steps){draw();return;}
+  var st=steps[stepIdx], p=Math.min(1,(now-stepStart)/st.dur);
+  st.fn(p);
+  draw();
+  if(p>=1){ if(st.done)st.done(); stepIdx++; stepStart=now;
+    if(stepIdx>=steps.length){steps=null;moving=[];hidden={};animBusy=false;var cb=onAllDone;onAllDone=null;if(cb)cb();return;} }
+  requestAnimationFrame(tick);
+}
+function engB(route,s){var q=polyAt(route,s);return {kind:'eng',x:q.x,y:q.y,ang:q.ang};}
+function carB(route,s,lb){var q=polyAt(route,s);return {kind:'car',x:q.x,y:q.y,ang:q.ang,label:lb};}
+var COUP=ENGLEN/2+CARLEN/2;
+
+// ===================== moves =====================
+function curTrack(){return document.getElementById('trk').value;}
+function setFb(cls,html){var fb=document.getElementById('fb');fb.className='fb'+(cls?' '+cls:'');fb.innerHTML=html;}
+function refuse(msg){setFb('no',msg);}
+
+function workIt(){
+  if(animBusy)return;
+  var act=document.getElementById('act').value, T=curTrack(), i=TRACKS.indexOf(T);
+  var n=parseInt(document.getElementById('cnt').value,10)||1;
+  // lining first (every move needs a lined road)
+  var lc=lineCheck(i);
+  if(!lc.ok){ refuse(lineMsg(lc,i)); return; }
+  if(act==='pull') return doPull(i,n,T);
+  if(act==='spot') return doSpot(i,n,T);
+  return doKick(i,n,T);
+}
+function lineMsg(lc,i){
+  if(lc.why==='normal') return 'The <b>'+TRACKS[i]+'</b> switch is lined <b>normal</b> (through) — line it <b>reverse</b> to take the track.';
+  return 'Switch <b>'+TRACKS[lc.bad]+'</b> is lined <b>reverse</b> — you’d take the points into '+TRACKS[lc.bad]+' before reaching '+TRACKS[i]+'. Line it normal.';
+}
+function doPull(i,n,T){
+  var arr=state.tracks[T];
+  if(n<1||n>arr.length){refuse('Only <b>'+arr.length+'</b> car'+(arr.length===1?'':'s')+' on '+T+' to pull.');return;}
+  var route=routePts(i), sC=sBody(i,0)-COUP, cars=arr.slice(0,n);
+  for(var c=0;c<n;c++)hidden[cars[c]]=1;
+  play([
+    {dur:durFor(sC-parkS()),fn:function(p){moving=[engB(route,lerp(parkS(),sC,ease(p)))];}},
+    {dur:240,fn:function(p){moving=[engB(route,sC)];}},
+    {dur:durFor(sC-parkS())+n*30,fn:function(p){var s=lerp(sC,parkS(),ease(p));
+       moving=[engB(route,s)].concat(cars.map(function(lb,j){return carB(route,s+COUP+j*CARLEN,lb);}));}}
+  ],function(){pullApply(state,T,n);jointsUsed+=1;reSecure(state);after('Backed in, pulled '+n+' off '+T+'. <span style="color:var(--orange)">(+1 joint)</span>');});
+}
+function doSpot(i,n,T){
+  if(n<1||n>state.engine.length){refuse('Only <b>'+state.engine.length+'</b> car'+(state.engine.length===1?'':'s')+' on the engine to spot.');return;}
+  var route=routePts(i), sC=sBody(i,0)-COUP, occ=state.tracks[T].length>0;
+  var bySlot=[];for(var j=0;j<n;j++)bySlot[j]=state.engine[state.engine.length-1-j];
+  for(var c=0;c<n;c++)hidden[bySlot[c]]=1;
+  function grp(s){return [engB(route,s)].concat(bySlot.map(function(lb,j){return carB(route,s+COUP+j*CARLEN,lb);}));}
+  play([
+    {dur:durFor(sC-parkS())+n*30,fn:function(p){moving=grp(lerp(parkS(),sC,ease(p)));}},
+    {dur:240,fn:function(p){moving=grp(sC);}},
+    {dur:durFor(sC-parkS()),fn:function(p){moving=[engB(route,lerp(sC,parkS(),ease(p)))];}}
+  ],function(){spotApply(state,T,n);jointsUsed+=(occ?1:0);reSecure(state);
+     var sn=state.tracks[T].length>=2?' Tied down — kickable now. ⛓':' Hand brake on.';
+     after('Shoved '+n+' into '+T+'.'+sn+(occ?' <span style="color:var(--orange)">(+1 joint)</span>':' <span style="color:var(--green)">(no joint)</span>'));});
+}
+function doKick(i,n,T){
+  if(!KICKABLE[T]){refuse('Can’t kick into <b>'+T+'</b> — not a kicking track here. Shove it instead.');return;}
+  if(state.tracks[T].length<2){refuse('Can’t kick into <b>'+T+'</b> — you only kick onto a standing cut of 2+ cars, never an empty/short track.');return;}
+  if(!state.secured[T]){refuse('Can’t kick into <b>'+T+'</b> yet — that cut isn’t tied down. Two hand brakes must be on first.');return;}
+  if(n<1||n>state.engine.length){refuse('Only <b>'+state.engine.length+'</b> car'+(state.engine.length===1?'':'s')+' on the engine to kick.');return;}
+  var route=routePts(i), release=preJ(i)+CLEAR*0.4, sStand=sBody(i,0);
+  var bySlot=[];for(var j=0;j<n;j++)bySlot[j]=state.engine[state.engine.length-1-j];
+  for(var c=0;c<n;c++)hidden[bySlot[c]]=1;
+  var sEngRel=release-COUP;
+  function grp(s){return [engB(route,s)].concat(bySlot.map(function(lb,j){return carB(route,s+COUP+j*CARLEN,lb);}));}
+  play([
+    // shove up to release, building speed (ease-in)
+    {dur:durFor(sEngRel-parkS()),fn:function(p){moving=grp(lerp(parkS(),sEngRel,p*p));}},
+    // cut away: cars coast on (decelerating) to the standing cut; engine eases back
+    {dur:760,fn:function(p){var cs=lerp(release,sStand-COUP+CARLEN*0.5, 1-Math.pow(1-p,2));
+       var es=lerp(sEngRel,parkS()+ (parkS()-sEngRel)*0, sEngRel>parkS()? p*0.15:0); // hold-ish
+       moving=[engB(route,lerp(sEngRel,sEngRel-20,ease(p)))].concat(bySlot.map(function(lb,j){return carB(route,cs+j*CARLEN,lb);}));}},
+    // engine returns to park
+    {dur:durFor(sEngRel-parkS()),fn:function(p){moving=[engB(route,lerp(sEngRel-20,parkS(),ease(p)))];}}
+  ],function(){kickApply(state,T,n);reSecure(state);after('Kicked '+n+' onto the tied cut in '+T+'. <span style="color:var(--green)">(no joint)</span>');});
+}
+function after(nar){setFb('',  '<span class="nar">'+nar+'</span>'); renderStat(); draw(); checkWin();}
+
+// ===================== win =====================
+function checkWin(){
+  var g=PUZZLES[pi].goal, ok=setEq(state.tracks[g.track],g.cars)&&state.engine.length===0;
+  var unsecured=TRACKS.some(function(t){return state.tracks[t].length>=2&&!state.secured[t];});
+  if(ok&&!unsecured){ setFb('ok','<b>Job done.</b> '+g.track+' holds '+g.cars.join('-')+', engine clear, cuts tied. <b>'+jointsUsed+' joint'+(jointsUsed===1?'':'s')+'.</b>'); }
+  else if(ok&&unsecured){ setFb('no','Cars are placed and the engine’s clear — but a 2+ cut is left untied. Spot it or tie it (Rule 112).'); }
+}
+
+// ===================== UI wiring =====================
+function renderPz(){var h='';PUZZLES.forEach(function(p,k){h+='<div class="chip'+(k===pi?' on':'')+'" data-k="'+k+'">'+p.title+'</div>';});
+  document.getElementById('pz').innerHTML=h;
+  Array.prototype.forEach.call(document.querySelectorAll('#pz .chip'),function(c){c.onclick=function(){loadPuzzle(+c.getAttribute('data-k'));};});}
+function renderSwitches(){var h='';TRACKS.forEach(function(t){var rev=SW[t]==='reverse';
+   h+='<div class="sw'+(rev?' rev':'')+'" data-t="'+t+'"><span class="dot"></span>'+t+' · '+(rev?'REV':'NORM')+'</div>';});
+  document.getElementById('switches').innerHTML=h;
+  Array.prototype.forEach.call(document.querySelectorAll('#switches .sw'),function(c){c.onclick=function(){throwSwitch(c.getAttribute('data-t'));};});}
+function throwSwitch(t){ if(animBusy)return; SW[t]=SW[t]==='reverse'?'normal':'reverse'; renderSwitches(); draw(); }
+function renderTrk(){var sel=document.getElementById('trk');sel.innerHTML=TRACKS.map(function(t){return '<option>'+t+'</option>';}).join('');}
+function renderStat(){var on=state.engine.length;
+  document.getElementById('stat').innerHTML='<span>On the engine: <b>'+(on?state.engine.join('-'):'—')+'</b></span><span>Joints: <b>'+jointsUsed+'</b></span>';}
+function loadPuzzle(k){pi=k;state=freshState();jointsUsed=0;moving=[];hidden={};animBusy=false;resetSwitches();
+  document.getElementById('obj').innerHTML='<b>'+PUZZLES[k].title+'</b> — '+PUZZLES[k].hint;
+  renderPz();renderSwitches();renderTrk();renderStat();setFb('','<span class="sys">Line the road, then call your move.</span>');draw();}
+
+// canvas click -> nearest switch
+cv.addEventListener('click',function(ev){ if(animBusy)return;
+  var r=cv.getBoundingClientRect(), x=(ev.clientX-r.left)*(W/r.width), y=(ev.clientY-r.top)*(H/r.height);
+  var best=-1,bd=20;for(var s=0;s<6;s++){var d=Math.hypot(x-JX[s][0],y-JX[s][1]);if(d<bd){bd=d;best=s;}}
+  if(best>=0)throwSwitch(TRACKS[best]);
+});
+document.getElementById('act').addEventListener('change',function(){document.getElementById('prep').textContent=this.value==='pull'?'from':'to';});
+document.getElementById('workBtn').addEventListener('click',workIt);
+document.getElementById('resetBtn').addEventListener('click',function(){loadPuzzle(pi);});
+document.getElementById('helpBtn').addEventListener('click',function(){document.getElementById('help').classList.add('show');});
+document.getElementById('helpClose').addEventListener('click',function(){document.getElementById('help').classList.remove('show');});
+document.getElementById('help').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
+
+resetSwitches();loadPuzzle(0);
+</script>
+</body>
+</html>
