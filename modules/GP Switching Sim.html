@@ -138,12 +138,16 @@ function polyAt(pts,s){ // {x,y,ang} at arclength s
 var SPINE=[A,B,TOP]; function sbAt(s){return polyAt(SPINE,s);}
 var dLead=dist(A,B);
 function preJ(i){return dLead+dist(B,JX[i]);}              // arclength from route start to the junction
-function sBody(i,k){return preJ(i)+CLEAR+state.offset[TRACKS[i]]+k*CARLEN;}  // offset = how far down the track the cut sits
+// ---- car lengths (px): standard 42; some cars longer ----
+var TYPE={m:74, p:60, r:74};                              // m,r = autorack / car carrier (~89ft); p = lumber/centerbeam (~73ft); the rest standard (~50ft)
+function carLen(lb){return TYPE[lb]||CARLEN;}
+function sumLen(a){var s=0;for(var k=0;k<a.length;k++)s+=carLen(a[k]);return s;}
 var FOUL=dLead-8;                                          // lead clearance point — just clear of the ladder/switches
-var FZONE=42, MINOFF=FZONE-CLEAR+CARLEN/2;                 // a body cut closer than FZONE to its switch fouls the route
-var LEAD_CAP=Math.floor((FOUL-CARLEN/2-(ENGLEN/2+CARLEN/2)-ENGLEN/2-4)/CARLEN)+1;  // cars that fit on the lead clear of the switch
-function parkS(){var n=state?state.engine.length:0;        // engine parks so its whole cut sits clear of the switch
-  return n<=0 ? FOUL-ENGLEN/2 : FOUL-CARLEN/2-(n-1)*CARLEN-COUP;}
+var FZONE=42;                                             // body clearance point: a cut's throat car must clear this far from its switch
+var LEAD_LEN=170;                                         // car length that fits on the lead clear of the switch (~4 standard)
+function throatS(i){return preJ(i)+state.head[TRACKS[i]];}                  // arclength of the throat car's near edge
+function engSlotS(q){var s=engS+ENGLEN/2;for(var j=0;j<q;j++)s+=carLen(state.engine[j]);return s+carLen(state.engine[q])/2;}
+function parkS(){return FOUL-ENGLEN/2-(state?sumLen(state.engine):0);}      // park so the whole consist clears the switch
 
 // ===================== puzzles + rules brain (reused model) =====================
 var KICKABLE={AS72:1,AS73:1};   // kickable tracks (north-end grade flavor)
@@ -183,17 +187,17 @@ var PUZZLES=[
 ];
 var pi=0, state=null, jointsUsed=0, auto=null, moveDone=null, slowmo=1, startState=null;
 function clone(o){return JSON.parse(JSON.stringify(o));}
-function freshState(){var p=PUZZLES[pi];var s={tracks:{},engine:[],secured:{},offset:{}};
-  TRACKS.forEach(function(t){s.tracks[t]=[];s.offset[t]=0;});
-  for(var k in p.start){s.tracks[k]=p.start[k].slice();s.offset[k]=randOffset();}
+function freshState(){var p=PUZZLES[pi];var s={tracks:{},engine:[],secured:{},head:{}};
+  TRACKS.forEach(function(t){s.tracks[t]=[];s.head[t]=0;});
+  for(var k in p.start){s.tracks[k]=p.start[k].slice();s.head[k]=randHead();}
   TRACKS.forEach(function(t){if(s.tracks[t].length>=2)s.secured[t]=true;});   // any standing cut of 2+ is tied down (Rule 112)
   return s;}
 function place(s,T,n){var t=s.tracks[T];var b=s.engine.slice(s.engine.length-n);s.engine=s.engine.slice(0,s.engine.length-n);s.tracks[T]=b.concat(t);}
-function pullApply(s,T,n){var t=s.tracks[T];s.engine=s.engine.concat(t.slice(0,n));s.tracks[T]=t.slice(n);s.secured[T]=false;s.offset[T]+=n*CARLEN;}
-function spotApply(s,T,n,no){place(s,T,n);s.offset[T]=no;if(s.tracks[T].length>=2)s.secured[T]=true;}
-function kickApply(s,T,n,no){place(s,T,n);s.offset[T]=no;}
-function randOffset(){return 185+Math.floor(Math.random()*41);}           // park deep: 185..225 px down the track
-function nextOffset(T,n){return state.tracks[T].length?(state.offset[T]-n*CARLEN):randOffset();}
+function pullApply(s,T,n){var t=s.tracks[T],rem=t.slice(0,n);s.engine=s.engine.concat(rem);s.head[T]+=sumLen(rem);s.tracks[T]=t.slice(n);s.secured[T]=false;}
+function spotApply(s,T,n,nh){place(s,T,n);s.head[T]=nh;if(s.tracks[T].length>=2)s.secured[T]=true;}
+function kickApply(s,T,n,nh){place(s,T,n);s.head[T]=nh;}
+function randHead(){return 185+Math.floor(Math.random()*41);}             // park deep: 185..225 px down the track
+function nextHead(T,n){return state.tracks[T].length?(state.head[T]-sumLen(state.engine.slice(state.engine.length-n))):randHead();}
 function reSecure(s){for(var k in s.tracks){if(s.tracks[k].length<2)s.secured[k]=false;}}
 function setEq(a,x){return a.length===x.length&&x.every(function(c){return a.indexOf(c)>=0;});}
 function eqArr(a,b){return a.length===b.length&&a.every(function(x,i){return x===b[i];});}
@@ -216,9 +220,9 @@ var engS=120, engRoute=SPINE, flying=null;  // engine arclength + the route it's
 var animBusy=false;
 
 function rail(p,q,color,wdt){ctx.strokeStyle=color;ctx.lineWidth=wdt||3;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke();}
-function drawCar(x,y,ang,label,kind,sec){
+function drawCar(x,y,ang,label,kind,sec,len){
   ctx.save();ctx.translate(x,y);ctx.rotate(ang||0);
-  var w=kind==='eng'?ENGLEN:CARLEN-4, h=kind==='eng'?ENGW:CARW;
+  var w=kind==='eng'?ENGLEN:(len-3), h=kind==='eng'?ENGW:CARW;
   ctx.fillStyle=kind==='eng'?'#2a1c0e':'#262d38';
   ctx.strokeStyle=kind==='eng'?'#ff8a3d':'#46505f';
   roundRect(-w/2,-h/2,w,h,5);ctx.fill();ctx.lineWidth=1.6;ctx.stroke();
@@ -249,19 +253,18 @@ function draw(){
     ctx.lineWidth=2;ctx.strokeStyle=rev?'#0c2418':'#1a2128';ctx.stroke();
   }
   // every car is a persistent object — drawn every frame straight from the model
-  // 1) cars standing on tracks
-  for(var ti=0;ti<6;ti++){var T=TRACKS[ti], arr=state.tracks[T];
-    for(var c=0;c<arr.length;c++){
-      var x=JX[ti][0]+CLEAR+state.offset[T]+c*CARLEN, y=TY[ti];
-      drawCar(x,y,0,arr[c],'car', state.secured[T] && c===0);
+  // 1) cars standing on tracks (laid out by their real lengths from the throat)
+  for(var ti=0;ti<6;ti++){var T=TRACKS[ti], arr=state.tracks[T], cx=JX[ti][0]+state.head[T];
+    for(var c=0;c<arr.length;c++){ var L=carLen(arr[c]);
+      drawCar(cx+L/2,TY[ti],0,arr[c],'car', state.secured[T] && c===0, L); cx+=L;
     }}
   // 2) the engine + whatever is coupled to it, along its current route at engS (cars trail on the yard side)
-  var ep=polyAt(engRoute,engS); drawCar(ep.x,ep.y,ep.ang,'ENG','eng');
-  for(var e=0;e<state.engine.length;e++){ var cp=polyAt(engRoute,engS+COUP+e*CARLEN);
-    drawCar(cp.x,cp.y,cp.ang,state.engine[e],'car'); }
+  var ep=polyAt(engRoute,engS); drawCar(ep.x,ep.y,ep.ang,'ENG','eng',false,ENGLEN);
+  for(var e=0;e<state.engine.length;e++){ var cp=polyAt(engRoute,engSlotS(e));
+    drawCar(cp.x,cp.y,cp.ang,state.engine[e],'car',false,carLen(state.engine[e])); }
   // 3) a kicked cut coasting on its own (only mid-kick)
-  if(flying){ for(var fk=0;fk<flying.labels.length;fk++){ var fp=polyAt(flying.route,flying.s0+fk*CARLEN);
-    drawCar(fp.x,fp.y,fp.ang,flying.labels[fk],'car'); } }
+  if(flying){ var fs=flying.s0; for(var fk=0;fk<flying.labels.length;fk++){ var FL=carLen(flying.labels[fk]);
+    var fp=polyAt(flying.route,fs+FL/2); drawCar(fp.x,fp.y,fp.ang,flying.labels[fk],'car',false,FL); fs+=FL; } }
 }
 
 // ===================== animation driver =====================
@@ -278,7 +281,6 @@ function tick(now){
     if(stepIdx>=steps.length){steps=null;animBusy=false;engRoute=SPINE;engS=parkS();flying=null;var cb=onAllDone;onAllDone=null;if(cb)cb();draw();return;} }
   requestAnimationFrame(tick);
 }
-var COUP=ENGLEN/2+CARLEN/2;
 
 // ===================== moves =====================
 function curTrack(){return document.getElementById('trk').value;}
@@ -303,9 +305,9 @@ function lineMsg(lc,i){
 function doPull(i,n,T){
   var arr=state.tracks[T];
   if(n<1||n>arr.length){refuse('Only <b>'+arr.length+'</b> car'+(arr.length===1?'':'s')+' on '+T+' to pull.');return;}
-  if(state.engine.length+n>LEAD_CAP){refuse('Not enough room to clear the switch — the lead only holds the engine and <b>'+LEAD_CAP+'</b> cars clear of the points. Spot some off first.');return;}
+  if(sumLen(state.engine)+sumLen(arr.slice(0,n))>LEAD_LEN){refuse('Not enough room to clear the switch — the lead won’t hold that cut clear of the points. Spot some off first.');return;}
   engRoute=routePts(i);
-  var sC=sBody(i,0)-COUP-state.engine.length*CARLEN, d=Math.abs(sC-parkS());   // back in past any cars already on the engine
+  var sC=throatS(i)-ENGLEN/2-sumLen(state.engine), d=Math.abs(sC-parkS());   // back in so the far held car reaches the throat car
   play([
     {dur:durFor(d),fn:function(p){engS=lerp(parkS(),sC,ease(p));}},                              // back in (cars wait on the track)
     {dur:240,fn:function(p){engS=sC;},done:function(){pullApply(state,T,n);jointsUsed+=1;reSecure(state);}}, // couple on
@@ -314,14 +316,14 @@ function doPull(i,n,T){
 }
 function doSpot(i,n,T){
   if(n<1||n>state.engine.length){refuse('Only <b>'+state.engine.length+'</b> car'+(state.engine.length===1?'':'s')+' on the engine to spot.');return;}
-  var occ=state.tracks[T].length>0, no=nextOffset(T,n), len=state.engine.length;
-  if(occ&&no<MINOFF){refuse('That’d foul the switch — <b>'+T+'</b> hasn’t the room to hold '+n+' more clear of the points. Use another track.');return;}
+  var occ=state.tracks[T].length>0, nh=nextHead(T,n), len=state.engine.length;
+  if(occ&&nh<FZONE){refuse('That’d foul the switch — <b>'+T+'</b> hasn’t the room to hold '+n+' more clear of the points. Use another track.');return;}
   engRoute=routePts(i);
-  // the dropped cars are the tail n; their throat-most (engine[len-n]) ends at depth `no`
-  var sShove=(preJ(i)+CLEAR+no)-COUP-(len-n)*CARLEN, d=Math.abs(sShove-parkS());
+  // the dropped cars are the tail n; their throat-most (engine[len-n]) lands at near-edge `nh`
+  var sShove=preJ(i)+nh-ENGLEN/2-sumLen(state.engine.slice(0,len-n)), d=Math.abs(sShove-parkS());
   play([
     {dur:durFor(d)+n*30,fn:function(p){engS=lerp(parkS(),sShove,ease(p));}},                     // shove the string in
-    {dur:240,fn:function(p){engS=sShove;},done:function(){spotApply(state,T,n,no);jointsUsed+=(occ?1:0);reSecure(state);}}, // cut away, leave them standing
+    {dur:240,fn:function(p){engS=sShove;},done:function(){spotApply(state,T,n,nh);jointsUsed+=(occ?1:0);reSecure(state);}}, // cut away, leave them standing
     {dur:durFor(d),fn:function(p){engS=lerp(sShove,parkS(),ease(p));}}                           // pull back with the rest
   ],function(){var sn=state.tracks[T].length>=2?' Tied down — kickable now. ⛓':' Hand brake on.';
      after('Shoved '+n+' into '+T+'.'+sn+(occ?' <span style="color:var(--orange)">(+1 joint)</span>':' <span style="color:var(--green)">(no joint)</span>'));});
@@ -331,19 +333,19 @@ function doKick(i,n,T){
   if(state.tracks[T].length<2){refuse('Can’t kick into <b>'+T+'</b> — you only kick onto a standing cut of 2+ cars, never an empty/short track.');return;}
   if(!state.secured[T]){refuse('Can’t kick into <b>'+T+'</b> yet — that cut isn’t tied down. Two hand brakes must be on first.');return;}
   if(n<1||n>state.engine.length){refuse('Only <b>'+state.engine.length+'</b> car'+(state.engine.length===1?'':'s')+' on the engine to kick.');return;}
-  var no=nextOffset(T,n), len=state.engine.length;
-  if(no<MINOFF){refuse('That’d foul the switch — no room on <b>'+T+'</b> to take '+n+' more clear of the points.');return;}
+  var nh=nextHead(T,n), len=state.engine.length;
+  if(nh<FZONE){refuse('That’d foul the switch — no room on <b>'+T+'</b> to take '+n+' more clear of the points.');return;}
   engRoute=routePts(i);
-  var relThroat=preJ(i)+CLEAR+CARLEN/2, tgtThroat=preJ(i)+CLEAR+no;   // coast from just inside the clearance up to the cut
+  var relThroat=preJ(i)+FZONE, tgtThroat=preJ(i)+nh;   // coast the cut's throat car from the clearance point up to the standing cut
   if(tgtThroat<relThroat)tgtThroat=relThroat;
-  var relEng=relThroat-COUP-(len-n)*CARLEN, d=Math.abs(relEng-parkS());
+  var relEng=relThroat-ENGLEN/2-sumLen(state.engine.slice(0,len-n)), d=Math.abs(relEng-parkS());
   play([
     // shove up, building speed (ease-in); the cut still rides the engine here
     {dur:durFor(d),fn:function(p){engS=lerp(parkS(),relEng,p*p);},
       done:function(){flying={route:engRoute,labels:state.engine.splice(len-n,n),s0:relThroat};}}, // cut away — now it's on its own
     // the free cut coasts on (decelerating) onto the tied cut; engine drifts back a touch
     {dur:820,fn:function(p){flying.s0=lerp(relThroat,tgtThroat,1-Math.pow(1-p,2));engS=lerp(relEng,relEng-26,ease(p));},
-      done:function(){state.tracks[T]=flying.labels.concat(state.tracks[T]);state.offset[T]=no;flying=null;reSecure(state);}}, // it stops against the cut
+      done:function(){state.tracks[T]=flying.labels.concat(state.tracks[T]);state.head[T]=nh;flying=null;reSecure(state);}}, // it stops against the cut
     // engine returns to the lead
     {dur:durFor(d),fn:function(p){engS=lerp(relEng-26,parkS(),ease(p));}}
   ],function(){after('Kicked '+n+' onto the tied cut in '+T+'. <span style="color:var(--green)">(no joint)</span>');});
