@@ -127,6 +127,11 @@ function dist(p,q){return Math.hypot(q[0]-p[0],q[1]-p[1]);}
 // where the ladder line (B->TOP) crosses a given y -> that track's junction point
 function junction(i){var t=(B[1]-TY[i])/(B[1]-TOP[1]); return [B[0]+(TOP[0]-B[0])*t, TY[i]];}
 var JX=TRACKS.map(function(_,i){return junction(i);});
+var _md=Math.hypot(TOP[0]-B[0],TOP[1]-B[1]);
+var OUT=[TOP[0]+(TOP[0]-B[0])/_md*460, TOP[1]+(TOP[1]-B[1])/_md*460];   // lead/main line continues past AS76, out the top-right (off frame)
+var OFFLEFT=[A[0]-340,A[1]];                                            // off the bottom-left
+function thruRoute(){return [OUT, B, OFFLEFT];}                         // through run: in top-right, down the ladder, out bottom-left
+function mainJ(i){return dist(OUT,JX[i]);}                              // arclength of junction i on the thru run
 // full route polyline from the lead's outer end to deep in track i
 function routePts(i){return [A,B,JX[i],[RIGHT,TY[i]]];}
 function polyLen(pts){var d=0;for(var k=1;k<pts.length;k++)d+=dist(pts[k-1],pts[k]);return d;}
@@ -193,10 +198,10 @@ var PUZZLES=[
   hint:'Eight-car cut — set out <b>C and F</b> to <b>AS73</b>. Deep digging, and a kick saves you a trip.', par:3, opt:[['pull','AS71',2],['spot','AS72',2],['pull','AS71',3],['spot','AS74',2],['pull','AS71',2],['kick','AS72',1],['spot','AS73',2]]},
  {tier:'Hard mode',title:'Kicker’s special', start:{AS71:['A','B','C','D','E','F'],AS72:['Z','W'],AS73:['X','Y'], AS76:['m','n']}, goal:{track:'AS73',cars:['D','E','F','X','Y']},
   hint:'Two tied cuts to work with. Land <b>D, E, F</b> on <b>AS73</b> — spot the spares, then kick the cut on (par just 2).', par:2, opt:[['pull','AS71',3],['spot','AS74',3],['pull','AS71',3],['kick','AS73',3]]},
- {tier:'Inbound / outbound',title:'Inbound & away', start:{AS76:['m','n']}, inbound:{cars:['A','B'],to:'AS74'}, loads:['A','B'], goal:{track:'AS73',cars:['A','B'],depart:true},
-  hint:'An inbound just set out <b>A-B</b> on AS74. Build them as the outbound on <b>AS73</b>, then send it away.', par:1, opt:[['pull','AS74',2],['spot','AS73',2]]},
- {tier:'Inbound / outbound',title:'Block the loads', start:{AS72:['E','F'], AS76:['m','n']}, inbound:{cars:['A','B','C','D'],to:'AS74'}, loads:['A','B','E'], goal:{track:'AS73',cars:['A','B','E'],depart:true},
-  hint:'Inbound left a mix on AS74; a load (E) waits on AS72. Don’t mix — block the <b>loads</b> (A, B, E — solid cars) on <b>AS73</b> as the outbound, leave the empties, then depart.', par:2, opt:[['pull','AS74',3],['spot','AS71',1],['pull','AS72',1],['spot','AS73',3]]}
+ {tier:'Inbound / outbound',title:'Pick up & go', start:{AS73:['A','B'], AS76:['m','n']}, inbound:{cars:['C','D'],length:20,to:'AS74'}, loads:['A','B','C','D'], goal:{track:'AS73',cars:['A','B','C','D'],depart:true},
+  hint:'You’re the outbound, holding <b>A-B</b> on AS73. A 20-car inbound runs through and sets out <b>C-D</b> on AS74 — pick them up, add them to your cut, and head out (bottom-left).', par:1, opt:[['pull','AS74',2],['kick','AS73',2]]},
+ {tier:'Inbound / outbound',title:'Block &amp; build', start:{AS73:['A','B'], AS72:['E','F'], AS76:['m','n']}, inbound:{cars:['C','D'],length:20,to:'AS74'}, loads:['A','B','C','E'], goal:{track:'AS73',cars:['A','B','C','E'],depart:true},
+  hint:'You hold <b>A-B</b> (loads) on AS73. The inbound drops <b>C-D</b> on AS74 (C loaded, D empty); a load <b>E</b> waits on AS72. Don’t mix — add the <b>loads</b> (C, E) to your cut, leave the empties, and depart.', par:2, opt:[['pull','AS72',1],['pull','AS74',1],['kick','AS73',2]]}
 ];
 var pi=0, state=null, jointsUsed=0, auto=null, moveDone=null, slowmo=1, startState=null;
 function clone(o){return JSON.parse(JSON.stringify(o));}
@@ -232,7 +237,7 @@ function lineCheck(i){
 var cv=document.getElementById('yard'), ctx=cv.getContext('2d'), DPR=Math.max(1,window.devicePixelRatio||1);
 function fitCanvas(){cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
 fitCanvas();
-var engS=120, engRoute=SPINE, flying=null;  // engine arclength + the route it's on; flying = a kicked cut coasting on its own
+var engS=120, engRoute=SPINE, flying=null, inb=null, peelOv=null;  // engine pos/route; flying = kicked cut; inb = inbound through-train; peelOv = its set-out peeling into a track
 var animBusy=false;
 // ===================== sound (Web Audio, synthesized — no files) =====================
 var muted=false; try{muted=localStorage.getItem('gpss_mute')==='1';}catch(e){}
@@ -268,7 +273,8 @@ function roundRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,
 function draw(){
   ctx.clearRect(0,0,W,H);
   // lead + ladder spine
-  rail(A,B,'#3a4452',5); rail(B,TOP,'#33414f',4);
+  rail(A,B,'#3a4452',5); rail(B,TOP,'#33414f',4); rail(TOP,OUT,'#33414f',4);
+  ctx.fillStyle='#56708a';ctx.font='10px ui-monospace,monospace';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('main line \u25b8',TOP[0]+46,TOP[1]-34);
   // body tracks
   for(var i=0;i<6;i++){ rail(JX[i],[RIGHT,TY[i]],'#2c3744',4);
     var fx=JX[i][0]+FZONE; ctx.strokeStyle='#8a6f2c';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(fx,TY[i]-6);ctx.lineTo(fx,TY[i]+6);ctx.stroke();   // clearance (foul) point
@@ -289,12 +295,16 @@ function draw(){
       drawCar(cx+L/2,TY[ti],0,arr[c],'car', state.secured[T] && c===0, L, state.loaded[arr[c]]); cx+=L;
     }}
   // 2) the engine + whatever is coupled to it, along its current route at engS (cars trail on the yard side)
-  var ep=polyAt(engRoute,engS); drawCar(ep.x,ep.y,ep.ang,'ENG','eng',false,ENGLEN);
-  for(var e=0;e<state.engine.length;e++){ var cp=polyAt(engRoute,engSlotS(e));
-    drawCar(cp.x,cp.y,cp.ang,state.engine[e],'car',false,carLen(state.engine[e]),state.loaded[state.engine[e]]); }
+  if(!inb){ var ep=polyAt(engRoute,engS); drawCar(ep.x,ep.y,ep.ang,'ENG','eng',false,ENGLEN);
+    for(var e=0;e<state.engine.length;e++){ var cp=polyAt(engRoute,engSlotS(e));
+      drawCar(cp.x,cp.y,cp.ang,state.engine[e],'car',false,carLen(state.engine[e]),state.loaded[state.engine[e]]); } }
   // 3) a kicked cut coasting on its own (only mid-kick)
   if(flying){ var fs=flying.s0; for(var fk=0;fk<flying.labels.length;fk++){ var FL=carLen(flying.labels[fk]);
     var fp=polyAt(flying.route,fs+FL/2); drawCar(fp.x,fp.y,fp.ang,flying.labels[fk],'car',false,FL,state.loaded[flying.labels[fk]]); fs+=FL; } }
+  // 4) inbound through-train (road engine + cars) and its set-out peeling into a track
+  if(inb){ var iep=polyAt(inb.route,inb.headS); drawCar(iep.x,iep.y,iep.ang,'ENG','eng',false,ENGLEN);
+    var is=inb.headS-ENGLEN/2; for(var ik=0;ik<inb.labels.length;ik++){ var IL=carLen(inb.labels[ik]); is-=IL/2; var icp=polyAt(inb.route,is); drawCar(icp.x,icp.y,icp.ang,inb.labels[ik],'car',false,IL,inb.loaded[inb.labels[ik]]); is-=IL/2; } }
+  if(peelOv){ var ps=peelOv.headS; for(var pk=0;pk<peelOv.labels.length;pk++){ var PL=carLen(peelOv.labels[pk]); var pcp=polyAt(peelOv.route,ps+PL/2); drawCar(pcp.x,pcp.y,pcp.ang,peelOv.labels[pk],'car',false,PL,peelOv.loaded[peelOv.labels[pk]]); ps+=PL; } }
 }
 
 // ===================== animation driver =====================
@@ -409,15 +419,23 @@ function renderStat(){var on=state.engine.length;
   document.getElementById('stat').innerHTML='<span>On the engine: <b>'+(on?state.engine.join('-'):'—')+'</b></span><span>Joints: <b>'+jointsUsed+'</b> · par <b>'+PUZZLES[pi].par+'</b></span>';}
 function arrive(){var p=PUZZLES[pi], T=p.inbound.to, i=TRACKS.indexOf(T);
   var cars=state.tracks[T].slice(), nh=state.head[T];
-  state.tracks[T]=[]; state.engine=cars.slice();                       // lift the cut onto the arriving engine
-  engRoute=routePts(i); autoLine(i);
-  var off=-ENGLEN/2-sumLen(cars)-70, sSet=preJ(i)+nh-ENGLEN/2; engS=off; animBusy=true;
-  setFb('','<span class="sys">Inbound on the lead — setting out '+cars.length+' on '+T+'…</span>');
+  state.tracks[T]=[];                                                   // the set-out couple ride in on the inbound
+  var ld={}; cars.forEach(function(c){ld[c]=state.loaded[c];});
+  var len=p.inbound.length||16, fillN=Math.max(0,len-cars.length), labels=[];
+  for(var z=0;z<fillN;z++)labels.push('');                              // flavor cars
+  labels=labels.concat(cars);                                          // set-out block rides at the rear
+  var route=thruRoute(), dJ=mainJ(i), total=ENGLEN+sumLen(labels);
+  var dropHead=dJ+ENGLEN/2+sumLen(labels)-sumLen(cars)/2;              // rear block ~ at the switch
+  var start=-total-40, endH=dist(OUT,B)+dist(B,OFFLEFT)+total+60;
+  inb={route:route,labels:labels.slice(),loaded:ld,headS:start}; animBusy=true;
+  setFb('','<span class="sys">Inbound on the main — '+len+' cars, setting out '+cars.length+' on '+T+'…</span>');
   play([
-    {dur:1500,fn:function(pp){engS=lerp(off,sSet,ease(pp));},done:function(){sHorn();}},          // roll in from off-screen
-    {dur:260,fn:function(pp){engS=sSet;},done:function(){spotApply(state,T,cars.length,nh);sCouple();}},  // set out + tie down
-    {dur:durFor(Math.abs(sSet-parkS())),fn:function(pp){engS=lerp(sSet,parkS(),ease(pp));}}        // engine pulls clear
-  ],function(){engRoute=SPINE;engS=parkS();setFb('','<span class="sys">Inbound set out on '+T+' — now build the outbound.</span>');draw();});
+    {dur:2300,fn:function(pp){inb.headS=lerp(start,dropHead,ease(pp));},done:function(){sHorn();}},        // stream in from the top-right
+    {dur:80,fn:function(pp){},done:function(){inb.labels=labels.slice(0,fillN); peelOv={route:routePts(i),labels:cars.slice(),loaded:ld,headS:preJ(i)};}},  // cut off the set-out block
+    {dur:650,fn:function(pp){peelOv.headS=lerp(preJ(i),preJ(i)+nh,ease(pp)); inb.headS=lerp(dropHead,dropHead+150,ease(pp));},
+      done:function(){state.tracks[T]=cars.slice();state.head[T]=nh;if(cars.length>=2)state.secured[T]=true;peelOv=null;sCouple();}},  // set out + tie
+    {dur:1500,fn:function(pp){inb.headS=lerp(dropHead+150,endH,ease(pp));},done:function(){sHorn();}}      // the rest runs off bottom-left
+  ],function(){inb=null;engRoute=SPINE;engS=parkS();setFb('','<span class="sys">Inbound gone — cars set out on '+T+'. Build your outbound and head out (bottom-left).</span>');draw();});
 }
 function departTrain(){var T=PUZZLES[pi].goal.track, i=TRACKS.indexOf(T), cars=state.tracks[T].slice();
   engRoute=routePts(i); autoLine(i); auto=null;
